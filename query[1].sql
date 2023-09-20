@@ -284,13 +284,13 @@ CREATE TABLE Hotel.Hotel_Reviews
 
 
 --use Hotel_Realta
-select * from Hotel.Hotels
-select *from Users.users
-select * from Hotel.Hotel_Reviews
+--select * from Hotel.Hotels
+--select *from Users.users
+--select * from Hotel.Hotel_Reviews
 
-select *
-from Users.users
-where user_type='C'
+--select *
+--from Users.users
+--where user_type='C'
 
 
 
@@ -492,8 +492,8 @@ CREATE TABLE HR.work_order_detail (
 --12
 CREATE TABLE Booking.special_offers(
     spof_id INT IDENTITY(1,1) NOT NULL,
-    spof_name NVARCHAR(55) NOT NULL,
-    spof_description NVARCHAR(255) NOT NULL,
+    spof_name NVARCHAR(105) NOT NULL,
+    spof_description NVARCHAR(455) NOT NULL,
     spof_type CHAR(5) NOT NULL CHECK (spof_type IN ('T','C','I')),
     spof_discount SMALLMONEY NOT NULL,
     spof_start_date DATETIME NOT NULL,
@@ -522,13 +522,9 @@ CREATE TABLE Booking.booking_orders(
 	boor_member_type NVARCHAR(15), -- ambil dari usme_memb_name(fk user_id)
 	boor_status NVARCHAR(15) CHECK (boor_status IN ('BOOKING','CHECKIN','CHECKOUT','CLEANING','CANCELED')),
 	boor_user_id INT,
-	boor_hotel_id INT
 	CONSTRAINT pk_boor_id PRIMARY KEY (boor_id),
 	CONSTRAINT unique_boor_order_number UNIQUE (boor_order_number),
 	CONSTRAINT fk_boor_user_id FOREIGN KEY (boor_user_id) REFERENCES Users.users (user_id) 
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-	CONSTRAINT fk_boor_hotel_id FOREIGN KEY (boor_hotel_id) REFERENCES Hotel.hotels (hotel_id) 
     ON DELETE CASCADE
     ON UPDATE CASCADE,
 );
@@ -740,10 +736,7 @@ CREATE TABLE Payment.payment_transaction(
 		REFERENCES Users.Users (user_id)
 		ON UPDATE CASCADE
 		ON DELETE SET NULL,
--- 	CONSTRAINT FK_PaymentPaymentTransactionSourceId FOREIGN KEY (patr_source_id)
--- 		REFERENCES Payment.User_Accounts(usac_account_number) ON DELETE NO ACTION ON UPDATE NO ACTION,
--- 	CONSTRAINT FK_PaymentPaymentTransactionTargetId FOREIGN KEY (patr_target_id)
--- 		REFERENCES Payment.User_Accounts(usac_account_number) ON DELETE NO ACTION ON UPDATE NO ACTION
+
 );
 
 -- CREATE UNIQUE INDEX UQ_PaymentTransaction_patr_trx_number_ref
@@ -820,6 +813,10 @@ CREATE TABLE purchasing.stock_photo(
   CONSTRAINT ck_spho_primary CHECK (spho_primary IN (0,1))
 );
 
+
+
+
+
 CREATE TABLE purchasing.purchase_order_header(
 	pohe_id INT IDENTITY(1,1) NOT NULL,
 	pohe_number NVARCHAR(20),
@@ -839,9 +836,10 @@ CREATE TABLE purchasing.purchase_order_header(
 	CONSTRAINT fk_pohe_emp_id FOREIGN KEY (pohe_emp_id)
 	  REFERENCES hr.employee(emp_id)
 	  ON DELETE CASCADE ON UPDATE CASCADE,
+
 	CONSTRAINT fk_pohe_vendor_id FOREIGN KEY (pohe_vendor_id)
 	  REFERENCES purchasing.vendor(vendor_entity_id)
-	  ON DELETE CASCADE ON UPDATE CASCADE,
+	ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT ck_pohe_pay_type CHECK (pohe_pay_type IN('TR', 'CA')),
 	CONSTRAINT ck_pohe_status CHECK (pohe_status IN(1, 2, 3, 4, 5)),
 );
@@ -904,6 +902,1209 @@ CREATE TABLE purchasing.cart(
 );
 go
 
+
+/*------------------------------------insert master ------------------------------*/
+---Modulo Master 
+
+
+
+---1.1-regiones (continentes)  1
+insert into master.regions (region_name) values ('Asia');
+insert into master.regions (region_name) values ('Africa');
+insert into master.regions (region_name) values ('Europa');
+insert into Master.regions (region_name) values ('America');
+insert into Master.regions (region_name) values ('Oceania');
+
+go
+ 
+--1.2.-paises   2
+INSERT INTO Master.country(country_name, country_region_id) VALUES 
+('Bolivia',4),
+('Perú',4),
+('Argentina',4),
+('Colombia',4),
+('Brasil',4),
+('Paraguay',4),
+('Uruguay',4),
+('Venezuela',4),
+('Chile',4),
+('Ecuador',4),
+('Cuba',4),
+('Mexico',4);
+
+go
+ 
+--1.3.-departamentos   3
+INSERT INTO Master.provinces(prov_name, prov_country_id) VALUES 
+('Santa Cruz de la Sierra',1),
+('La Paz',1),
+('Cochabamba',1),
+('Potosi',1),
+('Pando',1),
+('chuquisaca',1),
+('Beni',1),
+('Oruro',1),
+('Tarija',1)
+go
+
+
+
+--1.4.-direcciones     4
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Scoville', 'Emmet', 'La Paz', '0000', -6.633688, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Blackbird', 'Spohn', 'Cochabamba', '0000', 55.045149, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Jenifer', 'Weeping Birch', 'Potosi', '0000', -34.5954682, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Westport', 'Gateway', 'Pando', '0000', 59.379366, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Caliangt', 'Havey', 'chuquisaca', '0000', -20.4827446, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bunting', 'Dawn', 'Beni', '0000', -7.1265553, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dunning', 'Scofield', 'Oruro', '0000', 13.9123164, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Barnett', 'David', 'Tarija', '0000', 41.802914, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hagan', 'Holmberg', 'La Paz', '0000', 58.5118215, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fairview', 'Schiller', 'Cochabamba', '0000', 40.761653, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bartillon', 'Waywood', 'Potosi', '0000', 38.6968603, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Springs', 'Lukken', 'Pando', '0000', 41.4783577, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Merchant', 'Meadow Ridge', 'chuquisaca', '0000', 40.7879444, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mariners Cove', 'Crest Line', 'Beni', '0000', 53.7002, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Longview', 'Springview', 'Oruro', '0000', 52.1741837, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Killdeer', 'Red Cloud', 'Tarija', '0000', 23.075573, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Manitowish', 'Ilene', 'La Paz', '0000', -46.1022534, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('6th', 'Mendota', 'Cochabamba', '0000', 36.9923139, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Merry', 'Towne', 'Potosi', '0000', 43.4945737, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('South', 'Dwight', 'Pando', '0000', -30.85775, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Garrison', 'Oriole', 'chuquisaca', '0000', -6.9010133, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Homewood', 'Hudson', 'Beni', '0000', 7.38153, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Crownhardt', 'Redwing', 'Oruro', '0000', 20.585863, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Nancy', 'Monument', 'Tarija', '0000', 51.6083, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Union', 'Forest', 'La Paz', '0000', 24.7762658, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Carpenter', 'Burning Wood', 'Cochabamba', '0000', 67.6955232, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Towne', 'Orin', 'Potosi', '0000', -34.4349435, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Wayridge', 'Northwestern', 'Pando', '0000', 53.0748279, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Duke', 'Autumn Leaf', 'chuquisaca', '0000', 10.5942421, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Myrtle', 'Pearson', 'Beni', '0000', 25.6279123, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Macpherson', 'Novick', 'Oruro', '0000', 31.59998, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eagle Crest', 'Tony', 'Tarija', '0000', 24.006293, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Waxwing', 'Waywood', 'La Paz', '0000', 24.848984, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Maple Wood', 'Oakridge', 'Cochabamba', '0000', -9.0972502, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Quincy', 'Evergreen', 'Potosi', '0000', -0.8183228, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Nelson', 'Brentwood', 'Pando', '0000', 45.0417524, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lyons', 'Caliangt', 'chuquisaca', '0000', -12.0820196, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eggendart', 'Ridgeway', 'Beni', '0000', -22.2169379, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Westridge', 'Hooker', 'Oruro', '0000', -10.8996, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hanover', 'Linden', 'Tarija', '0000', 48.85917, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bartillon', 'Chinook', 'La Paz', '0000', -20.3761919, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Garrison', 'Arapahoe', 'Cochabamba', '0000', 6.7826022, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Kingsford', 'Dakota', 'Potosi', '0000', 40.5257819, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Coleman', 'Westerfield', 'Pando', '0000', 49.8408677, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Petterle', 'Canary', 'chuquisaca', '0000', 31.095979, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hintze', 'Eastwood', 'Beni', '0000', 12.7523556, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Transport', 'Mariners Cove', 'Oruro', '0000', 34.341574, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Summer Ridge', 'Crest Line', 'Tarija', '0000', 48.5847594, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Shoshone', 'Warner', 'La Paz', '0000', -8.7433, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fallview', '3rd', 'Cochabamba', '0000', 32.026097, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('3rd', 'High Crossing', 'Potosi', '0000', 44.6254349, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hoard', 'Almo', 'Pando', '0000', -3.2898398, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Monterey', 'Basil', 'chuquisaca', '0000', -38.6816248, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Novick', 'Dapin', 'Beni', '0000', 10.35, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Emmet', 'Forest Dale', 'Oruro', '0000', -26.2499033, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('6th', '2nd', 'Tarija', '0000', 8.3796569, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Parkside', 'Prentice', 'La Paz', '0000', 15.228683, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Maywood', 'Fair Oaks', 'Cochabamba', '0000', 40.9314367, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Merry', 'Anzinger', 'Potosi', '0000', -8.5424895, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Rutledge', 'Bultman', 'Pando', '0000', 36.1125, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Clove', 'Toban', 'chuquisaca', '0000', 15.23199, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Duke', 'Oriole', 'Beni', '0000', 50.2850778, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Loomis', 'Elka', 'Oruro', '0000', 40.6892276, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mcguire', 'Badeau', 'Tarija', '0000', -6.9665934, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Northwestern', 'Gina', 'La Paz', '0000', 40.7046234, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hintze', 'Raven', 'Cochabamba', '0000', 7.027766, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hollow Ridge', 'Bay', 'Potosi', '0000', 9.3567838, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Moose', 'Marquette', 'Pando', '0000', 22.6194565, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Shelley', 'Maple Wood', 'chuquisaca', '0000', -7.8808775, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Talmadge', 'Sundown', 'Beni', '0000', 59.2669111, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bartillon', 'Bunker Hill', 'Oruro', '0000', 15.475069, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sherman', 'Browning', 'Tarija', '0000', 37.369435, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bay', 'Maple', 'La Paz', '0000', 57.1785037, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Kinsman', 'Talisman', 'Cochabamba', '0000', 50.404284, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bobwhite', 'Harbort', 'Potosi', '0000', 29.8867761, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fulton', 'Anhalt', 'Pando', '0000', -23.0821226, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Warbler', 'Erie', 'chuquisaca', '0000', 49.9731106, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Jana', 'Bluestem', 'Beni', '0000', -7.9954685, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Amoth', 'Bunker Hill', 'Oruro', '0000', 27.951331, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Aberg', 'Bartillon', 'Tarija', '0000', 33.955844, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Stephen', 'Upham', 'La Paz', '0000', 41.4410475, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Porter', 'Ludington', 'Cochabamba', '0000', 17.3091916, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eastlawn', 'Center', 'Potosi', '0000', 7.8143838, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lake View', 'Fair Oaks', 'Pando', '0000', 30.7298739, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Spohn', 'Grover', 'chuquisaca', '0000', 53.5511779, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Debra', 'Oak Valley', 'Beni', '0000', 26.89745, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Tennyson', 'Knutson', 'Oruro', '0000', -12.0560257, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Jana', 'Forster', 'Tarija', '0000', 41.2221689, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Michigan', 'Lillian', 'La Paz', '0000', 41.0550723, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Montana', 'Nancy', 'Cochabamba', '0000', 38.0413984, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bonner', 'Pond', 'Potosi', '0000', 6.8117856, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Manitowish', 'Mockingbird', 'Pando', '0000', -2.6382189, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Vahlen', 'Kropf', 'chuquisaca', '0000', 38.828834, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Summer Ridge', 'Badeau', 'Beni', '0000', 28.4233602, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mcguire', 'Portage', 'Oruro', '0000', 30.427416, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dovetail', 'Summer Ridge', 'Tarija', '0000', 6.3188032, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Homewood', 'Mayfield', 'La Paz', '0000', 28.2068263, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fordem', 'Shopko', 'Cochabamba', '0000', 35.580662, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Homewood', 'Farwell', 'Potosi', '0000', 30.701369, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Marquette', 'Nevada', 'Pando', '0000', 40.3981884, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Northwestern', 'Union', 'chuquisaca', '0000', 32.729683, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ruskin', 'Del Mar', 'Beni', '0000', -0.789275, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Corry', 'Dakota', 'Oruro', '0000', 27.9676537, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Talmadge', 'Sullivan', 'Tarija', '0000', 17.1782591, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Wayridge', 'Kinsman', 'La Paz', '0000', 23.642114, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Rusk', 'Stoughton', 'Cochabamba', '0000', 41.2717724, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Elmside', 'Starling', 'Potosi', '0000', 23.028956, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Spohn', 'Acker', 'Pando', '0000', 59.1280914, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Saint Paul', 'Michigan', 'chuquisaca', '0000', -34.4786447, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Summer Ridge', 'Michigan', 'Beni', '0000', 45.521777, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Duke', 'David', 'Oruro', '0000', -19.6499319, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mccormick', 'Sundown', 'Tarija', '0000', 24.102499, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Garrison', 'Elka', 'La Paz', '0000', 25.0230538, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Johnson', 'Emmet', 'Cochabamba', '0000', 45.8367628, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Meadow Ridge', 'Westridge', 'Potosi', '0000', 53.695696, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hollow Ridge', 'Reindahl', 'Pando', '0000', 8.1380673, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ridgeway', 'Killdeer', 'chuquisaca', '0000', 45.2557594, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Alpine', 'Lunder', 'Beni', '0000', 28.162833, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('7th', 'Talmadge', 'Oruro', '0000', -8.2866081, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Continental', 'Summerview', 'Tarija', '0000', 37.005017, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Morningstar', 'Pond', 'La Paz', '0000', 46.8615704, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mallard', 'Nevada', 'Cochabamba', '0000', 54.1649073, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('David', 'Briar Crest', 'Potosi', '0000', 25.8007724, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Melby', 'Kenwood', 'Pando', '0000', 55.6832198, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Arkansas', 'Calypso', 'chuquisaca', '0000', -7.0986081, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lakewood Gardens', 'Oak Valley', 'Beni', '0000', 49.3637828, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Charing Cross', 'Charing Cross', 'Oruro', '0000', 39.128291, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Anzinger', 'Forest Run', 'Tarija', '0000', 53.3004898, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Jana', 'Grayhawk', 'La Paz', '0000', 24.880095, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Reinke', 'Coleman', 'Cochabamba', '0000', 30.917795, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Shopko', 'Hanson', 'Potosi', '0000', -43.2623846, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Forest', 'Paget', 'Pando', '0000', 37.429832, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Miller', 'Stuart', 'chuquisaca', '0000', 13.9052519, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Melvin', 'High Crossing', 'Beni', '0000', 62.471883, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Menomonie', 'Meadow Valley', 'Oruro', '0000', 61.7284389, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Spaight', 'Birchwood', 'Tarija', '0000', 46.9656528, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eagan', 'Fordem', 'La Paz', '0000', 55.5807611, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Delladonna', 'Wayridge', 'Cochabamba', '0000', 50.111779, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Melody', 'Rockefeller', 'Potosi', '0000', 41.5256088, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Rusk', 'Hudson', 'Pando', '0000', 49.4395013, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Gale', 'Summit', 'chuquisaca', '0000', 48.834578, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Logan', 'Mariners Cove', 'Beni', '0000', 41.0285386, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Golden Leaf', 'Transport', 'Oruro', '0000', 48.75667, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Parkside', 'Armistice', 'Tarija', '0000', 24.066095, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Quincy', 'Bayside', 'La Paz', '0000', 27.283955, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sheridan', 'Dwight', 'Cochabamba', '0000', 31.685311, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Spaight', 'Blaine', 'Potosi', '0000', 63.8223321, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ramsey', 'Hanson', 'Pando', '0000', -21.1330059, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Anzinger', 'Golf', 'chuquisaca', '0000', 6.323976, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Loftsgordon', 'Pine View', 'Beni', '0000', 49.65841, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Meadow Ridge', 'Crowley', 'Oruro', '0000', -6.4154, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Prairieview', 'Glendale', 'Tarija', '0000', 49.4580118, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fordem', 'Mosinee', 'La Paz', '0000', 22.0952234, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Maple', 'Bobwhite', 'Cochabamba', '0000', 39.3433574, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Shelley', 'Fieldstone', 'Potosi', '0000', -7.3497666, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fulton', 'Valley Edge', 'Pando', '0000', 53.1212988, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Anzinger', 'Coolidge', 'chuquisaca', '0000', 56.6306408, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Crowley', 'Parkside', 'Beni', '0000', 38.8744567, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bashford', 'Becker', 'Oruro', '0000', 49.3320487, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sugar', 'Kingsford', 'Tarija', '0000', 50.24987, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lake View', 'Carioca', 'La Paz', '0000', 24.154316, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Twin Pines', 'Carey', 'Cochabamba', '0000', 14.7252329, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Moulton', 'Orin', 'Potosi', '0000', 49.4992, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fuller', 'Union', 'Pando', '0000', 10.142762, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Trailsway', 'Corscot', 'chuquisaca', '0000', 48.1782952, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Namekagon', 'Stang', 'Beni', '0000', 14.565668, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Waywood', 'Dawn', 'Oruro', '0000', 32.4286242, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Warrior', 'Summerview', 'Tarija', '0000', 48.282193, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ridgeview', 'Evergreen', 'La Paz', '0000', 3.61023, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('John Wall', 'Buena Vista', 'Cochabamba', '0000', 35.30385, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mendota', 'Troy', 'Potosi', '0000', 11.4385093, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Granby', 'Gale', 'Pando', '0000', -9.5961614, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('American', 'Warner', 'chuquisaca', '0000', 36.608183, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Buena Vista', 'Mayfield', 'Beni', '0000', -3.3186067, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hazelcrest', 'Mitchell', 'Oruro', '0000', -17.5069121, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Manufacturers', 'Loftsgordon', 'Tarija', '0000', -8.4709546, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Surrey', 'Fordem', 'La Paz', '0000', -6.8641543, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Chive', 'Vera', 'Cochabamba', '0000', -20.0877391, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('5th', 'School', 'Potosi', '0000', 17.292049, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Old Shore', 'Randy', 'Pando', '0000', 8.6800991, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Chive', 'Linden', 'chuquisaca', '0000', 22.562964, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Rutledge', 'Mcguire', 'Beni', '0000', 50.043163, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Cambridge', 'Service', 'Oruro', '0000', 34.5215, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eagan', 'Dorton', 'Tarija', '0000', 49.2513639, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dorton', 'Susan', 'La Paz', '0000', 40.404991, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Coleman', 'Sutteridge', 'Cochabamba', '0000', -8.5568557, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sundown', 'Hooker', 'Potosi', '0000', 30.031533, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Old Gate', 'Huxley', 'Pando', '0000', 39.4365442, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Algoma', 'Tennessee', 'chuquisaca', '0000', 27.0874564, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fair Oaks', 'Union', 'Beni', '0000', -22.4206096, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Scofield', 'Merrick', 'Oruro', '0000', -22.363303, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Swallow', 'Marcy', 'Tarija', '0000', 50.4233463, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Garrison', 'Debra', 'La Paz', '0000', 56.4010545, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hovde', 'Fair Oaks', 'Cochabamba', '0000', 54.3749589, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('1st', 'Harper', 'Potosi', '0000', 45.4372062, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lotheville', 'Ronald Regan', 'Pando', '0000', 50.2637942, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Shelley', 'Meadow Ridge', 'chuquisaca', '0000', 14.5638721, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Nova', 'Dwight', 'Beni', '0000', 59.4746074, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Armistice', 'Amoth', 'Oruro', '0000', 36.6950261, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Roth', 'Pearson', 'Tarija', '0000', -7.5539241, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Shoshone', 'Boyd', 'La Paz', '0000', -4.1615016, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pierstorff', 'Blue Bill Park', 'Cochabamba', '0000', 22.579117, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dexter', 'Luster', 'Potosi', '0000', -26.8327412, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Towne', 'Novick', 'Pando', '0000', 40.7408774, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Superior', 'Carioca', 'chuquisaca', '0000', 15.787156, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Merry', 'Village', 'Beni', '0000', -4.6488523, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('La Follette', 'Kinsman', 'Oruro', '0000', 35.408609, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Nancy', 'Veith', 'Tarija', '0000', 41.6315023, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Di Loreto', 'Fieldstone', 'La Paz', '0000', 8.235581, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Karstens', 'Summer Ridge', 'Cochabamba', '0000', 28.579409, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Birchwood', 'Linden', 'Potosi', '0000', 36.4173244, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Canary', 'Messerschmidt', 'Pando', '0000', -20.2307033, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Summerview', 'Clyde Gallagher', 'chuquisaca', '0000', 20.8381545, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sachtjen', '6th', 'Beni', '0000', 41.3410168, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Anthes', 'Bellgrove', 'Oruro', '0000', 5.8765279, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eggendart', 'Anthes', 'Tarija', '0000', 41.1474096, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pleasure', 'Di Loreto', 'La Paz', '0000', 28.074649, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Nelson', 'Golf View', 'Cochabamba', '0000', 53.2109968, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Green Ridge', 'Charing Cross', 'Potosi', '0000', -7.5605, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Menomonie', 'Wayridge', 'Pando', '0000', 48.6618569, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Harper', 'Magdeline', 'chuquisaca', '0000', 64.0971015, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Milwaukee', 'Mayer', 'Beni', '0000', -7.135868, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lukken', 'Vermont', 'Oruro', '0000', 32.5746598, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Katie', 'Northview', 'Tarija', '0000', 14.0285468, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Goodland', 'Texas', 'La Paz', '0000', -8.4727553, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Farragut', 'Fallview', 'Cochabamba', '0000', 5.459089, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Swallow', 'Dunning', 'Potosi', '0000', 53.3870149, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Morning', 'Mcbride', 'Pando', '0000', -11.8648237, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eagan', 'Haas', 'chuquisaca', '0000', 36.6484118, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Boyd', 'Darwin', 'Beni', '0000', 37.444498, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dawn', 'Hovde', 'Oruro', '0000', 30.5211502, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dwight', 'Summer Ridge', 'Tarija', '0000', 45.7646846, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mcbride', 'Donald', 'La Paz', '0000', 50.282951, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hanson', '8th', 'Cochabamba', '0000', 41.2675718, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pleasure', 'Granby', 'Potosi', '0000', 47.747805, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Cottonwood', 'Dixon', 'Pando', '0000', 38.1162631, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Morningstar', 'Mitchell', 'chuquisaca', '0000', 50.5251922, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Independence', '6th', 'Beni', '0000', -6.2360264, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Golden Leaf', 'Esch', 'Oruro', '0000', 3.3273599, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bellgrove', 'Scofield', 'Tarija', '0000', 30.2638032, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bluestem', 'Old Gate', 'La Paz', '0000', 14.7690395, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pierstorff', 'Lake View', 'Cochabamba', '0000', 25.015105, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Division', 'Old Gate', 'Potosi', '0000', 36.8199022, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Raven', 'Esker', 'Pando', '0000', 50.4252048, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Forest Dale', 'Mcguire', 'chuquisaca', '0000', 32.0544346, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ryan', 'Packers', 'Beni', '0000', 36.6777372, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Merry', 'Forest Run', 'Oruro', '0000', -21.7567077, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fremont', 'Lotheville', 'Tarija', '0000', -6.8008183, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Armistice', 'Milwaukee', 'La Paz', '0000', 22.843818, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Rockefeller', 'Lindbergh', 'Cochabamba', '0000', 44.2, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Spenser', 'Bowman', 'Potosi', '0000', -6.7654544, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mccormick', 'Jana', 'Pando', '0000', 34.5278415, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Acker', 'Cambridge', 'chuquisaca', '0000', 23.817974, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Veith', 'Manley', 'Beni', '0000', 28.260141, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Westend', 'Blue Bill Park', 'Oruro', '0000', 37.177129, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Loeprich', 'Bunker Hill', 'Tarija', '0000', 29.2083348, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Elgar', 'Brickson Park', 'La Paz', '0000', 50.2318521, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Karstens', 'Kinsman', 'Cochabamba', '0000', 21.3926035, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mendota', 'Alpine', 'Potosi', '0000', 50.6856, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Iowa', 'Buena Vista', 'Pando', '0000', -19.8428824, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lotheville', 'Ludington', 'chuquisaca', '0000', 54.256793, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dawn', 'Buena Vista', 'Beni', '0000', -8.098672, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Montana', 'Longview', 'Oruro', '0000', -22.8521905, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sunbrook', 'Amoth', 'Tarija', '0000', 33.347316, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('2nd', 'Coolidge', 'La Paz', '0000', -21.4261129, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('David', 'Green', 'Cochabamba', '0000', 35.585575, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('8th', 'Welch', 'Potosi', '0000', 53.1406245, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Trailsway', 'Logan', 'Pando', '0000', 38.0117509, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Birchwood', 'Sloan', 'chuquisaca', '0000', 8.9806034, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Linden', 'Eagle Crest', 'Beni', '0000', 7.5129005, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Continental', 'Farmco', 'Oruro', '0000', 48.2629668, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Katie', 'Calypso', 'Tarija', '0000', 43.8371234, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Maple', 'Meadow Vale', 'La Paz', '0000', 17.1374798, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sugar', 'Rowland', 'Cochabamba', '0000', 3.033069, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Darwin', 'Reinke', 'Potosi', '0000', -6.3621916, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Jenna', 'Anzinger', 'Pando', '0000', 49.9846987, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Burning Wood', 'Hermina', 'chuquisaca', '0000', 29.2187967, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Almo', 'Jay', 'Beni', '0000', 46.3583447, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Anderson', 'Thierer', 'Oruro', '0000', -7.9903162, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Service', 'Express', 'Tarija', '0000', 39.41691, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lunder', 'Briar Crest', 'La Paz', '0000', -6.3079232, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Cascade', 'Monica', 'Cochabamba', '0000', 57.6995979, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Rieder', 'Bowman', 'Potosi', '0000', -34.6090822, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Coolidge', 'Sycamore', 'Pando', '0000', -7.2906502, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mallory', 'Morningstar', 'chuquisaca', '0000', -14.5205297, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Clemons', 'Schurz', 'Beni', '0000', -46.3478987, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ridge Oak', 'Tony', 'Oruro', '0000', 47.3752386, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hoard', 'Buena Vista', 'Tarija', '0000', 59.6136775, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ronald Regan', 'South', 'La Paz', '0000', -19.9245018, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dayton', 'Cottonwood', 'Cochabamba', '0000', 20.1527657, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('West', 'Fulton', 'Potosi', '0000', 32.38613, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Artisan', 'Ohio', 'Pando', '0000', -6.8089753, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Jay', 'Raven', 'chuquisaca', '0000', -7.0754952, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Magdeline', 'Express', 'Beni', '0000', 50.246964, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ridgeview', 'Straubel', 'Oruro', '0000', 44.1799774, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lighthouse Bay', 'Mosinee', 'Tarija', '0000', 30.5383451, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Goodland', 'Oneill', 'La Paz', '0000', 36.6561848, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Upham', 'Scofield', 'Cochabamba', '0000', -2.2014533, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Luster', 'Anhalt', 'Potosi', '0000', -3.4610562, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mitchell', 'Hudson', 'Pando', '0000', -21.1674808, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sauthoff', 'Jackson', 'chuquisaca', '0000', -8.498277, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lyons', 'Hooker', 'Beni', '0000', -7.337137, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sutteridge', 'Anderson', 'Oruro', '0000', 36.789796, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Grasskamp', 'Eastlawn', 'Tarija', '0000', 30.807667, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fieldstone', 'Schurz', 'La Paz', '0000', 37.948461, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Arrowood', 'Moulton', 'Cochabamba', '0000', -7.7013097, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Portage', 'Duke', 'Potosi', '0000', 14.602493, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Clyde Gallagher', 'Oriole', 'Pando', '0000', 54.256793, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Springs', 'Esch', 'chuquisaca', '0000', 4.485011, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('La Follette', 'Lake View', 'Beni', '0000', 17.9453521, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Loomis', 'Magdeline', 'Oruro', '0000', 31.651917, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Village', 'Carey', 'Tarija', '0000', 41.8822489, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('4th', 'Nelson', 'La Paz', '0000', 24.487326, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Raven', 'Cardinal', 'Cochabamba', '0000', -4.3695455, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Miller', 'Eagle Crest', 'Potosi', '0000', 50.585206, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Roxbury', 'Grasskamp', 'Pando', '0000', -14.2171388, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pawling', 'Larry', 'chuquisaca', '0000', 37.363389, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Golf Course', '7th', 'Beni', '0000', 23.101153, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Rockefeller', 'Hooker', 'Oruro', '0000', 48.922709, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Carpenter', 'Carey', 'Tarija', '0000', 61.7242142, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fieldstone', 'Florence', 'La Paz', '0000', 43.4945737, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Evergreen', 'Warbler', 'Cochabamba', '0000', 43.8313297, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Elgar', 'Burning Wood', 'Potosi', '0000', 49.7863419, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Grover', 'Carpenter', 'Pando', '0000', -25.0993621, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dapin', 'Talisman', 'chuquisaca', '0000', -2.5398781, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Corscot', 'Mendota', 'Beni', '0000', 60.0587654, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Summerview', 'Clove', 'Oruro', '0000', 39.918983, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sloan', 'Eggendart', 'Tarija', '0000', -6.612633, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Center', 'Sycamore', 'La Paz', '0000', 40.210071, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Goodland', 'Donald', 'Cochabamba', '0000', 25.84791, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Banding', 'Fairview', 'Potosi', '0000', 51.209018, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Duke', 'Sycamore', 'Pando', '0000', 35.5603286, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Montana', 'Melvin', 'chuquisaca', '0000', 59.9036118, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Parkside', 'Westport', 'Beni', '0000', 53.2231057, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Huxley', 'Michigan', 'Oruro', '0000', 53.2622714, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sutherland', 'Chive', 'Tarija', '0000', 5.746649, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Merry', 'Hermina', 'La Paz', '0000', 28.285873, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dapin', 'Magdeline', 'Cochabamba', '0000', -3.7690648, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Arizona', 'Rusk', 'Potosi', '0000', 44.439233, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Anhalt', 'Hauk', 'Pando', '0000', 30.5765383, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Arizona', 'Nobel', 'chuquisaca', '0000', -7.166519, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Becker', 'Memorial', 'Beni', '0000', 56.9938866, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Stoughton', 'Loeprich', 'Oruro', '0000', 18.4670158, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Old Shore', 'Lukken', 'Tarija', '0000', 27.630806, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('New Castle', 'Jana', 'La Paz', '0000', 41.6840477, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Victoria', 'Merry', 'Cochabamba', '0000', 36.4056598, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Anderson', 'Esch', 'Potosi', '0000', 44.724837, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Tennyson', 'Helena', 'Pando', '0000', -7.823074, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Gina', 'Farragut', 'chuquisaca', '0000', -30.9738956, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Butterfield', 'Corben', 'Beni', '0000', -16.361238, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Reinke', 'Lindbergh', 'Oruro', '0000', 48.1251024, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dwight', 'Melvin', 'Tarija', '0000', 49.9287189, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Kings', 'Comanche', 'La Paz', '0000', 53.7942932, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Del Sol', 'Golf View', 'Cochabamba', '0000', 59.1987737, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Riverside', 'Tomscot', 'Potosi', '0000', -4.5887697, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Jenifer', 'Doe Crossing', 'Pando', '0000', 31.689906, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Corscot', 'Buena Vista', 'chuquisaca', '0000', -6.808273, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Grim', 'Monument', 'Beni', '0000', 34.9128121, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mitchell', 'Cardinal', 'Oruro', '0000', 59.3582766, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hoard', 'Heath', 'Tarija', '0000', 25.66145, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Miller', 'David', 'La Paz', '0000', 25.6181943, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Buell', 'Alpine', 'Cochabamba', '0000', 43.785358, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Warrior', 'Kim', 'Potosi', '0000', 26.7255231, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Manley', 'Welch', 'Pando', '0000', 18.4180126, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Butternut', 'Johnson', 'chuquisaca', '0000', 28.947331, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Reinke', 'Northview', 'Beni', '0000', 19.482042, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hollow Ridge', 'Dixon', 'Oruro', '0000', 19.4392516, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Jana', 'Mosinee', 'Tarija', '0000', 11.0537247, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Esker', 'Blackbird', 'La Paz', '0000', 31.219568, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Badeau', 'Lakewood', 'Cochabamba', '0000', -6.8432007, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Esch', 'Amoth', 'Potosi', '0000', 14.93278, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Columbus', 'Graceland', 'Pando', '0000', 48.239431, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Northfield', 'Mariners Cove', 'chuquisaca', '0000', 31.491169, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Northwestern', 'Browning', 'Beni', '0000', 21.4981346, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sunnyside', 'Ramsey', 'Oruro', '0000', 55.590397, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hollow Ridge', 'Caliangt', 'Tarija', '0000', 28.353912, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ryan', 'Memorial', 'La Paz', '0000', -6.8333257, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hollow Ridge', 'Meadow Valley', 'Cochabamba', '0000', 51.1656869, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Johnson', 'Annamark', 'Potosi', '0000', 43.273732, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Shoshone', 'Brentwood', 'Pando', '0000', 58.8110301, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Messerschmidt', 'Stuart', 'chuquisaca', '0000', -9.7327, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Stone Corner', 'Hoard', 'Beni', '0000', 2.7682671, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Armistice', 'Hovde', 'Oruro', '0000', 59.418208, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Schiller', 'Southridge', 'Tarija', '0000', 36.826981, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Center', 'Alpine', 'La Paz', '0000', 31.0452345, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ridgeview', 'Hallows', 'Cochabamba', '0000', -1.8703308, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lerdahl', 'Crowley', 'Potosi', '0000', 55.1518222, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Michigan', 'Springs', 'Pando', '0000', -7.5284147, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Trailsway', 'Jenna', 'chuquisaca', '0000', 38.35, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Browning', 'Lighthouse Bay', 'Beni', '0000', 32.061895, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sauthoff', 'Arkansas', 'Oruro', '0000', 57.5002589, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Huxley', 'Alpine', 'Tarija', '0000', -7.1743383, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Banding', 'Warner', 'La Paz', '0000', 9.2478, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Arizona', 'Helena', 'Cochabamba', '0000', -8.8228841, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ridgeview', 'Stone Corner', 'Potosi', '0000', -6.9136675, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Haas', 'Roxbury', 'Pando', '0000', -6.2839964, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bartelt', 'Brown', 'chuquisaca', '0000', 38.7418853, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Rieder', '7th', 'Beni', '0000', -34.2899021, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Warner', 'Ridge Oak', 'Oruro', '0000', 39.75, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hanover', 'Petterle', 'Tarija', '0000', 53.5279846, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Vahlen', 'Lyons', 'La Paz', '0000', 54.1347287, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Warbler', 'Bobwhite', 'Cochabamba', '0000', 27.615202, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('3rd', 'Linden', 'Potosi', '0000', 38.87, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mendota', 'Coolidge', 'Pando', '0000', 35.90414, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sommers', 'Springview', 'chuquisaca', '0000', -19.9930478, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sachtjen', 'Mockingbird', 'Beni', '0000', 37.189822, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Corscot', 'Lakeland', 'Oruro', '0000', -6.1373578, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Paget', 'Carberry', 'Tarija', '0000', 32.6717749, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Holmberg', 'Sauthoff', 'La Paz', '0000', 22.7694444, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ohio', '8th', 'Cochabamba', '0000', 30.582271, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bultman', 'Village', 'Potosi', '0000', 25.5822549, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Morningstar', 'Macpherson', 'Pando', '0000', 47.92681, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Cottonwood', 'Dottie', 'chuquisaca', '0000', -27.3302999, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ridge Oak', 'Mosinee', 'Beni', '0000', 43.0429124, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Linden', 'Elgar', 'Oruro', '0000', 39.937881, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sunnyside', 'Monument', 'Tarija', '0000', 25.558201, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Algoma', 'Marcy', 'La Paz', '0000', 25.5562935, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Chive', 'Coolidge', 'Cochabamba', '0000', 11.8194472, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pearson', 'Hansons', 'Potosi', '0000', 28.55386, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Coolidge', 'Lillian', 'Pando', '0000', 40.8395426, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Schlimgen', 'Parkside', 'chuquisaca', '0000', -31.3224313, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Daystar', 'Farragut', 'Beni', '0000', 11.9170674, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Westend', 'Express', 'Oruro', '0000', 32.625478, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Banding', 'Packers', 'Tarija', '0000', 58.5235952, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('School', 'Londonderry', 'La Paz', '0000', 30.7366196, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Rusk', 'Monica', 'Cochabamba', '0000', -8.0344803, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Weeping Birch', 'Comanche', 'Potosi', '0000', 42.9107635, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bayside', 'Luster', 'Pando', '0000', 56.8564288, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Starling', 'Swallow', 'chuquisaca', '0000', 17.45685, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Doe Crossing', 'Pond', 'Beni', '0000', 9.0835262, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Goodland', 'Almo', 'Oruro', '0000', 41.7156359, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Summer Ridge', 'Sachtjen', 'Tarija', '0000', 21.1881873, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pond', 'Prairie Rose', 'La Paz', '0000', -26.1011687, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Susan', 'Granby', 'Cochabamba', '0000', -6.371137, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Anniversary', 'Chive', 'Potosi', '0000', 14.565668, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sunfield', 'Cottonwood', 'Pando', '0000', 41.2340369, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Columbus', 'Pankratz', 'chuquisaca', '0000', 21.857958, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Texas', 'Crownhardt', 'Beni', '0000', 45.1810363, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Service', 'Roth', 'Oruro', '0000', 32.425185, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Clove', 'Lawn', 'Tarija', '0000', 36.222959, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sachtjen', 'Coolidge', 'La Paz', '0000', 53.5733796, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Manley', 'Dahle', 'Cochabamba', '0000', 35.3209172, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bonner', 'Anthes', 'Potosi', '0000', 43.3688739, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Maywood', 'Lien', 'Pando', '0000', -0.5083679, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Clemons', 'Hooker', 'chuquisaca', '0000', -9.798194, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hagan', 'Dawn', 'Beni', '0000', 56.7558466, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Porter', 'Cambridge', 'Oruro', '0000', 59.989522, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lakewood', 'Graedel', 'Tarija', '0000', 34.273409, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sutherland', '5th', 'La Paz', '0000', 48.9234517, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Declaration', 'Commercial', 'Cochabamba', '0000', 34.12583, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Milwaukee', 'Columbus', 'Potosi', '0000', 40.8258113, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Anzinger', 'Mallard', 'Pando', '0000', -7.347756, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dahle', 'Columbus', 'chuquisaca', '0000', 15.92762, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Longview', 'Mallory', 'Beni', '0000', 31.3462005, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Birchwood', 'Loomis', 'Oruro', '0000', 38.94, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bluejay', 'Anhalt', 'Tarija', '0000', 49.9086926, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Maryland', 'Mosinee', 'La Paz', '0000', -23.5307464, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mccormick', 'Jackson', 'Cochabamba', '0000', 9.3730352, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fair Oaks', 'Morning', 'Potosi', '0000', 55.6152783, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mcbride', 'Mitchell', 'Pando', '0000', 49.4118611, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Nevada', 'John Wall', 'chuquisaca', '0000', 48.9046915, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Charing Cross', 'Dexter', 'Beni', '0000', 55.8437552, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Waxwing', 'Aberg', 'Oruro', '0000', 50.9173381, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Buhler', 'Hovde', 'Tarija', '0000', 14.7938922, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Del Sol', 'Lunder', 'La Paz', '0000', -7.9636675, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Oakridge', 'American', 'Cochabamba', '0000', 14.5180441, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fieldstone', 'Northwestern', 'Potosi', '0000', 42.1450502, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Banding', 'Lien', 'Pando', '0000', 22.3723336, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Express', 'Kim', 'chuquisaca', '0000', -16.3846284, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bultman', 'Elgar', 'Beni', '0000', 40.01833, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('High Crossing', 'Oxford', 'Oruro', '0000', 50.9346454, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Larry', 'Ludington', 'Tarija', '0000', 25.9755686, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Clemons', 'Mesta', 'La Paz', '0000', -23.6509279, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Prairie Rose', 'Cherokee', 'Cochabamba', '0000', 14.5713307, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Main', 'Evergreen', 'Potosi', '0000', -7.5450262, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Marcy', 'Superior', 'Pando', '0000', 35.0435187, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hanover', 'Jana', 'chuquisaca', '0000', 18.3092599, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dayton', 'Oak', 'Beni', '0000', 61.6614104, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Carioca', 'Alpine', 'Oruro', '0000', 59.8637584, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Alpine', 'Roxbury', 'Tarija', '0000', 15.4855369, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lunder', 'Hagan', 'La Paz', '0000', -3.0412633, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Muir', 'Almo', 'Cochabamba', '0000', 39.9041999, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Forest Dale', 'Swallow', 'Potosi', '0000', 43.6296613, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Cherokee', 'Pond', 'Pando', '0000', 48.8693156, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Cambridge', 'Claremont', 'chuquisaca', '0000', 45.8551505, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Calypso', 'Sullivan', 'Beni', '0000', 13.5820144, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fisk', 'Judy', 'Oruro', '0000', 48.015883, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sommers', 'Dovetail', 'Tarija', '0000', 57.7313899, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fieldstone', 'Sunnyside', 'La Paz', '0000', -0.0998238, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Algoma', 'Buena Vista', 'Cochabamba', '0000', 18.907778, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('School', 'Loftsgordon', 'Potosi', '0000', 8.955271, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Charing Cross', 'Montana', 'Pando', '0000', 41.0938736, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Meadow Valley', 'Hagan', 'chuquisaca', '0000', 22.5408317, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Talisman', 'Randy', 'Beni', '0000', 29.988244, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Springs', 'Michigan', 'Oruro', '0000', 12.647214, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sage', 'Butterfield', 'Tarija', '0000', 13.2836618, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Briar Crest', 'Mosinee', 'La Paz', '0000', 17.7434868, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lillian', 'Novick', 'Cochabamba', '0000', 48.816388, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eliot', 'Pankratz', 'Potosi', '0000', 17.7302207, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Brentwood', 'Brown', 'Pando', '0000', 41.305838, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Atwood', 'Ridgeview', 'chuquisaca', '0000', 40.7, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Farwell', 'Donald', 'Beni', '0000', 32.46, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Russell', 'Acker', 'Oruro', '0000', 40.5053499, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Moland', 'Waywood', 'Tarija', '0000', 41.884195, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('4th', 'Kedzie', 'La Paz', '0000', -11.70753, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Del Sol', 'Farmco', 'Cochabamba', '0000', 30.833079, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Veith', 'Acker', 'Potosi', '0000', 11.0574624, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Independence', 'Merry', 'Pando', '0000', 60.1391526, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mosinee', 'Old Shore', 'chuquisaca', '0000', -7.316501, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Summerview', 'Lakeland', 'Beni', '0000', 44.634519, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Utah', 'Dottie', 'Oruro', '0000', 25.600272, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lakewood', 'Bayside', 'Tarija', '0000', 11.0978809, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('International', 'Rutledge', 'La Paz', '0000', 34.9568026, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pleasure', 'Quincy', 'Cochabamba', '0000', 42.7590695, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Nobel', 'Merry', 'Potosi', '0000', -7.7408587, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Acker', 'Union', 'Pando', '0000', 30.2638032, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Raven', 'Clyde Gallagher', 'chuquisaca', '0000', 38.004153, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Utah', 'Crest Line', 'Beni', '0000', 40.04606, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Talisman', 'Pine View', 'Oruro', '0000', 7.6988579, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Comanche', 'Loftsgordon', 'Tarija', '0000', 12.6679167, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Loftsgordon', 'Summerview', 'La Paz', '0000', 52.27994, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Brentwood', 'Helena', 'Cochabamba', '0000', 51.5024848, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mosinee', 'Upham', 'Potosi', '0000', 14.1305459, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Main', 'Messerschmidt', 'Pando', '0000', 30.297791, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Northwestern', 'Spaight', 'chuquisaca', '0000', -5.0662102, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Paget', 'Cody', 'Beni', '0000', 32.23483, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Summerview', 'Badeau', 'Oruro', '0000', -7.8533911, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lake View', 'Saint Paul', 'Tarija', '0000', 16.5762863, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Declaration', 'Merry', 'La Paz', '0000', 59.2542117, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Westport', 'Lillian', 'Cochabamba', '0000', 49.9194173, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Londonderry', 'Bayside', 'Potosi', '0000', 48.8242268, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lukken', 'Linden', 'Pando', '0000', 52.4402961, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Debra', 'Lotheville', 'chuquisaca', '0000', 16.503112, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Darwin', 'Canary', 'Beni', '0000', 14.651459, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Anzinger', 'John Wall', 'Oruro', '0000', 67.1355975, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('American Ash', 'Sauthoff', 'Tarija', '0000', 40.5885408, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Vermont', 'Mifflin', 'La Paz', '0000', 41.420018, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Vahlen', 'Anzinger', 'Cochabamba', '0000', 44.904219, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Nancy', 'Bluestem', 'Potosi', '0000', 39.6022749, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sloan', 'Duke', 'Pando', '0000', -7.7326298, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Westport', 'Drewry', 'chuquisaca', '0000', 38.694365, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Marcy', 'Harper', 'Beni', '0000', 45.0510883, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Reinke', 'Killdeer', 'Oruro', '0000', -12.8454679, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Vera', 'Cherokee', 'Tarija', '0000', 42.6532844, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sundown', 'Bonner', 'La Paz', '0000', 31.263042, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fremont', 'Rockefeller', 'Cochabamba', '0000', 51.06681, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Comanche', 'Dorton', 'Potosi', '0000', 29.4374631, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Crescent Oaks', 'Novick', 'Pando', '0000', 32.224808, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Surrey', 'Redwing', 'chuquisaca', '0000', 15.6600225, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Packers', 'Parkside', 'Beni', '0000', 28.30993, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dennis', 'Dexter', 'Oruro', '0000', -16.2142869, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Banding', 'Dayton', 'Tarija', '0000', 36.650038, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mariners Cove', 'Utah', 'La Paz', '0000', 32.200197, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Waywood', 'Artisan', 'Cochabamba', '0000', 38.63333, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Nelson', 'Sachtjen', 'Potosi', '0000', 30.8337059, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sutherland', 'Almo', 'Pando', '0000', 18.8782625, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lakeland', 'School', 'chuquisaca', '0000', 60.3641945, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('School', 'Butternut', 'Beni', '0000', 25.85587, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Daystar', 'Gulseth', 'Oruro', '0000', 18.9337202, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Green Ridge', 'Lyons', 'Tarija', '0000', 59.3313673, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hovde', 'Hooker', 'La Paz', '0000', -9.2957636, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ramsey', 'Johnson', 'Cochabamba', '0000', -7.4846821, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Little Fleur', 'Di Loreto', 'Potosi', '0000', 14.8108901, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Kingsford', 'Bartillon', 'Pando', '0000', 41.7737809, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Troy', 'Rigney', 'chuquisaca', '0000', 41.441441, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Rigney', 'Maryland', 'Beni', '0000', -18.998706, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mandrake', 'Montana', 'Oruro', '0000', 46.0972432, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eastlawn', 'Lakewood Gardens', 'Tarija', '0000', -6.361128, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Novick', 'Muir', 'La Paz', '0000', 34.5107638, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Meadow Vale', 'Clove', 'Cochabamba', '0000', 11.5218308, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Laurel', 'Marcy', 'Potosi', '0000', -6.7407026, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Arkansas', 'Lotheville', 'Pando', '0000', -11.82198, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Burrows', 'Mitchell', 'chuquisaca', '0000', 14.5019116, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pepper Wood', 'Swallow', 'Beni', '0000', 42.7003378, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Green Ridge', 'Coolidge', 'Oruro', '0000', 51.1372058, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Old Gate', 'Muir', 'Tarija', '0000', 25.867345, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mandrake', 'Moland', 'La Paz', '0000', -7.347756, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ilene', 'Ridgeview', 'Cochabamba', '0000', 49.46634, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Melby', 'Dawn', 'Potosi', '0000', 42.4353312, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Marquette', 'Thackeray', 'Pando', '0000', -6.615755, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Chinook', 'Truax', 'chuquisaca', '0000', -2.5482448, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Orin', 'Fulton', 'Beni', '0000', 58.6247472, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Clarendon', 'Oxford', 'Oruro', '0000', 24.874839, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eastwood', 'Hanover', 'Tarija', '0000', 40.417358, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Old Gate', 'Leroy', 'La Paz', '0000', 38.26667, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Manitowish', 'Straubel', 'Cochabamba', '0000', 29.4778934, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Del Mar', 'Farwell', 'Potosi', '0000', 45.697904, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Center', 'Talisman', 'Pando', '0000', -23.1072154, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pepper Wood', 'Stoughton', 'chuquisaca', '0000', 63.3767052, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Moland', 'Maple Wood', 'Beni', '0000', -30.6732959, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('West', 'Utah', 'Oruro', '0000', -34.5006776, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Stoughton', 'Reinke', 'Tarija', '0000', 14.7299584, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Upham', 'Kingsford', 'La Paz', '0000', 43.6445087, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Little Fleur', 'Declaration', 'Cochabamba', '0000', -7.7169, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Saint Paul', 'Kinsman', 'Potosi', '0000', 56.9651439, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Steensland', 'Shoshone', 'Pando', '0000', 40.8806112, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Kenwood', 'Browning', 'chuquisaca', '0000', 19.604951, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Knutson', 'Blue Bill Park', 'Beni', '0000', 32.320332, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Nobel', 'Delladonna', 'Oruro', '0000', 17.6143085, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('School', 'Oak Valley', 'Tarija', '0000', -0.3208374, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Tomscot', 'Ruskin', 'La Paz', '0000', 41.0534668, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Arapahoe', 'Glacier Hill', 'Cochabamba', '0000', -7.1665502, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lien', 'Oakridge', 'Potosi', '0000', 49.5904912, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Thackeray', 'Dapin', 'Pando', '0000', -3.9257199, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Main', 'Sunbrook', 'chuquisaca', '0000', 41.0083753, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Becker', 'Prairie Rose', 'Beni', '0000', 47.171717, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Jackson', 'Karstens', 'Oruro', '0000', 22.806457, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Scott', 'Johnson', 'Tarija', '0000', -23.8879561, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Longview', 'Russell', 'La Paz', '0000', 54.6, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Carey', 'Carberry', 'Cochabamba', '0000', 9.939624, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Main', 'Reinke', 'Potosi', '0000', 14.9128369, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Katie', 'East', 'Pando', '0000', 40.0380778, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Almo', 'Granby', 'chuquisaca', '0000', -19.6824436, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Heffernan', 'Hoard', 'Beni', '0000', 3.1377116, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Michigan', 'Killdeer', 'Oruro', '0000', 0.6092923, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pine View', 'Carberry', 'Tarija', '0000', 34.746611, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Vidon', 'Blaine', 'La Paz', '0000', 14.5638721, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Redwing', 'Sloan', 'Cochabamba', '0000', 47.0163969, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Clyde Gallagher', 'Ridgeview', 'Potosi', '0000', 31.77, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Moulton', 'Donald', 'Pando', '0000', -25.0225309, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bayside', 'Summer Ridge', 'chuquisaca', '0000', 38.1861536, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sauthoff', 'Hansons', 'Beni', '0000', -34.7611766, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Havey', 'Atwood', 'Oruro', '0000', 23.83072, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Manitowish', 'Old Shore', 'Tarija', '0000', 53.8191, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Drewry', 'Kings', 'La Paz', '0000', 49.4817883, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('International', 'Sycamore', 'Cochabamba', '0000', 40.288561, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Miller', 'Texas', 'Potosi', '0000', 49.9467601, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Longview', 'Talmadge', 'Pando', '0000', 34.683646, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Macpherson', 'Towne', 'chuquisaca', '0000', -7.4720926, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Shopko', 'Blackbird', 'Beni', '0000', 36.7336287, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mosinee', 'Arrowood', 'Oruro', '0000', 30.5547139, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lunder', 'Holy Cross', 'Tarija', '0000', -10.07722, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Killdeer', 'Roth', 'La Paz', '0000', 46.6473105, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Chive', 'Bluestem', 'Cochabamba', '0000', 41.6338439, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sage', 'Heffernan', 'Potosi', '0000', 28.848613, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('American Ash', 'Lotheville', 'Pando', '0000', 29.879877, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Derek', 'Monterey', 'chuquisaca', '0000', 42.3745311, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('7th', 'La Follette', 'Beni', '0000', 40.3513253, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eliot', 'Clemons', 'Oruro', '0000', 9.9153112, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sage', 'Oriole', 'Tarija', '0000', 32.058597, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sundown', 'Northland', 'La Paz', '0000', 44.5652451, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hoard', 'Melody', 'Cochabamba', '0000', 6.7810505, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Merchant', 'Bartillon', 'Potosi', '0000', 50.3539812, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Buena Vista', 'Bunting', 'Pando', '0000', 53.8044834, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Shasta', 'Towne', 'chuquisaca', '0000', 6.8117856, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Crescent Oaks', 'Onsgard', 'Beni', '0000', 50.6503044, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Alpine', 'Reinke', 'Oruro', '0000', 43.2496743, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Acker', 'Bellgrove', 'Tarija', '0000', 21.31, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Thackeray', 'Jay', 'La Paz', '0000', 14.3586387, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bartillon', 'Eagan', 'Cochabamba', '0000', 14.6511524, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sullivan', 'Lukken', 'Potosi', '0000', 15.2286069, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Manley', 'Killdeer', 'Pando', '0000', 35.5374671, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hoepker', 'Fulton', 'chuquisaca', '0000', -42.7556675, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Loftsgordon', 'Onsgard', 'Beni', '0000', 31.9339724, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Elka', 'Hermina', 'Oruro', '0000', 6.6402, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lakewood Gardens', 'Chive', 'Tarija', '0000', 53.8037886, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Golf View', 'Dottie', 'La Paz', '0000', -23.3879703, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fremont', 'Waywood', 'Cochabamba', '0000', 34.34866, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sunbrook', 'Victoria', 'Potosi', '0000', 32.31, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sunnyside', 'Buena Vista', 'Pando', '0000', 41.0529013, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Spenser', 'School', 'chuquisaca', '0000', 39.952319, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mccormick', 'Upham', 'Beni', '0000', 37.366903, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Londonderry', 'Montana', 'Oruro', '0000', -9.8867238, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Glacier Hill', 'Ludington', 'Tarija', '0000', 20.5200611, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Butterfield', 'Graedel', 'La Paz', '0000', 32.3206, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Westport', 'Johnson', 'Cochabamba', '0000', 49.5936213, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Monica', 'David', 'Potosi', '0000', 39.1372748, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sachtjen', 'Banding', 'Pando', '0000', 51.78914, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Grasskamp', '3rd', 'chuquisaca', '0000', -8.681907, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Jenifer', 'Warrior', 'Beni', '0000', 30.0746, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Chive', 'Oriole', 'Oruro', '0000', 42.2098979, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Grasskamp', 'Cardinal', 'Tarija', '0000', 29.423417, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hoffman', 'Old Gate', 'La Paz', '0000', 22.1484928, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hauk', 'Linden', 'Cochabamba', '0000', 5.1886762, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pond', 'Lighthouse Bay', 'Potosi', '0000', 49.6284572, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Shoshone', 'Evergreen', 'Pando', '0000', 48.2735736, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Swallow', 'Karstens', 'chuquisaca', '0000', 31.8840886, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Manley', 'Talisman', 'Beni', '0000', 24.1092009, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Myrtle', 'Kensington', 'Oruro', '0000', 51.5489435, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('8th', 'Derek', 'Tarija', '0000', 45.674028, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Valley Edge', 'Little Fleur', 'La Paz', '0000', 32.955581, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fairview', 'Oxford', 'Cochabamba', '0000', 35.640089, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Morning', 'Dwight', 'Potosi', '0000', 41.09028, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Crescent Oaks', 'Dottie', 'Pando', '0000', 6.8907086, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sachtjen', 'Atwood', 'chuquisaca', '0000', 38.5537924, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Oak Valley', 'Jenifer', 'Beni', '0000', 49.7371648, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mosinee', 'Fuller', 'Oruro', '0000', -6.8903936, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Brown', 'Arizona', 'Tarija', '0000', 39.989836, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fair Oaks', 'Golf', 'La Paz', '0000', 17.76999, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('West', '8th', 'Cochabamba', '0000', -24.5997626, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Buell', 'Schmedeman', 'Potosi', '0000', 38.7188171, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Roth', '3rd', 'Pando', '0000', 25.6538807, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Maple', 'Mayfield', 'chuquisaca', '0000', 33.6042793, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Texas', 'Rockefeller', 'Beni', '0000', 60.0203894, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Cottonwood', 'Dwight', 'Oruro', '0000', -5.14445, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hoffman', 'Harbort', 'Tarija', '0000', 31.207751, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Burning Wood', 'Shasta', 'La Paz', '0000', 39.5676563, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Daystar', 'Weeping Birch', 'Cochabamba', '0000', 50.6655892, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Susan', 'Oak', 'Potosi', '0000', 13.7279858, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hansons', 'Lakewood', 'Pando', '0000', 18.504589, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Thierer', 'Hermina', 'chuquisaca', '0000', 30.5312657, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bluejay', 'Forster', 'Beni', '0000', 42.583016, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Redwing', 'Kings', 'Oruro', '0000', 27.8169, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Del Sol', 'Portage', 'Tarija', '0000', 48.9270449, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Rigney', 'Carpenter', 'La Paz', '0000', -24.2449065, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Little Fleur', 'Cordelia', 'Cochabamba', '0000', -15.7994139, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Messerschmidt', 'Acker', 'Potosi', '0000', 50.4034992, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sherman', 'Rockefeller', 'Pando', '0000', 33.917649, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Russell', 'Mccormick', 'chuquisaca', '0000', 31.917522, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Gina', 'Boyd', 'Beni', '0000', 12.0687, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Russell', 'Nevada', 'Oruro', '0000', 36.628305, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Twin Pines', '4th', 'Tarija', '0000', 14.6843598, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Longview', 'Prairie Rose', 'La Paz', '0000', 49.6308644, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Butternut', 'Maple Wood', 'Cochabamba', '0000', 39.7968818, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Susan', 'Stuart', 'Potosi', '0000', 35.295007, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('American', 'Killdeer', 'Pando', '0000', 40.7392836, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Northfield', 'Armistice', 'chuquisaca', '0000', 53.6179245, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ludington', 'Ilene', 'Beni', '0000', 33.708276, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eliot', 'Doe Crossing', 'Oruro', '0000', 36.691279, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Roth', 'Walton', 'Tarija', '0000', 63.7388395, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Tony', 'Dottie', 'La Paz', '0000', 30.352134, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Anniversary', 'Granby', 'Cochabamba', '0000', 55.7756358, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Carberry', 'Graceland', 'Potosi', '0000', 10.1684514, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pleasure', 'Messerschmidt', 'Pando', '0000', -9.1930089, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Helena', 'Village Green', 'chuquisaca', '0000', 35.87616, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Colorado', 'Katie', 'Beni', '0000', 18.3419004, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pierstorff', 'Beilfuss', 'Oruro', '0000', 11.2210043, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Talmadge', 'Carpenter', 'Tarija', '0000', 13.0883907, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Florence', 'Bellgrove', 'La Paz', '0000', 26.790544, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mosinee', 'Mosinee', 'Cochabamba', '0000', -1.259553, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Twin Pines', 'Sommers', 'Potosi', '0000', 57.5067967, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Cottonwood', 'Hanson', 'Pando', '0000', -9.9831, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pierstorff', 'Bellgrove', 'chuquisaca', '0000', 28.564189, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Independence', 'East', 'Beni', '0000', -7.5450262, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ilene', 'Twin Pines', 'Oruro', '0000', 46.3856393, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Jackson', 'Texas', 'Tarija', '0000', 33.54832, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Westerfield', 'Muir', 'La Paz', '0000', 6.477755, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ridgeway', 'Derek', 'Cochabamba', '0000', 7.3275252, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Jay', 'Holy Cross', 'Potosi', '0000', 24.848984, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Namekagon', 'Talisman', 'Pando', '0000', 14.233333, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Claremont', 'Memorial', 'chuquisaca', '0000', -6.9947862, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Truax', 'Hayes', 'Beni', '0000', -8.0060188, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Meadow Vale', 'Daystar', 'Oruro', '0000', 51.9601912, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Michigan', 'Bunker Hill', 'Tarija', '0000', 34.4740361, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Barby', 'Summer Ridge', 'La Paz', '0000', 35.8037979, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dottie', 'Mosinee', 'Cochabamba', '0000', 51.6571864, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Katie', 'Kenwood', 'Potosi', '0000', 33.195993, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Swallow', 'Jenna', 'Pando', '0000', 25.2743983, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Quincy', 'Schmedeman', 'chuquisaca', '0000', 27.69965, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Northridge', 'Ryan', 'Beni', '0000', 38.652683, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Starling', 'Elmside', 'Oruro', '0000', -1.8703308, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Glendale', 'Oak', 'Tarija', '0000', 19.5797297, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Alpine', 'Eagan', 'La Paz', '0000', -7.9110809, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Autumn Leaf', 'Harbort', 'Cochabamba', '0000', 40.5784827, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Vermont', 'Havey', 'Potosi', '0000', 62.4232512, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Forster', 'Crowley', 'Pando', '0000', -31.4561755, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lindbergh', 'Toban', 'chuquisaca', '0000', 43.15, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Drewry', 'Merry', 'Beni', '0000', 41.2357155, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Merry', 'Lakewood', 'Oruro', '0000', 21.428436, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Talmadge', 'Cardinal', 'Tarija', '0000', 49.794945, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ronald Regan', '4th', 'La Paz', '0000', 33.612843, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Spaight', 'Truax', 'Cochabamba', '0000', 29.053409, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Leroy', 'Manufacturers', 'Potosi', '0000', 38.9200512, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sauthoff', 'Mitchell', 'Pando', '0000', 24.066095, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('American', 'Harper', 'chuquisaca', '0000', 19.2540302, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Cardinal', 'Swallow', 'Beni', '0000', 30.20003, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Larry', 'Johnson', 'Oruro', '0000', 31.2122278, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Banding', 'Hauk', 'Tarija', '0000', 43.4945737, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ridge Oak', 'Forest Dale', 'La Paz', '0000', 36.5888732, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Duke', 'Morningstar', 'Cochabamba', '0000', 11.7863324, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pleasure', 'Main', 'Potosi', '0000', 32.42465, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pierstorff', 'Moland', 'Pando', '0000', 52.3518344, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Garrison', 'Anzinger', 'chuquisaca', '0000', 34.7188616, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('3rd', 'Miller', 'Beni', '0000', -17.5706623, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Tennyson', 'Commercial', 'Oruro', '0000', 2.100305, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sachtjen', 'Sherman', 'Tarija', '0000', 10.4477737, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Roxbury', 'Merry', 'La Paz', '0000', 64.6789618, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Barnett', 'Prairie Rose', 'Cochabamba', '0000', -34.7682125, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Duke', 'Union', 'Potosi', '0000', 41.811979, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pawling', 'Pearson', 'Pando', '0000', 7.619032, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Columbus', 'Atwood', 'chuquisaca', '0000', 42.8983715, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bashford', 'Grover', 'Beni', '0000', -11.4260053, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Meadow Ridge', 'Thompson', 'Oruro', '0000', 21.0598649, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sullivan', 'Raven', 'Tarija', '0000', -6.8392705, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Kinsman', 'Hansons', 'La Paz', '0000', 16.7445704, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fremont', 'Carpenter', 'Cochabamba', '0000', 10.7424589, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Debra', 'Doe Crossing', 'Potosi', '0000', 39.3433574, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bashford', 'Charing Cross', 'Pando', '0000', 9.939624, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Village', 'Sunbrook', 'chuquisaca', '0000', 10.431916, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eggendart', 'Mayfield', 'Beni', '0000', 43.6953508, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eggendart', 'Forest Dale', 'Oruro', '0000', -17.7178133, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('High Crossing', 'Manitowish', 'Tarija', '0000', 42.0387882, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hoard', 'Chive', 'La Paz', '0000', 38.682014, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dunning', 'Darwin', 'Cochabamba', '0000', -11.4260053, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Darwin', 'Tomscot', 'Potosi', '0000', 50.246964, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Boyd', 'Namekagon', 'Pando', '0000', 6.9130451, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Beilfuss', 'Graedel', 'chuquisaca', '0000', 48.9361342, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('American Ash', 'Tennyson', 'Beni', '0000', 12.4544798, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Laurel', 'Mifflin', 'Oruro', '0000', 10.6713871, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Artisan', 'Hanson', 'Tarija', '0000', -1.2545772, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Summer Ridge', 'Independence', 'La Paz', '0000', 51.2250373, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Shopko', 'Wayridge', 'Cochabamba', '0000', 3.9671435, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Roth', 'Shoshone', 'Potosi', '0000', 28.880867, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Scott', 'Gateway', 'Pando', '0000', 14.6031411, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Steensland', 'Caliangt', 'chuquisaca', '0000', 42.0813751, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Elgar', 'Brickson Park', 'Beni', '0000', 55.6817886, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Memorial', 'Northwestern', 'Oruro', '0000', 29.956858, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hazelcrest', 'Kropf', 'Tarija', '0000', 41.1731486, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Warner', 'Dahle', 'La Paz', '0000', 23.9179637, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Algoma', 'American Ash', 'Cochabamba', '0000', 22.579117, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Macpherson', 'Lindbergh', 'Potosi', '0000', 38.7, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Prairie Rose', 'Namekagon', 'Pando', '0000', 28.846966, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Truax', 'Becker', 'chuquisaca', '0000', 31.364042, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bashford', 'Kensington', 'Beni', '0000', 24.64995, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bultman', 'Farmco', 'Oruro', '0000', -7.2284727, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Messerschmidt', 'Roxbury', 'Tarija', '0000', -8.5614257, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Larry', 'Derek', 'La Paz', '0000', 43.981544, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bluestem', 'Hagan', 'Cochabamba', '0000', 10.6231047, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bunker Hill', 'Schurz', 'Potosi', '0000', 52.3863062, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Granby', 'Eagan', 'Pando', '0000', -23.8778461, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dorton', 'Rigney', 'chuquisaca', '0000', 42.0387882, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Schiller', 'Homewood', 'Beni', '0000', 50.3919, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Steensland', 'Delladonna', 'Oruro', '0000', 52.7301035, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ronald Regan', '3rd', 'Tarija', '0000', 32.6546275, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Rutledge', 'Northridge', 'La Paz', '0000', 16.8907872, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Spaight', 'Crowley', 'Cochabamba', '0000', 48.6277459, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fuller', 'Dayton', 'Potosi', '0000', -42.7556675, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Nobel', 'Starling', 'Pando', '0000', -20.1127536, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Burrows', 'Grasskamp', 'chuquisaca', '0000', 42.2971095, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sunbrook', 'Kensington', 'Beni', '0000', -9.503288, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hazelcrest', 'Esker', 'Oruro', '0000', 30.3776024, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Alpine', 'Jenna', 'Tarija', '0000', -6.2315975, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sutteridge', 'Northfield', 'La Paz', '0000', 13.7761367, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fallview', 'Welch', 'Cochabamba', '0000', 28.0154753, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Delaware', 'Oxford', 'Potosi', '0000', -28.3833642, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('1st', 'Carberry', 'Pando', '0000', -5.5850343, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Doe Crossing', 'Mariners Cove', 'chuquisaca', '0000', -8.4513, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ramsey', 'Miller', 'Beni', '0000', 48.6277459, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('4th', 'Walton', 'Oruro', '0000', 40.9392676, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Del Sol', '2nd', 'Tarija', '0000', -6.361128, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Valley Edge', 'Fairview', 'La Paz', '0000', 44.5209494, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Victoria', 'South', 'Cochabamba', '0000', 9.1707145, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Grim', 'Roth', 'Potosi', '0000', -31.3366412, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pond', 'Laurel', 'Pando', '0000', 10.8991156, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Florence', '1st', 'chuquisaca', '0000', 16.7054663, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hooker', 'Nevada', 'Beni', '0000', 16.004175, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Menomonie', 'Lakewood', 'Oruro', '0000', 60.134938, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Towne', 'Stuart', 'Tarija', '0000', -23.4554707, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Charing Cross', 'Del Mar', 'La Paz', '0000', 51.8417492, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mandrake', 'Larry', 'Cochabamba', '0000', 29.5530941, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Clemons', 'Union', 'Potosi', '0000', 59.2426907, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Westridge', 'Golden Leaf', 'Pando', '0000', 38.7470186, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('East', 'Fallview', 'chuquisaca', '0000', 48.5129473, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Butternut', 'Becker', 'Beni', '0000', 40.7681987, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Anderson', 'Oxford', 'Oruro', '0000', 16.0567117, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sauthoff', 'Fairview', 'Tarija', '0000', 29.9905062, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lukken', 'Monica', 'La Paz', '0000', 14.2462858, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lyons', 'Buell', 'Cochabamba', '0000', -23.2218772, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Gulseth', 'Arapahoe', 'Potosi', '0000', 14.7008738, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ruskin', 'Muir', 'Pando', '0000', 52.7456843, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pearson', 'Becker', 'chuquisaca', '0000', -7.13754, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Quincy', 'Brown', 'Beni', '0000', -6.9126426, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Di Loreto', 'Alpine', 'Oruro', '0000', 40.8276499, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Grayhawk', 'Doe Crossing', 'Tarija', '0000', -21.7034017, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Commercial', 'Anderson', 'La Paz', '0000', -10.1771997, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Linden', 'Cordelia', 'Cochabamba', '0000', -7.0453161, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Charing Cross', 'Debs', 'Potosi', '0000', 51.6861013, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mallory', 'Bashford', 'Pando', '0000', 48.418023, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Starling', 'Barby', 'chuquisaca', '0000', -7.13386, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Nevada', 'Fairview', 'Beni', '0000', -25.283333, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eastwood', 'David', 'Oruro', '0000', -8.334487, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Michigan', 'Elgar', 'Tarija', '0000', 32.8676912, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Paget', 'Straubel', 'La Paz', '0000', 56.1966377, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lakewood', 'Eastlawn', 'Cochabamba', '0000', 6.4315805, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Columbus', 'Arapahoe', 'Potosi', '0000', 40.9089779, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Melvin', '6th', 'Pando', '0000', 28.871569, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Park Meadow', 'Becker', 'chuquisaca', '0000', 22.0983236, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bartillon', 'Parkside', 'Beni', '0000', -26.0440358, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pennsylvania', 'Truax', 'Oruro', '0000', 22.775792, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Green', 'Warbler', 'Tarija', '0000', 35.4114708, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Green', 'Heath', 'La Paz', '0000', 51.3531567, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Norway Maple', 'Monica', 'Cochabamba', '0000', 47.5196602, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Anthes', 'Northfield', 'Potosi', '0000', 40.8570429, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bayside', 'Northwestern', 'Pando', '0000', 41.118436, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pleasure', 'Scott', 'chuquisaca', '0000', -7.6589782, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Barnett', 'Kings', 'Beni', '0000', -8.1814, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Granby', 'Hansons', 'Oruro', '0000', 48.0482483, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Orin', 'Darwin', 'Tarija', '0000', 38.135005, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('North', 'Clyde Gallagher', 'La Paz', '0000', 48.09967, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Village', 'Randy', 'Cochabamba', '0000', 2.9662346, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Welch', 'Thompson', 'Potosi', '0000', 8.6962086, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Buhler', 'Dovetail', 'Pando', '0000', 42.8043197, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Loeprich', 'Lakewood Gardens', 'chuquisaca', '0000', 60.4624232, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Nevada', 'Gateway', 'Beni', '0000', -13.4528458, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Waxwing', 'Mayer', 'Oruro', '0000', -20.2973067, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Arkansas', 'Chinook', 'Tarija', '0000', 36.9853085, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Grim', 'Welch', 'La Paz', '0000', 49.4875115, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('8th', 'Atwood', 'Cochabamba', '0000', 2.2250009, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Badeau', 'Dwight', 'Potosi', '0000', 2.731033, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Trailsway', 'Washington', 'Pando', '0000', 31.5555726, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sunfield', 'Shelley', 'chuquisaca', '0000', -17.3753589, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Waubesa', 'Hooker', 'Beni', '0000', 11.8962488, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Maryland', 'Straubel', 'Oruro', '0000', 60.6304039, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Calypso', 'Starling', 'Tarija', '0000', -26.17433, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mayfield', 'Gerald', 'La Paz', '0000', 45.456699, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Cody', 'Havey', 'Cochabamba', '0000', 25.639488, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('East', 'Tony', 'Potosi', '0000', 38.6690462, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('West', 'Farmco', 'Pando', '0000', 52.7634482, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Menomonie', 'Lakewood Gardens', 'chuquisaca', '0000', 50.0281297, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Chinook', 'Linden', 'Beni', '0000', 14.5707297, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Oneill', 'Fisk', 'Oruro', '0000', -8.557437, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Golf Course', 'Sycamore', 'Tarija', '0000', -22.6604341, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Katie', 'Butternut', 'La Paz', '0000', 53.3625182, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fulton', 'Spenser', 'Cochabamba', '0000', -7.5450262, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Waubesa', 'Lakeland', 'Potosi', '0000', 31.2266233, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Clove', 'Mallard', 'Pando', '0000', 56.8813564, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Forster', 'Kennedy', 'chuquisaca', '0000', 45.76629, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mesta', 'Hoffman', 'Beni', '0000', -9.7386858, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eagan', 'Center', 'Oruro', '0000', 49.4150717, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Maywood', 'Veith', 'Tarija', '0000', 48.9648089, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Park Meadow', 'Lukken', 'La Paz', '0000', 13.6343413, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Duke', 'Hintze', 'Cochabamba', '0000', 52.0404797, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fairview', 'Hallows', 'Potosi', '0000', 42.8818379, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Morningstar', 'Westport', 'Pando', '0000', 53.2445421, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Utah', 'Shopko', 'chuquisaca', '0000', 53.2650844, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Melby', 'Donald', 'Beni', '0000', 31.231521, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Glendale', 'Independence', 'Oruro', '0000', 61.1251, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lindbergh', 'Buell', 'Tarija', '0000', 14.5001422, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sommers', 'Crest Line', 'La Paz', '0000', 34.983385, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Annamark', 'Homewood', 'Cochabamba', '0000', 23.696757, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Oneill', 'Forest Run', 'Potosi', '0000', 49.1409438, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Memorial', 'Main', 'Pando', '0000', 6.00547, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Graedel', 'Corben', 'chuquisaca', '0000', 48.4353479, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sullivan', 'Hoffman', 'Beni', '0000', -7.5539241, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Moose', 'Eagle Crest', 'Oruro', '0000', 49.3788944, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Knutson', 'Glendale', 'Tarija', '0000', 36.9473226, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eastwood', 'Brickson Park', 'La Paz', '0000', 54.8133814, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Brickson Park', 'Hansons', 'Cochabamba', '0000', 50.1823264, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Parkside', 'South', 'Potosi', '0000', 49.7291343, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Commercial', 'Manitowish', 'Pando', '0000', 51.4992969, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Rowland', 'Spaight', 'chuquisaca', '0000', 22.781631, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mifflin', 'Spohn', 'Beni', '0000', 35.1268513, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fairfield', 'Michigan', 'Oruro', '0000', 36.123561, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Butterfield', 'Brentwood', 'Tarija', '0000', 45.129308, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dorton', 'Judy', 'La Paz', '0000', 17.563418, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Anthes', 'Valley Edge', 'Cochabamba', '0000', 1.5604242, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Nevada', 'Delladonna', 'Potosi', '0000', 34.1230021, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Alpine', 'Lake View', 'Pando', '0000', 54.1407588, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('South', 'John Wall', 'chuquisaca', '0000', -46.2763744, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Grim', 'Glacier Hill', 'Beni', '0000', -6.1859723, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Westport', 'Heffernan', 'Oruro', '0000', 23.269131, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Marquette', 'Linden', 'Tarija', '0000', 32.206857, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Canary', 'Mallory', 'La Paz', '0000', 46.75, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mitchell', 'Birchwood', 'Cochabamba', '0000', 46.6669865, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Londonderry', 'Maryland', 'Potosi', '0000', 7.5521655, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Donald', 'International', 'Pando', '0000', 23.028956, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Acker', 'Union', 'chuquisaca', '0000', 5.7866228, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Havey', 'Ruskin', 'Beni', '0000', -12.3325, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Golf Course', 'Arkansas', 'Oruro', '0000', 12.269743, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Marquette', 'Hauk', 'Tarija', '0000', 48.8904258, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Shelley', 'Eastlawn', 'La Paz', '0000', 7.2077348, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Rusk', 'Stoughton', 'Cochabamba', '0000', 56.2884624, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hanson', 'Helena', 'Potosi', '0000', 8.688031, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Tomscot', 'Rieder', 'Pando', '0000', 49.2216972, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Melvin', 'Clyde Gallagher', 'chuquisaca', '0000', 23.0029267, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Alpine', 'Lakeland', 'Beni', '0000', 22.483182, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lakeland', 'Shoshone', 'Oruro', '0000', 40.6236168, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Goodland', 'Truax', 'Tarija', '0000', 27.1291264, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Weeping Birch', 'Dawn', 'La Paz', '0000', -25.416667, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lindbergh', 'Dottie', 'Cochabamba', '0000', -6.6551319, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Raven', 'Porter', 'Potosi', '0000', -7.135868, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Old Shore', 'Cottonwood', 'Pando', '0000', 52.2902011, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Rusk', 'Bunker Hill', 'chuquisaca', '0000', -33.8688197, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lillian', 'Maple', 'Beni', '0000', 21.6098301, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hermina', 'Bayside', 'Oruro', '0000', 50.6140977, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Luster', 'Huxley', 'Tarija', '0000', 41.6853575, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bultman', 'Monica', 'La Paz', '0000', 56.4874279, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Maryland', '2nd', 'Cochabamba', '0000', 7.9819727, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Schmedeman', 'Kennedy', 'Potosi', '0000', 43.7563619, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Birchwood', 'Tomscot', 'Pando', '0000', 37.548299, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Texas', 'Artisan', 'chuquisaca', '0000', 52.2608863, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Farmco', 'Toban', 'Beni', '0000', 1.3887283, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eagle Crest', 'David', 'Oruro', '0000', 45.7123346, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Transport', 'Sauthoff', 'Tarija', '0000', 2.7005604, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('3rd', 'Sherman', 'La Paz', '0000', -8.1844859, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Shopko', 'American', 'Cochabamba', '0000', 14.631218, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Debs', 'South', 'Potosi', '0000', 17.0521348, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Grim', 'Acker', 'Pando', '0000', 14.4547788, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Nobel', 'Vernon', 'chuquisaca', '0000', 11.5762804, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Karstens', 'Knutson', 'Beni', '0000', 59.8664826, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Everett', 'Shasta', 'Oruro', '0000', 48.5986674, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Birchwood', '1st', 'Tarija', '0000', 50.8853797, 9);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('South', 'Lyons', 'La Paz', '0000', -9.0104992, 2);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Manley', 'Miller', 'Cochabamba', '0000', -16.3134305, 3);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Di Loreto', 'Dryden', 'Potosi', '0000', 37.8813153, 4);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Swallow', 'Thierer', 'Pando', '0000', 38.640106, 5);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fremont', 'Eagan', 'chuquisaca', '0000', 18.9494246, 6);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hagan', 'Charing Cross', 'Beni', '0000', 26.790544, 7);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pawling', 'Acker', 'Oruro', '0000', -7.8225811, 8);
+insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Thackeray', 'Village', 'Tarija', '0000', 12.8834358, 9);
+go
+
+--1.5.-categoria_grupo  5
+INSERT INTO Master.category_group(cagro_name, cagro_description, cagro_type,cagro_icon_url) VALUES 
+('Individual','Una habitación asignada a una persona. Puede tener una o más camas.','facility', 'https://www.hotelportuense.com/wp-content/uploads/sites/41/2019/05/gallery_Single-room10.jpg'),
+('Doble','Una habitación asignada a dos personas. Puede tener una o más camas','facility','https://www.cataloniahotels.com/es/blog/wp-content/uploads/2016/05/habitaci%C3%B3n-doble-catalonia-620x412.jpg'),
+('Triple','Una habitación asignada a tres personas. Puede tener dos o más camas','facility','https://www.torrehotelejecutivo.com/images/img-habitacion-triple1.jpg'),
+('Quad','Una sala asignada a cuatro personas. Puede tener dos o más camas.','facility','https://www.hotellosalmendros.com/uploads/1/3/9/5/13959225/whatsapp-image-1018-07-02-at-6-50-29-am_3_orig.jpeg'),
+('Queen','Una habitación con una cama de matrimonio. Puede ser ocupado por una o más personas','facility','https://hotelsantiagodecompostella.com.ec/wp-content/uploads/2018/08/principal_habitaciones-786x393.jpg'),
+('King','Una habitación con una cama king-size. Puede ser ocupado por una o más personas.','facility','https://www.desertpearl.com/uploads/widgets/201410300352235451b5f723633.jpeg?v10'),
+('Estudio','Una habitación con una cama de estudio, un sofá que se puede convertir en una cama. También puede tener una cama adicional.','facility','https://www.cataloniahotels.com/es/blog/wp-content/uploads/2016/05/habitaci%C3%B3n-doble-catalonia-620x412.jpg');
+
+
+
+
+
+--Modulo Hotel 
+INSERT INTO Hotel.Hotels(hotel_name,hotel_status,hotel_rating_star,hotel_phonenumber,
+hotel_addr_id,hotel_addr_description) VALUES 
+('Marriott Santa Cruz de la Sierra Hotel',1,4.7,'3 3424848',1,'4to Anillo Entre Radial 23 Y, Av. Las Ramblas S/N, Santa Cruz de la Sierra'),
+('Hotel Continental Park',1,4.2,'71641478',1,'Av. Cañoto 289 Esquina, Santa Cruz de la Sierra'),
+('Los Tajibos, a Tribute Portfolio Hotel',1,4.7,'3 3421000',1,'Av. San Martín 455, Santa Cruz de la Sierra'),
+('Swissôtel Santa Cruz De La Sierra',1,4.7,'3 3611200',1,'Canal Isuto, Av. La Salle, Edificio Blu Costanera, Los Pachio N 4500, Santa Cruz de la Sierra'),
+('Equipetrol Suites Apart Hotel',1,4.2,'77315851',1,'Av. Noel Kempff Mercado 470, Santa Cruz de la Sierra'),
+('Hotel Camino Real',1,4.6,'3 3423535',1,'Avenida San Martin &, C. K, Santa Cruz de la Sierra'),
+('Yotau All Suites Hotel',1,4.4,'3 3367799',1,'Av. San Martín 7, Santa Cruz de la Sierra'),
+('Buganvillas Hotel Suites & Spa',1,4.4,'3 3510400',1,'Avenida Roca y Coronado 901, Santa Cruz de la Sierra');
+
+go
+
+--1.6.-miembros   6
+INSERT INTO Master.members (memb_name,memb_description)
+  VALUES
+   ('Silver','dawdw'),
+   ('Gold','dada,'),
+   ('VIP','ddadaw'),
+   ('Wizard','dadwda')
+
+go
+
+-- 1.7Insertar datos de políticas en la tabla "policy"  7
+INSERT INTO Master.policy(poli_name,poli_description)
+VALUES
+  ('Check-in a partir de las 15:00', 'Los huéspedes pueden registrarse en el hotel a partir de las 15:00 horas.'),
+  ('Check-out antes de las 12:00', 'Se requiere que los huéspedes abandonen sus habitaciones antes de las 12:00 del mediodía en el día de salida.'),
+  ('No se permiten mascotas', 'El hotel tiene una política de no permitir mascotas en las habitaciones.'),
+  ('Prohibido fumar en las habitaciones', 'Fumar está estrictamente prohibido en las habitaciones y en áreas interiores del hotel.'),
+  ('Desayuno incluido en la tarifa', 'El desayuno está incluido en la tarifa de la habitación.'),
+  ('Wi-Fi gratuito en todas las áreas del hotel', 'El hotel ofrece acceso gratuito a Wi-Fi en todas las áreas públicas y habitaciones.'),
+  ('Servicio de habitaciones las 24 horas', 'Los huéspedes pueden solicitar comida y bebida en sus habitaciones en cualquier momento del día o de la noche a través del servicio de habitaciones.'),
+  ('Área de estacionamiento gratuito', 'El hotel proporciona estacionamiento gratuito para los huéspedes.'),
+  ('Piscina al aire libre disponible', 'Los huéspedes pueden disfrutar de una piscina al aire libre para relajarse y nadar durante su estadía en el hotel.'),
+  ('Gimnasio abierto para los huéspedes', 'El hotel cuenta con un gimnasio que está disponible para que los huéspedes puedan mantenerse en forma durante su estadía.'),
+  ('Recepción abierta las 24 horas', 'La recepción del hotel está disponible las 24 horas, lo que significa que el personal puede ayudar a los huéspedes en cualquier momento, incluso durante la noche.'),
+  ('Caja fuerte disponible en las habitaciones', 'Se proporcionan cajas fuertes en las habitaciones para que los huéspedes puedan guardar sus objetos de valor de manera segura.'),
+  ('Servicio de lavandería y planchado', 'Los huéspedes pueden utilizar el servicio de lavandería y planchado del hotel para mantener su ropa limpia y en buen estado.'),
+  ('Política de cancelación de 24 horas', 'Los huéspedes deben cancelar sus reservas al menos con 24 horas de anticipación para evitar cargos por cancelación.'),
+  ('Tarjetas de crédito aceptadas como forma de pago', 'El hotel acepta tarjetas de crédito como forma de pago, lo que brinda comodidad a los huéspedes al realizar transacciones.'),
+  ('No se permite el acceso a personas no registradas en las habitaciones', 'Por razones de seguridad, solo las personas registradas en una habitación tienen permiso para ingresar a ella.'),
+  ('Restaurante en el hotel abierto para el desayuno, almuerzo y cena', 'El hotel cuenta con un restaurante que sirve comidas durante todo el día, lo que brinda opciones de comida conveniente para los huéspedes.'),
+  ('Servicio de transporte al aeropuerto disponible bajo petición', 'Los huéspedes pueden solicitar un servicio de transporte desde y hacia el aeropuerto con previo aviso al hotel.'),
+  ('Habitaciones con aire acondicionado', 'Todas las habitaciones del hotel están equipadas con aire acondicionado para garantizar una temperatura agradable en todas las estaciones del año.'),
+  ('Servicio de conserjería para ayudar a los huéspedes', 'El personal de conserjería del hotel está disponible para ayudar a los huéspedes con reservas y recomendaciones locales.'),
+  ('Servicio de alquiler de coches en el lugar', 'Los huéspedes pueden alquilar un coche directamente en el hotel para su conveniencia.'),
+  ('Habitaciones familiares disponibles', 'El hotel ofrece habitaciones diseñadas especialmente para familias, con espacio adicional y comodidades.'),
+  ('Política de respeto al medio ambiente y sostenibilidad', 'El hotel se compromete a tomar medidas para reducir su impacto ambiental y promover prácticas sostenibles.'),
+  ('Habitaciones adaptadas para personas con discapacidad', 'El hotel cuenta con habitaciones diseñadas para la comodidad y accesibilidad de las personas con discapacidad.'),
+  ('Servicio de despertador disponible', 'Los huéspedes pueden solicitar un servicio de despertador para asegurarse de no perder compromisos importantes durante su estadía.');
+   go
+
+
+--1.8 politicas_categoria_grupo   8
+INSERT INTO Master.policy_category_group (poca_poli_id, poca_cagro_id)
+VALUES
+  (1, 1),
+  (2, 1),
+  (3, 1),
+  (4, 1),
+  (5, 1),
+  (6, 1),
+  (7, 1),
+  (8, 1),
+  (9, 1),
+  (10, 1),
+  (11, 2),
+  (12, 2),
+  (13, 2),
+  (14, 2),
+  (15, 2),
+  (16, 2),
+  (17, 2),
+  (18, 2),
+  (19, 2),
+  (20, 2),
+  (21, 3),
+  (22, 3),
+  (23, 3),
+  (24, 3),
+  (25, 3);
+  go
+
+
+  --1.9  tareas de servicio  9
+INSERT INTO Master.service_task (seta_name)
+VALUES
+  ('Limpieza de habitaciones'),
+  ('Cambio de sábanas'),
+  ('Reposición de toallas'),
+  ('Servicio de despertador'),
+  ('Mantenimiento de instalaciones'),
+  ('Servicio de habitaciones'),
+  ('Atención al cliente'),
+  ('Recepción de huéspedes'),
+  ('Gestión de reservas'),
+  ('Servicio de conserjería'),
+  ('Servicio de lavandería'),
+  ('Servicio de restaurante'),
+  ('Servicio de bar'),
+  ('Servicio de piscina'),
+  ('Servicio de gimnasio'),
+  ('Servicio de spa'),
+  ('Organización de eventos'),
+  ('Servicio de transporte'),
+  ('Asistencia turística'),
+  ('Seguridad del hotel');
+  go
+
+-- 1.10 price_items    10
+INSERT INTO Master.price_items (prit_name, prit_price, prit_description, prit_type, prit_icon_url, prit_modified_date)
+VALUES
+  ('Snack 1', 2.99, 'Snack description 1', 'SNACK', 'https://example.com/snack1.png', GETDATE()),
+  ('Facility 1', 5.99, 'Facility description 1', 'FACILITY', 'https://example.com/facility1.png', GETDATE()),
+  ('Softdrink 1', 1.99, 'Softdrink description 1', 'SOFTDRINK', 'https://example.com/softdrink1.png', GETDATE()),
+  ('Food 1', 7.99, 'Food description 1', 'FOOD', 'https://example.com/food1.png', GETDATE()),
+  ('Service 1', 9.99, 'Service description 1', 'SERVICE', 'https://example.com/service1.png', GETDATE()),
+  ('Snack 2', 3.99, 'Snack description 2', 'SNACK', 'https://example.com/snack2.png', GETDATE()),
+  ('Facility 2', 6.99, 'Facility description 2', 'FACILITY', 'https://example.com/facility2.png', GETDATE()),
+  ('Softdrink 2', 2.49, 'Softdrink description 2', 'SOFTDRINK', 'https://example.com/softdrink2.png', GETDATE()),
+  ('Food 2', 8.99, 'Food description 2', 'FOOD', 'https://example.com/food2.png', GETDATE()),
+  ('Service 2', 10.99, 'Service description 2', 'SERVICE', 'https://example.com/service2.png', GETDATE()),
+  ('Snack 3', 4.49, 'Snack description 3', 'SNACK', 'https://example.com/snack3.png', GETDATE()),
+  ('Facility 3', 7.49, 'Facility description 3', 'FACILITY', 'https://example.com/facility3.png', GETDATE()),
+  ('Softdrink 3', 2.99, 'Softdrink description 3', 'SOFTDRINK', 'https://example.com/softdrink3.png', GETDATE()),
+  ('Food 3', 9.49, 'Food description 3', 'FOOD', 'https://example.com/food3.png', GETDATE()),
+  ('Service 3', 11.49, 'Service description 3', 'SERVICE', 'https://example.com/service3.png', GETDATE()),
+  ('Snack 4', 4.99, 'Snack description 4', 'SNACK', 'https://example.com/snack4.png', GETDATE()),
+  ('Facility 4', 8.99, 'Facility description 4', 'FACILITY', 'https://example.com/facility4.png', GETDATE()),
+  ('Softdrink 4', 3.49, 'Softdrink description 4', 'SOFTDRINK', 'https://example.com/softdrink4.png', GETDATE()),
+  ('Food 4', 10.99, 'Food description 4', 'FOOD', 'https://example.com/food4.png', GETDATE()),
+  ('Service 4', 12.99, 'Service description 4', 'SERVICE', 'https://example.com/service4.png', GETDATE());
+go
+
+
+--------------------------------Modulo Users----------------------------------------------------------
+---2.1 Usuarios    11
 insert into Users.users (user_full_name, user_type, user_company_name, user_email, user_phone_number) values ('Ximenes Dingivan', 'T', 'Vidoo', 'xdingivan0@skype.com', '680 965 1942');
 insert into Users.users (user_full_name, user_type, user_company_name, user_email, user_phone_number) values ('Brant Wycliffe', 'I', 'Layo', 'bwycliffe1@wisc.edu', '421 338 1919');
 insert into Users.users (user_full_name, user_type, user_company_name, user_email, user_phone_number) values ('Theobald Curryer', 'T', 'Eidel', 'tcurryer2@php.net', '554 492 1224');
@@ -1908,1189 +3109,7 @@ insert into Users.users (user_full_name, user_type, user_company_name, user_emai
 go
 
 
-
-
-
-
--- Insertar datos de políticas en la tabla "policy"
-INSERT INTO Master.policy(poli_name,poli_description)
-VALUES
-  ('Check-in a partir de las 15:00', 'Los huéspedes pueden registrarse en el hotel a partir de las 15:00 horas.'),
-  ('Check-out antes de las 12:00', 'Se requiere que los huéspedes abandonen sus habitaciones antes de las 12:00 del mediodía en el día de salida.'),
-  ('No se permiten mascotas', 'El hotel tiene una política de no permitir mascotas en las habitaciones.'),
-  ('Prohibido fumar en las habitaciones', 'Fumar está estrictamente prohibido en las habitaciones y en áreas interiores del hotel.'),
-  ('Desayuno incluido en la tarifa', 'El desayuno está incluido en la tarifa de la habitación.'),
-  ('Wi-Fi gratuito en todas las áreas del hotel', 'El hotel ofrece acceso gratuito a Wi-Fi en todas las áreas públicas y habitaciones.'),
-  ('Servicio de habitaciones las 24 horas', 'Los huéspedes pueden solicitar comida y bebida en sus habitaciones en cualquier momento del día o de la noche a través del servicio de habitaciones.'),
-  ('Área de estacionamiento gratuito', 'El hotel proporciona estacionamiento gratuito para los huéspedes.'),
-  ('Piscina al aire libre disponible', 'Los huéspedes pueden disfrutar de una piscina al aire libre para relajarse y nadar durante su estadía en el hotel.'),
-  ('Gimnasio abierto para los huéspedes', 'El hotel cuenta con un gimnasio que está disponible para que los huéspedes puedan mantenerse en forma durante su estadía.'),
-  ('Recepción abierta las 24 horas', 'La recepción del hotel está disponible las 24 horas, lo que significa que el personal puede ayudar a los huéspedes en cualquier momento, incluso durante la noche.'),
-  ('Caja fuerte disponible en las habitaciones', 'Se proporcionan cajas fuertes en las habitaciones para que los huéspedes puedan guardar sus objetos de valor de manera segura.'),
-  ('Servicio de lavandería y planchado', 'Los huéspedes pueden utilizar el servicio de lavandería y planchado del hotel para mantener su ropa limpia y en buen estado.'),
-  ('Política de cancelación de 24 horas', 'Los huéspedes deben cancelar sus reservas al menos con 24 horas de anticipación para evitar cargos por cancelación.'),
-  ('Tarjetas de crédito aceptadas como forma de pago', 'El hotel acepta tarjetas de crédito como forma de pago, lo que brinda comodidad a los huéspedes al realizar transacciones.'),
-  ('No se permite el acceso a personas no registradas en las habitaciones', 'Por razones de seguridad, solo las personas registradas en una habitación tienen permiso para ingresar a ella.'),
-  ('Restaurante en el hotel abierto para el desayuno, almuerzo y cena', 'El hotel cuenta con un restaurante que sirve comidas durante todo el día, lo que brinda opciones de comida conveniente para los huéspedes.'),
-  ('Servicio de transporte al aeropuerto disponible bajo petición', 'Los huéspedes pueden solicitar un servicio de transporte desde y hacia el aeropuerto con previo aviso al hotel.'),
-  ('Habitaciones con aire acondicionado', 'Todas las habitaciones del hotel están equipadas con aire acondicionado para garantizar una temperatura agradable en todas las estaciones del año.'),
-  ('Servicio de conserjería para ayudar a los huéspedes', 'El personal de conserjería del hotel está disponible para ayudar a los huéspedes con reservas y recomendaciones locales.'),
-  ('Servicio de alquiler de coches en el lugar', 'Los huéspedes pueden alquilar un coche directamente en el hotel para su conveniencia.'),
-  ('Habitaciones familiares disponibles', 'El hotel ofrece habitaciones diseñadas especialmente para familias, con espacio adicional y comodidades.'),
-  ('Política de respeto al medio ambiente y sostenibilidad', 'El hotel se compromete a tomar medidas para reducir su impacto ambiental y promover prácticas sostenibles.'),
-  ('Habitaciones adaptadas para personas con discapacidad', 'El hotel cuenta con habitaciones diseñadas para la comodidad y accesibilidad de las personas con discapacidad.'),
-  ('Servicio de despertador disponible', 'Los huéspedes pueden solicitar un servicio de despertador para asegurarse de no perder compromisos importantes durante su estadía.');
-   go
-
-
-    UPDATE Users.users
-    SET user_modified_date = DATEADD(SECOND, ABS(CHECKSUM(NEWID())) % (DATEDIFF(SECOND, '2015-01-01', '2023-12-31') + 1), '2015-01-01');
-    go
-
-
-
-  INSERT INTO Master.members (memb_name,memb_description)
-  VALUES
-   ('Silver','dawdw'),
-   ('Gold','dada,'),
-   ('VIP','ddadaw'),
-   ('Wizard','dadwda')
-
-go
-
-
-
-INSERT INTO HR.job_role (joro_name, joro_modified_date) VALUES 
-('Recepcionista','01-01-2011'),
-('Botones','01-01-2011'),
-('Ama de llaves','01-01-2011'),
-('Camarero','01-01-2011'),
-('Cocinero','01-01-2011'),
-('Auxiliar de cocina','01-01-2011'),
-('Friega platos','01-01-2011'),
-('Personal de seguridad','01-01-2011'),
-('Animador','01-06-2015'),
-('Socorrista','01-01-2015'),
-('Masajista','01-01-2015'),
-('Hotel manager','01-01-2011'),
-('Personal de mantenimiento','01-01-2012'),
-('Conserje','01-01-2015'),
-('Agente de reservas','01-01-2015'),
-('Entrenador','01-01-2015')
-
-go 
-
-
-INSERT INTO HR.department (dept_name, dept_modified_date) VALUES 
-('Departamento de Recepcion','01-01-2011'),
-('Departamento de Direccion','01-01-2011'),
-('Departamento de Limpieza','01-01-2011'),
-('Departamento de Restauracion','01-01-2011'),
-('Departamento de Cocina','01-01-2011'),
-('Departamento de Mantenimiento','01-01-2015'),
-('Departamento de Contabilidad y Finanzas','01-01-2015'),
-('Departamento de Seguridad','01-01-2011'),
-('Departamento de Ventas y Reservas','01-01-2011'),
-('Departamento de Marketing','01-01-2015'),
-('Departamento de Compras','01-01-2011'),
-('Departamento de TI','01-01-2015'),
-('Departamento de fitness','01-01-2015'),
-('Departamento de Spa','01-01-2015')
-go 
-
-
-INSERT INTO HR.shift (shift_name, shift_start_time, shift_end_time) VALUES 
-('Turno mañana', '06:00', '14:00'),
-('Turno tarde', '14:00', '22:00'),
-('Turno noche', '22:00', '06:00');
-
-go
-
-
-
-
-insert into master.regions (region_name) values ('Asia');
-insert into master.regions (region_name) values ('Africa');
-insert into master.regions (region_name) values ('Europa');
-insert into Master.regions (region_name) values ('America');
-insert into Master.regions (region_name) values ('Oceania');
-
-go
-
-
-
-INSERT INTO Master.country(country_name, country_region_id) VALUES 
-('Bolivia',4),
-('Perú',4),
-('Argentina',4),
-('Colombia',4),
-('Brasil',4),
-('Paraguay',4),
-('Uruguay',4),
-('Venezuela',4),
-('Chile',4),
-('Ecuador',4),
-('Cuba',4),
-('Mexico',4);
-
-go
-
-
-INSERT INTO Master.provinces(prov_name, prov_country_id) VALUES 
-('Santa Cruz de la Sierra',1),
-('La Paz',1),
-('Cochabamba',1),
-('Potosi',1),
-('Pando',1),
-('chuquisaca',1),
-('Beni',1),
-('Oruro',1),
-('Tarija',1)
-go
-
-
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Scoville', 'Emmet', 'La Paz', '0000', -6.633688, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Blackbird', 'Spohn', 'Cochabamba', '0000', 55.045149, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Jenifer', 'Weeping Birch', 'Potosi', '0000', -34.5954682, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Westport', 'Gateway', 'Pando', '0000', 59.379366, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Caliangt', 'Havey', 'chuquisaca', '0000', -20.4827446, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bunting', 'Dawn', 'Beni', '0000', -7.1265553, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dunning', 'Scofield', 'Oruro', '0000', 13.9123164, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Barnett', 'David', 'Tarija', '0000', 41.802914, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hagan', 'Holmberg', 'La Paz', '0000', 58.5118215, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fairview', 'Schiller', 'Cochabamba', '0000', 40.761653, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bartillon', 'Waywood', 'Potosi', '0000', 38.6968603, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Springs', 'Lukken', 'Pando', '0000', 41.4783577, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Merchant', 'Meadow Ridge', 'chuquisaca', '0000', 40.7879444, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mariners Cove', 'Crest Line', 'Beni', '0000', 53.7002, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Longview', 'Springview', 'Oruro', '0000', 52.1741837, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Killdeer', 'Red Cloud', 'Tarija', '0000', 23.075573, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Manitowish', 'Ilene', 'La Paz', '0000', -46.1022534, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('6th', 'Mendota', 'Cochabamba', '0000', 36.9923139, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Merry', 'Towne', 'Potosi', '0000', 43.4945737, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('South', 'Dwight', 'Pando', '0000', -30.85775, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Garrison', 'Oriole', 'chuquisaca', '0000', -6.9010133, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Homewood', 'Hudson', 'Beni', '0000', 7.38153, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Crownhardt', 'Redwing', 'Oruro', '0000', 20.585863, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Nancy', 'Monument', 'Tarija', '0000', 51.6083, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Union', 'Forest', 'La Paz', '0000', 24.7762658, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Carpenter', 'Burning Wood', 'Cochabamba', '0000', 67.6955232, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Towne', 'Orin', 'Potosi', '0000', -34.4349435, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Wayridge', 'Northwestern', 'Pando', '0000', 53.0748279, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Duke', 'Autumn Leaf', 'chuquisaca', '0000', 10.5942421, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Myrtle', 'Pearson', 'Beni', '0000', 25.6279123, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Macpherson', 'Novick', 'Oruro', '0000', 31.59998, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eagle Crest', 'Tony', 'Tarija', '0000', 24.006293, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Waxwing', 'Waywood', 'La Paz', '0000', 24.848984, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Maple Wood', 'Oakridge', 'Cochabamba', '0000', -9.0972502, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Quincy', 'Evergreen', 'Potosi', '0000', -0.8183228, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Nelson', 'Brentwood', 'Pando', '0000', 45.0417524, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lyons', 'Caliangt', 'chuquisaca', '0000', -12.0820196, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eggendart', 'Ridgeway', 'Beni', '0000', -22.2169379, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Westridge', 'Hooker', 'Oruro', '0000', -10.8996, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hanover', 'Linden', 'Tarija', '0000', 48.85917, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bartillon', 'Chinook', 'La Paz', '0000', -20.3761919, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Garrison', 'Arapahoe', 'Cochabamba', '0000', 6.7826022, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Kingsford', 'Dakota', 'Potosi', '0000', 40.5257819, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Coleman', 'Westerfield', 'Pando', '0000', 49.8408677, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Petterle', 'Canary', 'chuquisaca', '0000', 31.095979, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hintze', 'Eastwood', 'Beni', '0000', 12.7523556, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Transport', 'Mariners Cove', 'Oruro', '0000', 34.341574, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Summer Ridge', 'Crest Line', 'Tarija', '0000', 48.5847594, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Shoshone', 'Warner', 'La Paz', '0000', -8.7433, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fallview', '3rd', 'Cochabamba', '0000', 32.026097, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('3rd', 'High Crossing', 'Potosi', '0000', 44.6254349, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hoard', 'Almo', 'Pando', '0000', -3.2898398, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Monterey', 'Basil', 'chuquisaca', '0000', -38.6816248, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Novick', 'Dapin', 'Beni', '0000', 10.35, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Emmet', 'Forest Dale', 'Oruro', '0000', -26.2499033, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('6th', '2nd', 'Tarija', '0000', 8.3796569, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Parkside', 'Prentice', 'La Paz', '0000', 15.228683, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Maywood', 'Fair Oaks', 'Cochabamba', '0000', 40.9314367, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Merry', 'Anzinger', 'Potosi', '0000', -8.5424895, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Rutledge', 'Bultman', 'Pando', '0000', 36.1125, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Clove', 'Toban', 'chuquisaca', '0000', 15.23199, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Duke', 'Oriole', 'Beni', '0000', 50.2850778, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Loomis', 'Elka', 'Oruro', '0000', 40.6892276, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mcguire', 'Badeau', 'Tarija', '0000', -6.9665934, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Northwestern', 'Gina', 'La Paz', '0000', 40.7046234, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hintze', 'Raven', 'Cochabamba', '0000', 7.027766, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hollow Ridge', 'Bay', 'Potosi', '0000', 9.3567838, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Moose', 'Marquette', 'Pando', '0000', 22.6194565, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Shelley', 'Maple Wood', 'chuquisaca', '0000', -7.8808775, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Talmadge', 'Sundown', 'Beni', '0000', 59.2669111, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bartillon', 'Bunker Hill', 'Oruro', '0000', 15.475069, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sherman', 'Browning', 'Tarija', '0000', 37.369435, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bay', 'Maple', 'La Paz', '0000', 57.1785037, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Kinsman', 'Talisman', 'Cochabamba', '0000', 50.404284, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bobwhite', 'Harbort', 'Potosi', '0000', 29.8867761, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fulton', 'Anhalt', 'Pando', '0000', -23.0821226, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Warbler', 'Erie', 'chuquisaca', '0000', 49.9731106, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Jana', 'Bluestem', 'Beni', '0000', -7.9954685, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Amoth', 'Bunker Hill', 'Oruro', '0000', 27.951331, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Aberg', 'Bartillon', 'Tarija', '0000', 33.955844, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Stephen', 'Upham', 'La Paz', '0000', 41.4410475, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Porter', 'Ludington', 'Cochabamba', '0000', 17.3091916, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eastlawn', 'Center', 'Potosi', '0000', 7.8143838, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lake View', 'Fair Oaks', 'Pando', '0000', 30.7298739, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Spohn', 'Grover', 'chuquisaca', '0000', 53.5511779, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Debra', 'Oak Valley', 'Beni', '0000', 26.89745, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Tennyson', 'Knutson', 'Oruro', '0000', -12.0560257, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Jana', 'Forster', 'Tarija', '0000', 41.2221689, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Michigan', 'Lillian', 'La Paz', '0000', 41.0550723, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Montana', 'Nancy', 'Cochabamba', '0000', 38.0413984, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bonner', 'Pond', 'Potosi', '0000', 6.8117856, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Manitowish', 'Mockingbird', 'Pando', '0000', -2.6382189, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Vahlen', 'Kropf', 'chuquisaca', '0000', 38.828834, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Summer Ridge', 'Badeau', 'Beni', '0000', 28.4233602, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mcguire', 'Portage', 'Oruro', '0000', 30.427416, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dovetail', 'Summer Ridge', 'Tarija', '0000', 6.3188032, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Homewood', 'Mayfield', 'La Paz', '0000', 28.2068263, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fordem', 'Shopko', 'Cochabamba', '0000', 35.580662, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Homewood', 'Farwell', 'Potosi', '0000', 30.701369, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Marquette', 'Nevada', 'Pando', '0000', 40.3981884, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Northwestern', 'Union', 'chuquisaca', '0000', 32.729683, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ruskin', 'Del Mar', 'Beni', '0000', -0.789275, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Corry', 'Dakota', 'Oruro', '0000', 27.9676537, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Talmadge', 'Sullivan', 'Tarija', '0000', 17.1782591, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Wayridge', 'Kinsman', 'La Paz', '0000', 23.642114, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Rusk', 'Stoughton', 'Cochabamba', '0000', 41.2717724, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Elmside', 'Starling', 'Potosi', '0000', 23.028956, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Spohn', 'Acker', 'Pando', '0000', 59.1280914, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Saint Paul', 'Michigan', 'chuquisaca', '0000', -34.4786447, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Summer Ridge', 'Michigan', 'Beni', '0000', 45.521777, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Duke', 'David', 'Oruro', '0000', -19.6499319, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mccormick', 'Sundown', 'Tarija', '0000', 24.102499, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Garrison', 'Elka', 'La Paz', '0000', 25.0230538, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Johnson', 'Emmet', 'Cochabamba', '0000', 45.8367628, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Meadow Ridge', 'Westridge', 'Potosi', '0000', 53.695696, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hollow Ridge', 'Reindahl', 'Pando', '0000', 8.1380673, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ridgeway', 'Killdeer', 'chuquisaca', '0000', 45.2557594, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Alpine', 'Lunder', 'Beni', '0000', 28.162833, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('7th', 'Talmadge', 'Oruro', '0000', -8.2866081, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Continental', 'Summerview', 'Tarija', '0000', 37.005017, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Morningstar', 'Pond', 'La Paz', '0000', 46.8615704, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mallard', 'Nevada', 'Cochabamba', '0000', 54.1649073, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('David', 'Briar Crest', 'Potosi', '0000', 25.8007724, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Melby', 'Kenwood', 'Pando', '0000', 55.6832198, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Arkansas', 'Calypso', 'chuquisaca', '0000', -7.0986081, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lakewood Gardens', 'Oak Valley', 'Beni', '0000', 49.3637828, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Charing Cross', 'Charing Cross', 'Oruro', '0000', 39.128291, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Anzinger', 'Forest Run', 'Tarija', '0000', 53.3004898, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Jana', 'Grayhawk', 'La Paz', '0000', 24.880095, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Reinke', 'Coleman', 'Cochabamba', '0000', 30.917795, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Shopko', 'Hanson', 'Potosi', '0000', -43.2623846, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Forest', 'Paget', 'Pando', '0000', 37.429832, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Miller', 'Stuart', 'chuquisaca', '0000', 13.9052519, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Melvin', 'High Crossing', 'Beni', '0000', 62.471883, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Menomonie', 'Meadow Valley', 'Oruro', '0000', 61.7284389, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Spaight', 'Birchwood', 'Tarija', '0000', 46.9656528, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eagan', 'Fordem', 'La Paz', '0000', 55.5807611, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Delladonna', 'Wayridge', 'Cochabamba', '0000', 50.111779, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Melody', 'Rockefeller', 'Potosi', '0000', 41.5256088, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Rusk', 'Hudson', 'Pando', '0000', 49.4395013, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Gale', 'Summit', 'chuquisaca', '0000', 48.834578, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Logan', 'Mariners Cove', 'Beni', '0000', 41.0285386, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Golden Leaf', 'Transport', 'Oruro', '0000', 48.75667, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Parkside', 'Armistice', 'Tarija', '0000', 24.066095, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Quincy', 'Bayside', 'La Paz', '0000', 27.283955, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sheridan', 'Dwight', 'Cochabamba', '0000', 31.685311, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Spaight', 'Blaine', 'Potosi', '0000', 63.8223321, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ramsey', 'Hanson', 'Pando', '0000', -21.1330059, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Anzinger', 'Golf', 'chuquisaca', '0000', 6.323976, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Loftsgordon', 'Pine View', 'Beni', '0000', 49.65841, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Meadow Ridge', 'Crowley', 'Oruro', '0000', -6.4154, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Prairieview', 'Glendale', 'Tarija', '0000', 49.4580118, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fordem', 'Mosinee', 'La Paz', '0000', 22.0952234, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Maple', 'Bobwhite', 'Cochabamba', '0000', 39.3433574, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Shelley', 'Fieldstone', 'Potosi', '0000', -7.3497666, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fulton', 'Valley Edge', 'Pando', '0000', 53.1212988, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Anzinger', 'Coolidge', 'chuquisaca', '0000', 56.6306408, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Crowley', 'Parkside', 'Beni', '0000', 38.8744567, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bashford', 'Becker', 'Oruro', '0000', 49.3320487, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sugar', 'Kingsford', 'Tarija', '0000', 50.24987, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lake View', 'Carioca', 'La Paz', '0000', 24.154316, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Twin Pines', 'Carey', 'Cochabamba', '0000', 14.7252329, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Moulton', 'Orin', 'Potosi', '0000', 49.4992, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fuller', 'Union', 'Pando', '0000', 10.142762, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Trailsway', 'Corscot', 'chuquisaca', '0000', 48.1782952, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Namekagon', 'Stang', 'Beni', '0000', 14.565668, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Waywood', 'Dawn', 'Oruro', '0000', 32.4286242, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Warrior', 'Summerview', 'Tarija', '0000', 48.282193, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ridgeview', 'Evergreen', 'La Paz', '0000', 3.61023, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('John Wall', 'Buena Vista', 'Cochabamba', '0000', 35.30385, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mendota', 'Troy', 'Potosi', '0000', 11.4385093, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Granby', 'Gale', 'Pando', '0000', -9.5961614, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('American', 'Warner', 'chuquisaca', '0000', 36.608183, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Buena Vista', 'Mayfield', 'Beni', '0000', -3.3186067, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hazelcrest', 'Mitchell', 'Oruro', '0000', -17.5069121, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Manufacturers', 'Loftsgordon', 'Tarija', '0000', -8.4709546, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Surrey', 'Fordem', 'La Paz', '0000', -6.8641543, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Chive', 'Vera', 'Cochabamba', '0000', -20.0877391, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('5th', 'School', 'Potosi', '0000', 17.292049, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Old Shore', 'Randy', 'Pando', '0000', 8.6800991, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Chive', 'Linden', 'chuquisaca', '0000', 22.562964, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Rutledge', 'Mcguire', 'Beni', '0000', 50.043163, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Cambridge', 'Service', 'Oruro', '0000', 34.5215, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eagan', 'Dorton', 'Tarija', '0000', 49.2513639, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dorton', 'Susan', 'La Paz', '0000', 40.404991, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Coleman', 'Sutteridge', 'Cochabamba', '0000', -8.5568557, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sundown', 'Hooker', 'Potosi', '0000', 30.031533, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Old Gate', 'Huxley', 'Pando', '0000', 39.4365442, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Algoma', 'Tennessee', 'chuquisaca', '0000', 27.0874564, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fair Oaks', 'Union', 'Beni', '0000', -22.4206096, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Scofield', 'Merrick', 'Oruro', '0000', -22.363303, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Swallow', 'Marcy', 'Tarija', '0000', 50.4233463, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Garrison', 'Debra', 'La Paz', '0000', 56.4010545, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hovde', 'Fair Oaks', 'Cochabamba', '0000', 54.3749589, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('1st', 'Harper', 'Potosi', '0000', 45.4372062, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lotheville', 'Ronald Regan', 'Pando', '0000', 50.2637942, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Shelley', 'Meadow Ridge', 'chuquisaca', '0000', 14.5638721, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Nova', 'Dwight', 'Beni', '0000', 59.4746074, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Armistice', 'Amoth', 'Oruro', '0000', 36.6950261, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Roth', 'Pearson', 'Tarija', '0000', -7.5539241, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Shoshone', 'Boyd', 'La Paz', '0000', -4.1615016, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pierstorff', 'Blue Bill Park', 'Cochabamba', '0000', 22.579117, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dexter', 'Luster', 'Potosi', '0000', -26.8327412, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Towne', 'Novick', 'Pando', '0000', 40.7408774, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Superior', 'Carioca', 'chuquisaca', '0000', 15.787156, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Merry', 'Village', 'Beni', '0000', -4.6488523, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('La Follette', 'Kinsman', 'Oruro', '0000', 35.408609, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Nancy', 'Veith', 'Tarija', '0000', 41.6315023, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Di Loreto', 'Fieldstone', 'La Paz', '0000', 8.235581, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Karstens', 'Summer Ridge', 'Cochabamba', '0000', 28.579409, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Birchwood', 'Linden', 'Potosi', '0000', 36.4173244, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Canary', 'Messerschmidt', 'Pando', '0000', -20.2307033, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Summerview', 'Clyde Gallagher', 'chuquisaca', '0000', 20.8381545, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sachtjen', '6th', 'Beni', '0000', 41.3410168, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Anthes', 'Bellgrove', 'Oruro', '0000', 5.8765279, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eggendart', 'Anthes', 'Tarija', '0000', 41.1474096, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pleasure', 'Di Loreto', 'La Paz', '0000', 28.074649, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Nelson', 'Golf View', 'Cochabamba', '0000', 53.2109968, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Green Ridge', 'Charing Cross', 'Potosi', '0000', -7.5605, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Menomonie', 'Wayridge', 'Pando', '0000', 48.6618569, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Harper', 'Magdeline', 'chuquisaca', '0000', 64.0971015, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Milwaukee', 'Mayer', 'Beni', '0000', -7.135868, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lukken', 'Vermont', 'Oruro', '0000', 32.5746598, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Katie', 'Northview', 'Tarija', '0000', 14.0285468, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Goodland', 'Texas', 'La Paz', '0000', -8.4727553, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Farragut', 'Fallview', 'Cochabamba', '0000', 5.459089, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Swallow', 'Dunning', 'Potosi', '0000', 53.3870149, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Morning', 'Mcbride', 'Pando', '0000', -11.8648237, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eagan', 'Haas', 'chuquisaca', '0000', 36.6484118, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Boyd', 'Darwin', 'Beni', '0000', 37.444498, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dawn', 'Hovde', 'Oruro', '0000', 30.5211502, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dwight', 'Summer Ridge', 'Tarija', '0000', 45.7646846, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mcbride', 'Donald', 'La Paz', '0000', 50.282951, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hanson', '8th', 'Cochabamba', '0000', 41.2675718, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pleasure', 'Granby', 'Potosi', '0000', 47.747805, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Cottonwood', 'Dixon', 'Pando', '0000', 38.1162631, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Morningstar', 'Mitchell', 'chuquisaca', '0000', 50.5251922, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Independence', '6th', 'Beni', '0000', -6.2360264, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Golden Leaf', 'Esch', 'Oruro', '0000', 3.3273599, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bellgrove', 'Scofield', 'Tarija', '0000', 30.2638032, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bluestem', 'Old Gate', 'La Paz', '0000', 14.7690395, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pierstorff', 'Lake View', 'Cochabamba', '0000', 25.015105, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Division', 'Old Gate', 'Potosi', '0000', 36.8199022, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Raven', 'Esker', 'Pando', '0000', 50.4252048, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Forest Dale', 'Mcguire', 'chuquisaca', '0000', 32.0544346, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ryan', 'Packers', 'Beni', '0000', 36.6777372, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Merry', 'Forest Run', 'Oruro', '0000', -21.7567077, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fremont', 'Lotheville', 'Tarija', '0000', -6.8008183, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Armistice', 'Milwaukee', 'La Paz', '0000', 22.843818, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Rockefeller', 'Lindbergh', 'Cochabamba', '0000', 44.2, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Spenser', 'Bowman', 'Potosi', '0000', -6.7654544, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mccormick', 'Jana', 'Pando', '0000', 34.5278415, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Acker', 'Cambridge', 'chuquisaca', '0000', 23.817974, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Veith', 'Manley', 'Beni', '0000', 28.260141, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Westend', 'Blue Bill Park', 'Oruro', '0000', 37.177129, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Loeprich', 'Bunker Hill', 'Tarija', '0000', 29.2083348, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Elgar', 'Brickson Park', 'La Paz', '0000', 50.2318521, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Karstens', 'Kinsman', 'Cochabamba', '0000', 21.3926035, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mendota', 'Alpine', 'Potosi', '0000', 50.6856, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Iowa', 'Buena Vista', 'Pando', '0000', -19.8428824, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lotheville', 'Ludington', 'chuquisaca', '0000', 54.256793, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dawn', 'Buena Vista', 'Beni', '0000', -8.098672, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Montana', 'Longview', 'Oruro', '0000', -22.8521905, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sunbrook', 'Amoth', 'Tarija', '0000', 33.347316, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('2nd', 'Coolidge', 'La Paz', '0000', -21.4261129, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('David', 'Green', 'Cochabamba', '0000', 35.585575, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('8th', 'Welch', 'Potosi', '0000', 53.1406245, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Trailsway', 'Logan', 'Pando', '0000', 38.0117509, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Birchwood', 'Sloan', 'chuquisaca', '0000', 8.9806034, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Linden', 'Eagle Crest', 'Beni', '0000', 7.5129005, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Continental', 'Farmco', 'Oruro', '0000', 48.2629668, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Katie', 'Calypso', 'Tarija', '0000', 43.8371234, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Maple', 'Meadow Vale', 'La Paz', '0000', 17.1374798, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sugar', 'Rowland', 'Cochabamba', '0000', 3.033069, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Darwin', 'Reinke', 'Potosi', '0000', -6.3621916, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Jenna', 'Anzinger', 'Pando', '0000', 49.9846987, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Burning Wood', 'Hermina', 'chuquisaca', '0000', 29.2187967, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Almo', 'Jay', 'Beni', '0000', 46.3583447, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Anderson', 'Thierer', 'Oruro', '0000', -7.9903162, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Service', 'Express', 'Tarija', '0000', 39.41691, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lunder', 'Briar Crest', 'La Paz', '0000', -6.3079232, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Cascade', 'Monica', 'Cochabamba', '0000', 57.6995979, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Rieder', 'Bowman', 'Potosi', '0000', -34.6090822, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Coolidge', 'Sycamore', 'Pando', '0000', -7.2906502, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mallory', 'Morningstar', 'chuquisaca', '0000', -14.5205297, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Clemons', 'Schurz', 'Beni', '0000', -46.3478987, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ridge Oak', 'Tony', 'Oruro', '0000', 47.3752386, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hoard', 'Buena Vista', 'Tarija', '0000', 59.6136775, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ronald Regan', 'South', 'La Paz', '0000', -19.9245018, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dayton', 'Cottonwood', 'Cochabamba', '0000', 20.1527657, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('West', 'Fulton', 'Potosi', '0000', 32.38613, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Artisan', 'Ohio', 'Pando', '0000', -6.8089753, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Jay', 'Raven', 'chuquisaca', '0000', -7.0754952, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Magdeline', 'Express', 'Beni', '0000', 50.246964, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ridgeview', 'Straubel', 'Oruro', '0000', 44.1799774, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lighthouse Bay', 'Mosinee', 'Tarija', '0000', 30.5383451, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Goodland', 'Oneill', 'La Paz', '0000', 36.6561848, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Upham', 'Scofield', 'Cochabamba', '0000', -2.2014533, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Luster', 'Anhalt', 'Potosi', '0000', -3.4610562, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mitchell', 'Hudson', 'Pando', '0000', -21.1674808, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sauthoff', 'Jackson', 'chuquisaca', '0000', -8.498277, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lyons', 'Hooker', 'Beni', '0000', -7.337137, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sutteridge', 'Anderson', 'Oruro', '0000', 36.789796, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Grasskamp', 'Eastlawn', 'Tarija', '0000', 30.807667, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fieldstone', 'Schurz', 'La Paz', '0000', 37.948461, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Arrowood', 'Moulton', 'Cochabamba', '0000', -7.7013097, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Portage', 'Duke', 'Potosi', '0000', 14.602493, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Clyde Gallagher', 'Oriole', 'Pando', '0000', 54.256793, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Springs', 'Esch', 'chuquisaca', '0000', 4.485011, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('La Follette', 'Lake View', 'Beni', '0000', 17.9453521, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Loomis', 'Magdeline', 'Oruro', '0000', 31.651917, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Village', 'Carey', 'Tarija', '0000', 41.8822489, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('4th', 'Nelson', 'La Paz', '0000', 24.487326, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Raven', 'Cardinal', 'Cochabamba', '0000', -4.3695455, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Miller', 'Eagle Crest', 'Potosi', '0000', 50.585206, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Roxbury', 'Grasskamp', 'Pando', '0000', -14.2171388, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pawling', 'Larry', 'chuquisaca', '0000', 37.363389, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Golf Course', '7th', 'Beni', '0000', 23.101153, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Rockefeller', 'Hooker', 'Oruro', '0000', 48.922709, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Carpenter', 'Carey', 'Tarija', '0000', 61.7242142, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fieldstone', 'Florence', 'La Paz', '0000', 43.4945737, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Evergreen', 'Warbler', 'Cochabamba', '0000', 43.8313297, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Elgar', 'Burning Wood', 'Potosi', '0000', 49.7863419, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Grover', 'Carpenter', 'Pando', '0000', -25.0993621, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dapin', 'Talisman', 'chuquisaca', '0000', -2.5398781, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Corscot', 'Mendota', 'Beni', '0000', 60.0587654, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Summerview', 'Clove', 'Oruro', '0000', 39.918983, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sloan', 'Eggendart', 'Tarija', '0000', -6.612633, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Center', 'Sycamore', 'La Paz', '0000', 40.210071, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Goodland', 'Donald', 'Cochabamba', '0000', 25.84791, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Banding', 'Fairview', 'Potosi', '0000', 51.209018, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Duke', 'Sycamore', 'Pando', '0000', 35.5603286, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Montana', 'Melvin', 'chuquisaca', '0000', 59.9036118, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Parkside', 'Westport', 'Beni', '0000', 53.2231057, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Huxley', 'Michigan', 'Oruro', '0000', 53.2622714, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sutherland', 'Chive', 'Tarija', '0000', 5.746649, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Merry', 'Hermina', 'La Paz', '0000', 28.285873, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dapin', 'Magdeline', 'Cochabamba', '0000', -3.7690648, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Arizona', 'Rusk', 'Potosi', '0000', 44.439233, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Anhalt', 'Hauk', 'Pando', '0000', 30.5765383, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Arizona', 'Nobel', 'chuquisaca', '0000', -7.166519, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Becker', 'Memorial', 'Beni', '0000', 56.9938866, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Stoughton', 'Loeprich', 'Oruro', '0000', 18.4670158, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Old Shore', 'Lukken', 'Tarija', '0000', 27.630806, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('New Castle', 'Jana', 'La Paz', '0000', 41.6840477, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Victoria', 'Merry', 'Cochabamba', '0000', 36.4056598, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Anderson', 'Esch', 'Potosi', '0000', 44.724837, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Tennyson', 'Helena', 'Pando', '0000', -7.823074, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Gina', 'Farragut', 'chuquisaca', '0000', -30.9738956, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Butterfield', 'Corben', 'Beni', '0000', -16.361238, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Reinke', 'Lindbergh', 'Oruro', '0000', 48.1251024, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dwight', 'Melvin', 'Tarija', '0000', 49.9287189, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Kings', 'Comanche', 'La Paz', '0000', 53.7942932, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Del Sol', 'Golf View', 'Cochabamba', '0000', 59.1987737, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Riverside', 'Tomscot', 'Potosi', '0000', -4.5887697, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Jenifer', 'Doe Crossing', 'Pando', '0000', 31.689906, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Corscot', 'Buena Vista', 'chuquisaca', '0000', -6.808273, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Grim', 'Monument', 'Beni', '0000', 34.9128121, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mitchell', 'Cardinal', 'Oruro', '0000', 59.3582766, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hoard', 'Heath', 'Tarija', '0000', 25.66145, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Miller', 'David', 'La Paz', '0000', 25.6181943, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Buell', 'Alpine', 'Cochabamba', '0000', 43.785358, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Warrior', 'Kim', 'Potosi', '0000', 26.7255231, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Manley', 'Welch', 'Pando', '0000', 18.4180126, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Butternut', 'Johnson', 'chuquisaca', '0000', 28.947331, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Reinke', 'Northview', 'Beni', '0000', 19.482042, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hollow Ridge', 'Dixon', 'Oruro', '0000', 19.4392516, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Jana', 'Mosinee', 'Tarija', '0000', 11.0537247, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Esker', 'Blackbird', 'La Paz', '0000', 31.219568, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Badeau', 'Lakewood', 'Cochabamba', '0000', -6.8432007, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Esch', 'Amoth', 'Potosi', '0000', 14.93278, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Columbus', 'Graceland', 'Pando', '0000', 48.239431, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Northfield', 'Mariners Cove', 'chuquisaca', '0000', 31.491169, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Northwestern', 'Browning', 'Beni', '0000', 21.4981346, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sunnyside', 'Ramsey', 'Oruro', '0000', 55.590397, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hollow Ridge', 'Caliangt', 'Tarija', '0000', 28.353912, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ryan', 'Memorial', 'La Paz', '0000', -6.8333257, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hollow Ridge', 'Meadow Valley', 'Cochabamba', '0000', 51.1656869, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Johnson', 'Annamark', 'Potosi', '0000', 43.273732, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Shoshone', 'Brentwood', 'Pando', '0000', 58.8110301, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Messerschmidt', 'Stuart', 'chuquisaca', '0000', -9.7327, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Stone Corner', 'Hoard', 'Beni', '0000', 2.7682671, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Armistice', 'Hovde', 'Oruro', '0000', 59.418208, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Schiller', 'Southridge', 'Tarija', '0000', 36.826981, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Center', 'Alpine', 'La Paz', '0000', 31.0452345, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ridgeview', 'Hallows', 'Cochabamba', '0000', -1.8703308, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lerdahl', 'Crowley', 'Potosi', '0000', 55.1518222, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Michigan', 'Springs', 'Pando', '0000', -7.5284147, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Trailsway', 'Jenna', 'chuquisaca', '0000', 38.35, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Browning', 'Lighthouse Bay', 'Beni', '0000', 32.061895, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sauthoff', 'Arkansas', 'Oruro', '0000', 57.5002589, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Huxley', 'Alpine', 'Tarija', '0000', -7.1743383, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Banding', 'Warner', 'La Paz', '0000', 9.2478, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Arizona', 'Helena', 'Cochabamba', '0000', -8.8228841, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ridgeview', 'Stone Corner', 'Potosi', '0000', -6.9136675, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Haas', 'Roxbury', 'Pando', '0000', -6.2839964, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bartelt', 'Brown', 'chuquisaca', '0000', 38.7418853, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Rieder', '7th', 'Beni', '0000', -34.2899021, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Warner', 'Ridge Oak', 'Oruro', '0000', 39.75, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hanover', 'Petterle', 'Tarija', '0000', 53.5279846, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Vahlen', 'Lyons', 'La Paz', '0000', 54.1347287, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Warbler', 'Bobwhite', 'Cochabamba', '0000', 27.615202, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('3rd', 'Linden', 'Potosi', '0000', 38.87, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mendota', 'Coolidge', 'Pando', '0000', 35.90414, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sommers', 'Springview', 'chuquisaca', '0000', -19.9930478, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sachtjen', 'Mockingbird', 'Beni', '0000', 37.189822, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Corscot', 'Lakeland', 'Oruro', '0000', -6.1373578, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Paget', 'Carberry', 'Tarija', '0000', 32.6717749, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Holmberg', 'Sauthoff', 'La Paz', '0000', 22.7694444, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ohio', '8th', 'Cochabamba', '0000', 30.582271, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bultman', 'Village', 'Potosi', '0000', 25.5822549, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Morningstar', 'Macpherson', 'Pando', '0000', 47.92681, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Cottonwood', 'Dottie', 'chuquisaca', '0000', -27.3302999, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ridge Oak', 'Mosinee', 'Beni', '0000', 43.0429124, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Linden', 'Elgar', 'Oruro', '0000', 39.937881, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sunnyside', 'Monument', 'Tarija', '0000', 25.558201, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Algoma', 'Marcy', 'La Paz', '0000', 25.5562935, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Chive', 'Coolidge', 'Cochabamba', '0000', 11.8194472, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pearson', 'Hansons', 'Potosi', '0000', 28.55386, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Coolidge', 'Lillian', 'Pando', '0000', 40.8395426, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Schlimgen', 'Parkside', 'chuquisaca', '0000', -31.3224313, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Daystar', 'Farragut', 'Beni', '0000', 11.9170674, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Westend', 'Express', 'Oruro', '0000', 32.625478, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Banding', 'Packers', 'Tarija', '0000', 58.5235952, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('School', 'Londonderry', 'La Paz', '0000', 30.7366196, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Rusk', 'Monica', 'Cochabamba', '0000', -8.0344803, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Weeping Birch', 'Comanche', 'Potosi', '0000', 42.9107635, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bayside', 'Luster', 'Pando', '0000', 56.8564288, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Starling', 'Swallow', 'chuquisaca', '0000', 17.45685, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Doe Crossing', 'Pond', 'Beni', '0000', 9.0835262, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Goodland', 'Almo', 'Oruro', '0000', 41.7156359, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Summer Ridge', 'Sachtjen', 'Tarija', '0000', 21.1881873, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pond', 'Prairie Rose', 'La Paz', '0000', -26.1011687, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Susan', 'Granby', 'Cochabamba', '0000', -6.371137, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Anniversary', 'Chive', 'Potosi', '0000', 14.565668, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sunfield', 'Cottonwood', 'Pando', '0000', 41.2340369, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Columbus', 'Pankratz', 'chuquisaca', '0000', 21.857958, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Texas', 'Crownhardt', 'Beni', '0000', 45.1810363, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Service', 'Roth', 'Oruro', '0000', 32.425185, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Clove', 'Lawn', 'Tarija', '0000', 36.222959, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sachtjen', 'Coolidge', 'La Paz', '0000', 53.5733796, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Manley', 'Dahle', 'Cochabamba', '0000', 35.3209172, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bonner', 'Anthes', 'Potosi', '0000', 43.3688739, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Maywood', 'Lien', 'Pando', '0000', -0.5083679, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Clemons', 'Hooker', 'chuquisaca', '0000', -9.798194, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hagan', 'Dawn', 'Beni', '0000', 56.7558466, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Porter', 'Cambridge', 'Oruro', '0000', 59.989522, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lakewood', 'Graedel', 'Tarija', '0000', 34.273409, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sutherland', '5th', 'La Paz', '0000', 48.9234517, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Declaration', 'Commercial', 'Cochabamba', '0000', 34.12583, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Milwaukee', 'Columbus', 'Potosi', '0000', 40.8258113, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Anzinger', 'Mallard', 'Pando', '0000', -7.347756, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dahle', 'Columbus', 'chuquisaca', '0000', 15.92762, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Longview', 'Mallory', 'Beni', '0000', 31.3462005, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Birchwood', 'Loomis', 'Oruro', '0000', 38.94, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bluejay', 'Anhalt', 'Tarija', '0000', 49.9086926, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Maryland', 'Mosinee', 'La Paz', '0000', -23.5307464, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mccormick', 'Jackson', 'Cochabamba', '0000', 9.3730352, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fair Oaks', 'Morning', 'Potosi', '0000', 55.6152783, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mcbride', 'Mitchell', 'Pando', '0000', 49.4118611, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Nevada', 'John Wall', 'chuquisaca', '0000', 48.9046915, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Charing Cross', 'Dexter', 'Beni', '0000', 55.8437552, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Waxwing', 'Aberg', 'Oruro', '0000', 50.9173381, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Buhler', 'Hovde', 'Tarija', '0000', 14.7938922, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Del Sol', 'Lunder', 'La Paz', '0000', -7.9636675, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Oakridge', 'American', 'Cochabamba', '0000', 14.5180441, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fieldstone', 'Northwestern', 'Potosi', '0000', 42.1450502, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Banding', 'Lien', 'Pando', '0000', 22.3723336, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Express', 'Kim', 'chuquisaca', '0000', -16.3846284, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bultman', 'Elgar', 'Beni', '0000', 40.01833, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('High Crossing', 'Oxford', 'Oruro', '0000', 50.9346454, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Larry', 'Ludington', 'Tarija', '0000', 25.9755686, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Clemons', 'Mesta', 'La Paz', '0000', -23.6509279, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Prairie Rose', 'Cherokee', 'Cochabamba', '0000', 14.5713307, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Main', 'Evergreen', 'Potosi', '0000', -7.5450262, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Marcy', 'Superior', 'Pando', '0000', 35.0435187, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hanover', 'Jana', 'chuquisaca', '0000', 18.3092599, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dayton', 'Oak', 'Beni', '0000', 61.6614104, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Carioca', 'Alpine', 'Oruro', '0000', 59.8637584, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Alpine', 'Roxbury', 'Tarija', '0000', 15.4855369, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lunder', 'Hagan', 'La Paz', '0000', -3.0412633, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Muir', 'Almo', 'Cochabamba', '0000', 39.9041999, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Forest Dale', 'Swallow', 'Potosi', '0000', 43.6296613, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Cherokee', 'Pond', 'Pando', '0000', 48.8693156, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Cambridge', 'Claremont', 'chuquisaca', '0000', 45.8551505, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Calypso', 'Sullivan', 'Beni', '0000', 13.5820144, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fisk', 'Judy', 'Oruro', '0000', 48.015883, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sommers', 'Dovetail', 'Tarija', '0000', 57.7313899, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fieldstone', 'Sunnyside', 'La Paz', '0000', -0.0998238, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Algoma', 'Buena Vista', 'Cochabamba', '0000', 18.907778, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('School', 'Loftsgordon', 'Potosi', '0000', 8.955271, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Charing Cross', 'Montana', 'Pando', '0000', 41.0938736, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Meadow Valley', 'Hagan', 'chuquisaca', '0000', 22.5408317, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Talisman', 'Randy', 'Beni', '0000', 29.988244, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Springs', 'Michigan', 'Oruro', '0000', 12.647214, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sage', 'Butterfield', 'Tarija', '0000', 13.2836618, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Briar Crest', 'Mosinee', 'La Paz', '0000', 17.7434868, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lillian', 'Novick', 'Cochabamba', '0000', 48.816388, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eliot', 'Pankratz', 'Potosi', '0000', 17.7302207, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Brentwood', 'Brown', 'Pando', '0000', 41.305838, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Atwood', 'Ridgeview', 'chuquisaca', '0000', 40.7, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Farwell', 'Donald', 'Beni', '0000', 32.46, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Russell', 'Acker', 'Oruro', '0000', 40.5053499, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Moland', 'Waywood', 'Tarija', '0000', 41.884195, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('4th', 'Kedzie', 'La Paz', '0000', -11.70753, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Del Sol', 'Farmco', 'Cochabamba', '0000', 30.833079, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Veith', 'Acker', 'Potosi', '0000', 11.0574624, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Independence', 'Merry', 'Pando', '0000', 60.1391526, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mosinee', 'Old Shore', 'chuquisaca', '0000', -7.316501, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Summerview', 'Lakeland', 'Beni', '0000', 44.634519, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Utah', 'Dottie', 'Oruro', '0000', 25.600272, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lakewood', 'Bayside', 'Tarija', '0000', 11.0978809, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('International', 'Rutledge', 'La Paz', '0000', 34.9568026, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pleasure', 'Quincy', 'Cochabamba', '0000', 42.7590695, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Nobel', 'Merry', 'Potosi', '0000', -7.7408587, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Acker', 'Union', 'Pando', '0000', 30.2638032, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Raven', 'Clyde Gallagher', 'chuquisaca', '0000', 38.004153, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Utah', 'Crest Line', 'Beni', '0000', 40.04606, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Talisman', 'Pine View', 'Oruro', '0000', 7.6988579, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Comanche', 'Loftsgordon', 'Tarija', '0000', 12.6679167, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Loftsgordon', 'Summerview', 'La Paz', '0000', 52.27994, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Brentwood', 'Helena', 'Cochabamba', '0000', 51.5024848, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mosinee', 'Upham', 'Potosi', '0000', 14.1305459, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Main', 'Messerschmidt', 'Pando', '0000', 30.297791, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Northwestern', 'Spaight', 'chuquisaca', '0000', -5.0662102, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Paget', 'Cody', 'Beni', '0000', 32.23483, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Summerview', 'Badeau', 'Oruro', '0000', -7.8533911, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lake View', 'Saint Paul', 'Tarija', '0000', 16.5762863, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Declaration', 'Merry', 'La Paz', '0000', 59.2542117, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Westport', 'Lillian', 'Cochabamba', '0000', 49.9194173, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Londonderry', 'Bayside', 'Potosi', '0000', 48.8242268, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lukken', 'Linden', 'Pando', '0000', 52.4402961, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Debra', 'Lotheville', 'chuquisaca', '0000', 16.503112, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Darwin', 'Canary', 'Beni', '0000', 14.651459, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Anzinger', 'John Wall', 'Oruro', '0000', 67.1355975, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('American Ash', 'Sauthoff', 'Tarija', '0000', 40.5885408, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Vermont', 'Mifflin', 'La Paz', '0000', 41.420018, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Vahlen', 'Anzinger', 'Cochabamba', '0000', 44.904219, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Nancy', 'Bluestem', 'Potosi', '0000', 39.6022749, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sloan', 'Duke', 'Pando', '0000', -7.7326298, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Westport', 'Drewry', 'chuquisaca', '0000', 38.694365, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Marcy', 'Harper', 'Beni', '0000', 45.0510883, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Reinke', 'Killdeer', 'Oruro', '0000', -12.8454679, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Vera', 'Cherokee', 'Tarija', '0000', 42.6532844, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sundown', 'Bonner', 'La Paz', '0000', 31.263042, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fremont', 'Rockefeller', 'Cochabamba', '0000', 51.06681, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Comanche', 'Dorton', 'Potosi', '0000', 29.4374631, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Crescent Oaks', 'Novick', 'Pando', '0000', 32.224808, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Surrey', 'Redwing', 'chuquisaca', '0000', 15.6600225, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Packers', 'Parkside', 'Beni', '0000', 28.30993, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dennis', 'Dexter', 'Oruro', '0000', -16.2142869, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Banding', 'Dayton', 'Tarija', '0000', 36.650038, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mariners Cove', 'Utah', 'La Paz', '0000', 32.200197, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Waywood', 'Artisan', 'Cochabamba', '0000', 38.63333, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Nelson', 'Sachtjen', 'Potosi', '0000', 30.8337059, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sutherland', 'Almo', 'Pando', '0000', 18.8782625, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lakeland', 'School', 'chuquisaca', '0000', 60.3641945, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('School', 'Butternut', 'Beni', '0000', 25.85587, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Daystar', 'Gulseth', 'Oruro', '0000', 18.9337202, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Green Ridge', 'Lyons', 'Tarija', '0000', 59.3313673, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hovde', 'Hooker', 'La Paz', '0000', -9.2957636, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ramsey', 'Johnson', 'Cochabamba', '0000', -7.4846821, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Little Fleur', 'Di Loreto', 'Potosi', '0000', 14.8108901, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Kingsford', 'Bartillon', 'Pando', '0000', 41.7737809, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Troy', 'Rigney', 'chuquisaca', '0000', 41.441441, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Rigney', 'Maryland', 'Beni', '0000', -18.998706, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mandrake', 'Montana', 'Oruro', '0000', 46.0972432, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eastlawn', 'Lakewood Gardens', 'Tarija', '0000', -6.361128, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Novick', 'Muir', 'La Paz', '0000', 34.5107638, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Meadow Vale', 'Clove', 'Cochabamba', '0000', 11.5218308, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Laurel', 'Marcy', 'Potosi', '0000', -6.7407026, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Arkansas', 'Lotheville', 'Pando', '0000', -11.82198, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Burrows', 'Mitchell', 'chuquisaca', '0000', 14.5019116, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pepper Wood', 'Swallow', 'Beni', '0000', 42.7003378, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Green Ridge', 'Coolidge', 'Oruro', '0000', 51.1372058, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Old Gate', 'Muir', 'Tarija', '0000', 25.867345, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mandrake', 'Moland', 'La Paz', '0000', -7.347756, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ilene', 'Ridgeview', 'Cochabamba', '0000', 49.46634, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Melby', 'Dawn', 'Potosi', '0000', 42.4353312, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Marquette', 'Thackeray', 'Pando', '0000', -6.615755, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Chinook', 'Truax', 'chuquisaca', '0000', -2.5482448, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Orin', 'Fulton', 'Beni', '0000', 58.6247472, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Clarendon', 'Oxford', 'Oruro', '0000', 24.874839, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eastwood', 'Hanover', 'Tarija', '0000', 40.417358, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Old Gate', 'Leroy', 'La Paz', '0000', 38.26667, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Manitowish', 'Straubel', 'Cochabamba', '0000', 29.4778934, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Del Mar', 'Farwell', 'Potosi', '0000', 45.697904, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Center', 'Talisman', 'Pando', '0000', -23.1072154, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pepper Wood', 'Stoughton', 'chuquisaca', '0000', 63.3767052, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Moland', 'Maple Wood', 'Beni', '0000', -30.6732959, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('West', 'Utah', 'Oruro', '0000', -34.5006776, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Stoughton', 'Reinke', 'Tarija', '0000', 14.7299584, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Upham', 'Kingsford', 'La Paz', '0000', 43.6445087, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Little Fleur', 'Declaration', 'Cochabamba', '0000', -7.7169, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Saint Paul', 'Kinsman', 'Potosi', '0000', 56.9651439, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Steensland', 'Shoshone', 'Pando', '0000', 40.8806112, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Kenwood', 'Browning', 'chuquisaca', '0000', 19.604951, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Knutson', 'Blue Bill Park', 'Beni', '0000', 32.320332, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Nobel', 'Delladonna', 'Oruro', '0000', 17.6143085, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('School', 'Oak Valley', 'Tarija', '0000', -0.3208374, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Tomscot', 'Ruskin', 'La Paz', '0000', 41.0534668, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Arapahoe', 'Glacier Hill', 'Cochabamba', '0000', -7.1665502, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lien', 'Oakridge', 'Potosi', '0000', 49.5904912, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Thackeray', 'Dapin', 'Pando', '0000', -3.9257199, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Main', 'Sunbrook', 'chuquisaca', '0000', 41.0083753, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Becker', 'Prairie Rose', 'Beni', '0000', 47.171717, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Jackson', 'Karstens', 'Oruro', '0000', 22.806457, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Scott', 'Johnson', 'Tarija', '0000', -23.8879561, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Longview', 'Russell', 'La Paz', '0000', 54.6, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Carey', 'Carberry', 'Cochabamba', '0000', 9.939624, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Main', 'Reinke', 'Potosi', '0000', 14.9128369, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Katie', 'East', 'Pando', '0000', 40.0380778, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Almo', 'Granby', 'chuquisaca', '0000', -19.6824436, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Heffernan', 'Hoard', 'Beni', '0000', 3.1377116, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Michigan', 'Killdeer', 'Oruro', '0000', 0.6092923, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pine View', 'Carberry', 'Tarija', '0000', 34.746611, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Vidon', 'Blaine', 'La Paz', '0000', 14.5638721, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Redwing', 'Sloan', 'Cochabamba', '0000', 47.0163969, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Clyde Gallagher', 'Ridgeview', 'Potosi', '0000', 31.77, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Moulton', 'Donald', 'Pando', '0000', -25.0225309, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bayside', 'Summer Ridge', 'chuquisaca', '0000', 38.1861536, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sauthoff', 'Hansons', 'Beni', '0000', -34.7611766, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Havey', 'Atwood', 'Oruro', '0000', 23.83072, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Manitowish', 'Old Shore', 'Tarija', '0000', 53.8191, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Drewry', 'Kings', 'La Paz', '0000', 49.4817883, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('International', 'Sycamore', 'Cochabamba', '0000', 40.288561, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Miller', 'Texas', 'Potosi', '0000', 49.9467601, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Longview', 'Talmadge', 'Pando', '0000', 34.683646, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Macpherson', 'Towne', 'chuquisaca', '0000', -7.4720926, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Shopko', 'Blackbird', 'Beni', '0000', 36.7336287, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mosinee', 'Arrowood', 'Oruro', '0000', 30.5547139, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lunder', 'Holy Cross', 'Tarija', '0000', -10.07722, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Killdeer', 'Roth', 'La Paz', '0000', 46.6473105, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Chive', 'Bluestem', 'Cochabamba', '0000', 41.6338439, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sage', 'Heffernan', 'Potosi', '0000', 28.848613, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('American Ash', 'Lotheville', 'Pando', '0000', 29.879877, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Derek', 'Monterey', 'chuquisaca', '0000', 42.3745311, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('7th', 'La Follette', 'Beni', '0000', 40.3513253, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eliot', 'Clemons', 'Oruro', '0000', 9.9153112, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sage', 'Oriole', 'Tarija', '0000', 32.058597, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sundown', 'Northland', 'La Paz', '0000', 44.5652451, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hoard', 'Melody', 'Cochabamba', '0000', 6.7810505, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Merchant', 'Bartillon', 'Potosi', '0000', 50.3539812, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Buena Vista', 'Bunting', 'Pando', '0000', 53.8044834, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Shasta', 'Towne', 'chuquisaca', '0000', 6.8117856, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Crescent Oaks', 'Onsgard', 'Beni', '0000', 50.6503044, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Alpine', 'Reinke', 'Oruro', '0000', 43.2496743, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Acker', 'Bellgrove', 'Tarija', '0000', 21.31, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Thackeray', 'Jay', 'La Paz', '0000', 14.3586387, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bartillon', 'Eagan', 'Cochabamba', '0000', 14.6511524, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sullivan', 'Lukken', 'Potosi', '0000', 15.2286069, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Manley', 'Killdeer', 'Pando', '0000', 35.5374671, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hoepker', 'Fulton', 'chuquisaca', '0000', -42.7556675, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Loftsgordon', 'Onsgard', 'Beni', '0000', 31.9339724, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Elka', 'Hermina', 'Oruro', '0000', 6.6402, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lakewood Gardens', 'Chive', 'Tarija', '0000', 53.8037886, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Golf View', 'Dottie', 'La Paz', '0000', -23.3879703, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fremont', 'Waywood', 'Cochabamba', '0000', 34.34866, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sunbrook', 'Victoria', 'Potosi', '0000', 32.31, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sunnyside', 'Buena Vista', 'Pando', '0000', 41.0529013, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Spenser', 'School', 'chuquisaca', '0000', 39.952319, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mccormick', 'Upham', 'Beni', '0000', 37.366903, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Londonderry', 'Montana', 'Oruro', '0000', -9.8867238, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Glacier Hill', 'Ludington', 'Tarija', '0000', 20.5200611, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Butterfield', 'Graedel', 'La Paz', '0000', 32.3206, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Westport', 'Johnson', 'Cochabamba', '0000', 49.5936213, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Monica', 'David', 'Potosi', '0000', 39.1372748, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sachtjen', 'Banding', 'Pando', '0000', 51.78914, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Grasskamp', '3rd', 'chuquisaca', '0000', -8.681907, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Jenifer', 'Warrior', 'Beni', '0000', 30.0746, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Chive', 'Oriole', 'Oruro', '0000', 42.2098979, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Grasskamp', 'Cardinal', 'Tarija', '0000', 29.423417, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hoffman', 'Old Gate', 'La Paz', '0000', 22.1484928, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hauk', 'Linden', 'Cochabamba', '0000', 5.1886762, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pond', 'Lighthouse Bay', 'Potosi', '0000', 49.6284572, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Shoshone', 'Evergreen', 'Pando', '0000', 48.2735736, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Swallow', 'Karstens', 'chuquisaca', '0000', 31.8840886, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Manley', 'Talisman', 'Beni', '0000', 24.1092009, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Myrtle', 'Kensington', 'Oruro', '0000', 51.5489435, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('8th', 'Derek', 'Tarija', '0000', 45.674028, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Valley Edge', 'Little Fleur', 'La Paz', '0000', 32.955581, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fairview', 'Oxford', 'Cochabamba', '0000', 35.640089, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Morning', 'Dwight', 'Potosi', '0000', 41.09028, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Crescent Oaks', 'Dottie', 'Pando', '0000', 6.8907086, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sachtjen', 'Atwood', 'chuquisaca', '0000', 38.5537924, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Oak Valley', 'Jenifer', 'Beni', '0000', 49.7371648, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mosinee', 'Fuller', 'Oruro', '0000', -6.8903936, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Brown', 'Arizona', 'Tarija', '0000', 39.989836, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fair Oaks', 'Golf', 'La Paz', '0000', 17.76999, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('West', '8th', 'Cochabamba', '0000', -24.5997626, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Buell', 'Schmedeman', 'Potosi', '0000', 38.7188171, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Roth', '3rd', 'Pando', '0000', 25.6538807, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Maple', 'Mayfield', 'chuquisaca', '0000', 33.6042793, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Texas', 'Rockefeller', 'Beni', '0000', 60.0203894, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Cottonwood', 'Dwight', 'Oruro', '0000', -5.14445, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hoffman', 'Harbort', 'Tarija', '0000', 31.207751, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Burning Wood', 'Shasta', 'La Paz', '0000', 39.5676563, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Daystar', 'Weeping Birch', 'Cochabamba', '0000', 50.6655892, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Susan', 'Oak', 'Potosi', '0000', 13.7279858, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hansons', 'Lakewood', 'Pando', '0000', 18.504589, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Thierer', 'Hermina', 'chuquisaca', '0000', 30.5312657, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bluejay', 'Forster', 'Beni', '0000', 42.583016, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Redwing', 'Kings', 'Oruro', '0000', 27.8169, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Del Sol', 'Portage', 'Tarija', '0000', 48.9270449, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Rigney', 'Carpenter', 'La Paz', '0000', -24.2449065, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Little Fleur', 'Cordelia', 'Cochabamba', '0000', -15.7994139, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Messerschmidt', 'Acker', 'Potosi', '0000', 50.4034992, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sherman', 'Rockefeller', 'Pando', '0000', 33.917649, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Russell', 'Mccormick', 'chuquisaca', '0000', 31.917522, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Gina', 'Boyd', 'Beni', '0000', 12.0687, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Russell', 'Nevada', 'Oruro', '0000', 36.628305, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Twin Pines', '4th', 'Tarija', '0000', 14.6843598, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Longview', 'Prairie Rose', 'La Paz', '0000', 49.6308644, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Butternut', 'Maple Wood', 'Cochabamba', '0000', 39.7968818, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Susan', 'Stuart', 'Potosi', '0000', 35.295007, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('American', 'Killdeer', 'Pando', '0000', 40.7392836, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Northfield', 'Armistice', 'chuquisaca', '0000', 53.6179245, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ludington', 'Ilene', 'Beni', '0000', 33.708276, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eliot', 'Doe Crossing', 'Oruro', '0000', 36.691279, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Roth', 'Walton', 'Tarija', '0000', 63.7388395, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Tony', 'Dottie', 'La Paz', '0000', 30.352134, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Anniversary', 'Granby', 'Cochabamba', '0000', 55.7756358, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Carberry', 'Graceland', 'Potosi', '0000', 10.1684514, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pleasure', 'Messerschmidt', 'Pando', '0000', -9.1930089, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Helena', 'Village Green', 'chuquisaca', '0000', 35.87616, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Colorado', 'Katie', 'Beni', '0000', 18.3419004, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pierstorff', 'Beilfuss', 'Oruro', '0000', 11.2210043, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Talmadge', 'Carpenter', 'Tarija', '0000', 13.0883907, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Florence', 'Bellgrove', 'La Paz', '0000', 26.790544, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mosinee', 'Mosinee', 'Cochabamba', '0000', -1.259553, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Twin Pines', 'Sommers', 'Potosi', '0000', 57.5067967, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Cottonwood', 'Hanson', 'Pando', '0000', -9.9831, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pierstorff', 'Bellgrove', 'chuquisaca', '0000', 28.564189, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Independence', 'East', 'Beni', '0000', -7.5450262, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ilene', 'Twin Pines', 'Oruro', '0000', 46.3856393, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Jackson', 'Texas', 'Tarija', '0000', 33.54832, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Westerfield', 'Muir', 'La Paz', '0000', 6.477755, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ridgeway', 'Derek', 'Cochabamba', '0000', 7.3275252, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Jay', 'Holy Cross', 'Potosi', '0000', 24.848984, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Namekagon', 'Talisman', 'Pando', '0000', 14.233333, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Claremont', 'Memorial', 'chuquisaca', '0000', -6.9947862, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Truax', 'Hayes', 'Beni', '0000', -8.0060188, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Meadow Vale', 'Daystar', 'Oruro', '0000', 51.9601912, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Michigan', 'Bunker Hill', 'Tarija', '0000', 34.4740361, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Barby', 'Summer Ridge', 'La Paz', '0000', 35.8037979, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dottie', 'Mosinee', 'Cochabamba', '0000', 51.6571864, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Katie', 'Kenwood', 'Potosi', '0000', 33.195993, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Swallow', 'Jenna', 'Pando', '0000', 25.2743983, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Quincy', 'Schmedeman', 'chuquisaca', '0000', 27.69965, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Northridge', 'Ryan', 'Beni', '0000', 38.652683, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Starling', 'Elmside', 'Oruro', '0000', -1.8703308, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Glendale', 'Oak', 'Tarija', '0000', 19.5797297, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Alpine', 'Eagan', 'La Paz', '0000', -7.9110809, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Autumn Leaf', 'Harbort', 'Cochabamba', '0000', 40.5784827, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Vermont', 'Havey', 'Potosi', '0000', 62.4232512, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Forster', 'Crowley', 'Pando', '0000', -31.4561755, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lindbergh', 'Toban', 'chuquisaca', '0000', 43.15, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Drewry', 'Merry', 'Beni', '0000', 41.2357155, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Merry', 'Lakewood', 'Oruro', '0000', 21.428436, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Talmadge', 'Cardinal', 'Tarija', '0000', 49.794945, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ronald Regan', '4th', 'La Paz', '0000', 33.612843, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Spaight', 'Truax', 'Cochabamba', '0000', 29.053409, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Leroy', 'Manufacturers', 'Potosi', '0000', 38.9200512, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sauthoff', 'Mitchell', 'Pando', '0000', 24.066095, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('American', 'Harper', 'chuquisaca', '0000', 19.2540302, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Cardinal', 'Swallow', 'Beni', '0000', 30.20003, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Larry', 'Johnson', 'Oruro', '0000', 31.2122278, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Banding', 'Hauk', 'Tarija', '0000', 43.4945737, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ridge Oak', 'Forest Dale', 'La Paz', '0000', 36.5888732, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Duke', 'Morningstar', 'Cochabamba', '0000', 11.7863324, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pleasure', 'Main', 'Potosi', '0000', 32.42465, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pierstorff', 'Moland', 'Pando', '0000', 52.3518344, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Garrison', 'Anzinger', 'chuquisaca', '0000', 34.7188616, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('3rd', 'Miller', 'Beni', '0000', -17.5706623, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Tennyson', 'Commercial', 'Oruro', '0000', 2.100305, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sachtjen', 'Sherman', 'Tarija', '0000', 10.4477737, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Roxbury', 'Merry', 'La Paz', '0000', 64.6789618, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Barnett', 'Prairie Rose', 'Cochabamba', '0000', -34.7682125, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Duke', 'Union', 'Potosi', '0000', 41.811979, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pawling', 'Pearson', 'Pando', '0000', 7.619032, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Columbus', 'Atwood', 'chuquisaca', '0000', 42.8983715, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bashford', 'Grover', 'Beni', '0000', -11.4260053, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Meadow Ridge', 'Thompson', 'Oruro', '0000', 21.0598649, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sullivan', 'Raven', 'Tarija', '0000', -6.8392705, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Kinsman', 'Hansons', 'La Paz', '0000', 16.7445704, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fremont', 'Carpenter', 'Cochabamba', '0000', 10.7424589, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Debra', 'Doe Crossing', 'Potosi', '0000', 39.3433574, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bashford', 'Charing Cross', 'Pando', '0000', 9.939624, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Village', 'Sunbrook', 'chuquisaca', '0000', 10.431916, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eggendart', 'Mayfield', 'Beni', '0000', 43.6953508, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eggendart', 'Forest Dale', 'Oruro', '0000', -17.7178133, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('High Crossing', 'Manitowish', 'Tarija', '0000', 42.0387882, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hoard', 'Chive', 'La Paz', '0000', 38.682014, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dunning', 'Darwin', 'Cochabamba', '0000', -11.4260053, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Darwin', 'Tomscot', 'Potosi', '0000', 50.246964, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Boyd', 'Namekagon', 'Pando', '0000', 6.9130451, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Beilfuss', 'Graedel', 'chuquisaca', '0000', 48.9361342, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('American Ash', 'Tennyson', 'Beni', '0000', 12.4544798, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Laurel', 'Mifflin', 'Oruro', '0000', 10.6713871, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Artisan', 'Hanson', 'Tarija', '0000', -1.2545772, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Summer Ridge', 'Independence', 'La Paz', '0000', 51.2250373, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Shopko', 'Wayridge', 'Cochabamba', '0000', 3.9671435, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Roth', 'Shoshone', 'Potosi', '0000', 28.880867, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Scott', 'Gateway', 'Pando', '0000', 14.6031411, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Steensland', 'Caliangt', 'chuquisaca', '0000', 42.0813751, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Elgar', 'Brickson Park', 'Beni', '0000', 55.6817886, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Memorial', 'Northwestern', 'Oruro', '0000', 29.956858, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hazelcrest', 'Kropf', 'Tarija', '0000', 41.1731486, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Warner', 'Dahle', 'La Paz', '0000', 23.9179637, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Algoma', 'American Ash', 'Cochabamba', '0000', 22.579117, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Macpherson', 'Lindbergh', 'Potosi', '0000', 38.7, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Prairie Rose', 'Namekagon', 'Pando', '0000', 28.846966, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Truax', 'Becker', 'chuquisaca', '0000', 31.364042, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bashford', 'Kensington', 'Beni', '0000', 24.64995, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bultman', 'Farmco', 'Oruro', '0000', -7.2284727, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Messerschmidt', 'Roxbury', 'Tarija', '0000', -8.5614257, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Larry', 'Derek', 'La Paz', '0000', 43.981544, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bluestem', 'Hagan', 'Cochabamba', '0000', 10.6231047, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bunker Hill', 'Schurz', 'Potosi', '0000', 52.3863062, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Granby', 'Eagan', 'Pando', '0000', -23.8778461, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dorton', 'Rigney', 'chuquisaca', '0000', 42.0387882, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Schiller', 'Homewood', 'Beni', '0000', 50.3919, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Steensland', 'Delladonna', 'Oruro', '0000', 52.7301035, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ronald Regan', '3rd', 'Tarija', '0000', 32.6546275, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Rutledge', 'Northridge', 'La Paz', '0000', 16.8907872, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Spaight', 'Crowley', 'Cochabamba', '0000', 48.6277459, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fuller', 'Dayton', 'Potosi', '0000', -42.7556675, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Nobel', 'Starling', 'Pando', '0000', -20.1127536, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Burrows', 'Grasskamp', 'chuquisaca', '0000', 42.2971095, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sunbrook', 'Kensington', 'Beni', '0000', -9.503288, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hazelcrest', 'Esker', 'Oruro', '0000', 30.3776024, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Alpine', 'Jenna', 'Tarija', '0000', -6.2315975, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sutteridge', 'Northfield', 'La Paz', '0000', 13.7761367, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fallview', 'Welch', 'Cochabamba', '0000', 28.0154753, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Delaware', 'Oxford', 'Potosi', '0000', -28.3833642, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('1st', 'Carberry', 'Pando', '0000', -5.5850343, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Doe Crossing', 'Mariners Cove', 'chuquisaca', '0000', -8.4513, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ramsey', 'Miller', 'Beni', '0000', 48.6277459, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('4th', 'Walton', 'Oruro', '0000', 40.9392676, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Del Sol', '2nd', 'Tarija', '0000', -6.361128, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Valley Edge', 'Fairview', 'La Paz', '0000', 44.5209494, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Victoria', 'South', 'Cochabamba', '0000', 9.1707145, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Grim', 'Roth', 'Potosi', '0000', -31.3366412, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pond', 'Laurel', 'Pando', '0000', 10.8991156, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Florence', '1st', 'chuquisaca', '0000', 16.7054663, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hooker', 'Nevada', 'Beni', '0000', 16.004175, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Menomonie', 'Lakewood', 'Oruro', '0000', 60.134938, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Towne', 'Stuart', 'Tarija', '0000', -23.4554707, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Charing Cross', 'Del Mar', 'La Paz', '0000', 51.8417492, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mandrake', 'Larry', 'Cochabamba', '0000', 29.5530941, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Clemons', 'Union', 'Potosi', '0000', 59.2426907, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Westridge', 'Golden Leaf', 'Pando', '0000', 38.7470186, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('East', 'Fallview', 'chuquisaca', '0000', 48.5129473, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Butternut', 'Becker', 'Beni', '0000', 40.7681987, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Anderson', 'Oxford', 'Oruro', '0000', 16.0567117, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sauthoff', 'Fairview', 'Tarija', '0000', 29.9905062, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lukken', 'Monica', 'La Paz', '0000', 14.2462858, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lyons', 'Buell', 'Cochabamba', '0000', -23.2218772, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Gulseth', 'Arapahoe', 'Potosi', '0000', 14.7008738, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Ruskin', 'Muir', 'Pando', '0000', 52.7456843, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pearson', 'Becker', 'chuquisaca', '0000', -7.13754, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Quincy', 'Brown', 'Beni', '0000', -6.9126426, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Di Loreto', 'Alpine', 'Oruro', '0000', 40.8276499, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Grayhawk', 'Doe Crossing', 'Tarija', '0000', -21.7034017, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Commercial', 'Anderson', 'La Paz', '0000', -10.1771997, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Linden', 'Cordelia', 'Cochabamba', '0000', -7.0453161, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Charing Cross', 'Debs', 'Potosi', '0000', 51.6861013, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mallory', 'Bashford', 'Pando', '0000', 48.418023, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Starling', 'Barby', 'chuquisaca', '0000', -7.13386, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Nevada', 'Fairview', 'Beni', '0000', -25.283333, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eastwood', 'David', 'Oruro', '0000', -8.334487, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Michigan', 'Elgar', 'Tarija', '0000', 32.8676912, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Paget', 'Straubel', 'La Paz', '0000', 56.1966377, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lakewood', 'Eastlawn', 'Cochabamba', '0000', 6.4315805, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Columbus', 'Arapahoe', 'Potosi', '0000', 40.9089779, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Melvin', '6th', 'Pando', '0000', 28.871569, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Park Meadow', 'Becker', 'chuquisaca', '0000', 22.0983236, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bartillon', 'Parkside', 'Beni', '0000', -26.0440358, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pennsylvania', 'Truax', 'Oruro', '0000', 22.775792, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Green', 'Warbler', 'Tarija', '0000', 35.4114708, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Green', 'Heath', 'La Paz', '0000', 51.3531567, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Norway Maple', 'Monica', 'Cochabamba', '0000', 47.5196602, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Anthes', 'Northfield', 'Potosi', '0000', 40.8570429, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bayside', 'Northwestern', 'Pando', '0000', 41.118436, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pleasure', 'Scott', 'chuquisaca', '0000', -7.6589782, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Barnett', 'Kings', 'Beni', '0000', -8.1814, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Granby', 'Hansons', 'Oruro', '0000', 48.0482483, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Orin', 'Darwin', 'Tarija', '0000', 38.135005, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('North', 'Clyde Gallagher', 'La Paz', '0000', 48.09967, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Village', 'Randy', 'Cochabamba', '0000', 2.9662346, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Welch', 'Thompson', 'Potosi', '0000', 8.6962086, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Buhler', 'Dovetail', 'Pando', '0000', 42.8043197, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Loeprich', 'Lakewood Gardens', 'chuquisaca', '0000', 60.4624232, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Nevada', 'Gateway', 'Beni', '0000', -13.4528458, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Waxwing', 'Mayer', 'Oruro', '0000', -20.2973067, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Arkansas', 'Chinook', 'Tarija', '0000', 36.9853085, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Grim', 'Welch', 'La Paz', '0000', 49.4875115, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('8th', 'Atwood', 'Cochabamba', '0000', 2.2250009, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Badeau', 'Dwight', 'Potosi', '0000', 2.731033, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Trailsway', 'Washington', 'Pando', '0000', 31.5555726, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sunfield', 'Shelley', 'chuquisaca', '0000', -17.3753589, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Waubesa', 'Hooker', 'Beni', '0000', 11.8962488, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Maryland', 'Straubel', 'Oruro', '0000', 60.6304039, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Calypso', 'Starling', 'Tarija', '0000', -26.17433, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mayfield', 'Gerald', 'La Paz', '0000', 45.456699, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Cody', 'Havey', 'Cochabamba', '0000', 25.639488, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('East', 'Tony', 'Potosi', '0000', 38.6690462, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('West', 'Farmco', 'Pando', '0000', 52.7634482, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Menomonie', 'Lakewood Gardens', 'chuquisaca', '0000', 50.0281297, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Chinook', 'Linden', 'Beni', '0000', 14.5707297, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Oneill', 'Fisk', 'Oruro', '0000', -8.557437, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Golf Course', 'Sycamore', 'Tarija', '0000', -22.6604341, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Katie', 'Butternut', 'La Paz', '0000', 53.3625182, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fulton', 'Spenser', 'Cochabamba', '0000', -7.5450262, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Waubesa', 'Lakeland', 'Potosi', '0000', 31.2266233, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Clove', 'Mallard', 'Pando', '0000', 56.8813564, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Forster', 'Kennedy', 'chuquisaca', '0000', 45.76629, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mesta', 'Hoffman', 'Beni', '0000', -9.7386858, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eagan', 'Center', 'Oruro', '0000', 49.4150717, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Maywood', 'Veith', 'Tarija', '0000', 48.9648089, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Park Meadow', 'Lukken', 'La Paz', '0000', 13.6343413, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Duke', 'Hintze', 'Cochabamba', '0000', 52.0404797, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fairview', 'Hallows', 'Potosi', '0000', 42.8818379, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Morningstar', 'Westport', 'Pando', '0000', 53.2445421, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Utah', 'Shopko', 'chuquisaca', '0000', 53.2650844, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Melby', 'Donald', 'Beni', '0000', 31.231521, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Glendale', 'Independence', 'Oruro', '0000', 61.1251, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lindbergh', 'Buell', 'Tarija', '0000', 14.5001422, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sommers', 'Crest Line', 'La Paz', '0000', 34.983385, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Annamark', 'Homewood', 'Cochabamba', '0000', 23.696757, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Oneill', 'Forest Run', 'Potosi', '0000', 49.1409438, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Memorial', 'Main', 'Pando', '0000', 6.00547, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Graedel', 'Corben', 'chuquisaca', '0000', 48.4353479, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Sullivan', 'Hoffman', 'Beni', '0000', -7.5539241, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Moose', 'Eagle Crest', 'Oruro', '0000', 49.3788944, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Knutson', 'Glendale', 'Tarija', '0000', 36.9473226, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eastwood', 'Brickson Park', 'La Paz', '0000', 54.8133814, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Brickson Park', 'Hansons', 'Cochabamba', '0000', 50.1823264, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Parkside', 'South', 'Potosi', '0000', 49.7291343, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Commercial', 'Manitowish', 'Pando', '0000', 51.4992969, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Rowland', 'Spaight', 'chuquisaca', '0000', 22.781631, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mifflin', 'Spohn', 'Beni', '0000', 35.1268513, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fairfield', 'Michigan', 'Oruro', '0000', 36.123561, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Butterfield', 'Brentwood', 'Tarija', '0000', 45.129308, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Dorton', 'Judy', 'La Paz', '0000', 17.563418, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Anthes', 'Valley Edge', 'Cochabamba', '0000', 1.5604242, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Nevada', 'Delladonna', 'Potosi', '0000', 34.1230021, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Alpine', 'Lake View', 'Pando', '0000', 54.1407588, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('South', 'John Wall', 'chuquisaca', '0000', -46.2763744, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Grim', 'Glacier Hill', 'Beni', '0000', -6.1859723, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Westport', 'Heffernan', 'Oruro', '0000', 23.269131, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Marquette', 'Linden', 'Tarija', '0000', 32.206857, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Canary', 'Mallory', 'La Paz', '0000', 46.75, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Mitchell', 'Birchwood', 'Cochabamba', '0000', 46.6669865, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Londonderry', 'Maryland', 'Potosi', '0000', 7.5521655, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Donald', 'International', 'Pando', '0000', 23.028956, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Acker', 'Union', 'chuquisaca', '0000', 5.7866228, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Havey', 'Ruskin', 'Beni', '0000', -12.3325, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Golf Course', 'Arkansas', 'Oruro', '0000', 12.269743, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Marquette', 'Hauk', 'Tarija', '0000', 48.8904258, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Shelley', 'Eastlawn', 'La Paz', '0000', 7.2077348, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Rusk', 'Stoughton', 'Cochabamba', '0000', 56.2884624, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hanson', 'Helena', 'Potosi', '0000', 8.688031, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Tomscot', 'Rieder', 'Pando', '0000', 49.2216972, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Melvin', 'Clyde Gallagher', 'chuquisaca', '0000', 23.0029267, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Alpine', 'Lakeland', 'Beni', '0000', 22.483182, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lakeland', 'Shoshone', 'Oruro', '0000', 40.6236168, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Goodland', 'Truax', 'Tarija', '0000', 27.1291264, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Weeping Birch', 'Dawn', 'La Paz', '0000', -25.416667, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lindbergh', 'Dottie', 'Cochabamba', '0000', -6.6551319, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Raven', 'Porter', 'Potosi', '0000', -7.135868, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Old Shore', 'Cottonwood', 'Pando', '0000', 52.2902011, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Rusk', 'Bunker Hill', 'chuquisaca', '0000', -33.8688197, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Lillian', 'Maple', 'Beni', '0000', 21.6098301, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hermina', 'Bayside', 'Oruro', '0000', 50.6140977, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Luster', 'Huxley', 'Tarija', '0000', 41.6853575, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Bultman', 'Monica', 'La Paz', '0000', 56.4874279, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Maryland', '2nd', 'Cochabamba', '0000', 7.9819727, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Schmedeman', 'Kennedy', 'Potosi', '0000', 43.7563619, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Birchwood', 'Tomscot', 'Pando', '0000', 37.548299, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Texas', 'Artisan', 'chuquisaca', '0000', 52.2608863, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Farmco', 'Toban', 'Beni', '0000', 1.3887283, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Eagle Crest', 'David', 'Oruro', '0000', 45.7123346, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Transport', 'Sauthoff', 'Tarija', '0000', 2.7005604, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('3rd', 'Sherman', 'La Paz', '0000', -8.1844859, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Shopko', 'American', 'Cochabamba', '0000', 14.631218, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Debs', 'South', 'Potosi', '0000', 17.0521348, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Grim', 'Acker', 'Pando', '0000', 14.4547788, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Nobel', 'Vernon', 'chuquisaca', '0000', 11.5762804, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Karstens', 'Knutson', 'Beni', '0000', 59.8664826, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Everett', 'Shasta', 'Oruro', '0000', 48.5986674, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Birchwood', '1st', 'Tarija', '0000', 50.8853797, 9);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('South', 'Lyons', 'La Paz', '0000', -9.0104992, 2);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Manley', 'Miller', 'Cochabamba', '0000', -16.3134305, 3);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Di Loreto', 'Dryden', 'Potosi', '0000', 37.8813153, 4);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Swallow', 'Thierer', 'Pando', '0000', 38.640106, 5);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Fremont', 'Eagan', 'chuquisaca', '0000', 18.9494246, 6);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Hagan', 'Charing Cross', 'Beni', '0000', 26.790544, 7);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Pawling', 'Acker', 'Oruro', '0000', -7.8225811, 8);
-insert into Master.address (addr_line1, addr_line2, addr_city, addr_postal_code, addr_spatial_location, addr_prov_id) values ('Thackeray', 'Village', 'Tarija', '0000', 12.8834358, 9);
-go
-
-
-INSERT INTO Hotel.Hotels(hotel_name,hotel_status,hotel_rating_star,hotel_phonenumber,
-hotel_addr_id,hotel_addr_description) VALUES 
-('Marriott Santa Cruz de la Sierra Hotel',1,4.7,'3 3424848',1,'4to Anillo Entre Radial 23 Y, Av. Las Ramblas S/N, Santa Cruz de la Sierra'),
-('Hotel Continental Park',1,4.2,'71641478',1,'Av. Cañoto 289 Esquina, Santa Cruz de la Sierra'),
-('Los Tajibos, a Tribute Portfolio Hotel',1,4.7,'3 3421000',1,'Av. San Martín 455, Santa Cruz de la Sierra'),
-('Swissôtel Santa Cruz De La Sierra',1,4.7,'3 3611200',1,'Canal Isuto, Av. La Salle, Edificio Blu Costanera, Los Pachio N 4500, Santa Cruz de la Sierra'),
-('Equipetrol Suites Apart Hotel',1,4.2,'77315851',1,'Av. Noel Kempff Mercado 470, Santa Cruz de la Sierra'),
-('Hotel Camino Real',1,4.6,'3 3423535',1,'Avenida San Martin &, C. K, Santa Cruz de la Sierra'),
-('Yotau All Suites Hotel',1,4.4,'3 3367799',1,'Av. San Martín 7, Santa Cruz de la Sierra'),
-('Buganvillas Hotel Suites & Spa',1,4.4,'3 3510400',1,'Avenida Roca y Coronado 901, Santa Cruz de la Sierra');
-
-go
-
-
-
-
-
-DECLARE @counter INT = 1;
-WHILE @counter <= 10  
-BEGIN
-    INSERT INTO Payment.entity DEFAULT VALUES;
-    SET @counter = @counter + 1;
-END;
-
-
--- Inserciones en la tabla Payment.bank con bancos de Bolivia
-INSERT INTO Payment.bank (bank_entity_id, bank_code, bank_name)
-VALUES (1, 'BANCO1', 'Banco Ganadero'),
-      (2, 'BANCO2', 'Banco Mercantil Santa Cruz'),
-     (3, 'BANCO3', 'Banco Nacional de Bolivia');
-go
-
-
-
-
-
-
-
-
+ ---2.2 roles de usuario   12 
 INSERT INTO Users.roles (role_name) VALUES ('Agente de reservas');
 INSERT INTO Users.roles (role_name) VALUES ('masajista');
 INSERT INTO Users.roles (role_name) VALUES ('Recepcionista');
@@ -3110,234 +3129,7 @@ INSERT INTO Users.roles (role_name) VALUES ('Cliente de Vacaciones');
 INSERT INTO Users.roles (role_name) VALUES ('Cliente de Lujo');
 go
 
-
-
-INSERT INTO purchasing.vendor (vendor_entity_id, vendor_name, vendor_active, vendor_priority, vendor_weburl)
-VALUES
-
-(4, 'Proveedor A', 1, 0, 'http://www.proveedor-a.com'),
-(5, 'Proveedor B', 1, 1, 'http://www.proveedor-b.com'),
-(6, 'Proveedor C', 0, 0, 'http://www.proveedor-c.com'),
-(7, 'Proveedor D', 1, 0, 'http://www.proveedor-d.com'),
-(8, 'Proveedor E', 1, 1, 'http://www.proveedor-e.com');
-
-go
-
-
--- Registros de ejemplo para la tabla purchasing.stocks
-INSERT INTO purchasing.stocks (stock_name, stock_description, stock_quantity, stock_reorder_point, stock_used, stock_scrap, stock_price, stock_standar_cost, stock_size, stock_color)
-VALUES
-('Toallas de Baño', 'Toallas de baño suaves y absorbentes', 100, 20, 0, 0, 10.99, 7.99, 'Grande', 'Blanco'),
-('Sábanas de Algodón', 'Sábanas de cama de algodón de alta calidad', 200, 50, 0, 0, 24.99, 18.99, 'Queen', 'Blanco'),
-('Champú para Huéspedes', 'Champú de cortesía para huéspedes', 300, 100, 0, 0, 3.99, 2.99, NULL, NULL),
-('Jabón de Baño', 'Jabón de baño perfumado', 250, 80, 0, 0, 1.99, 1.49, NULL, NULL),
-('Secador de Pelo', 'Secadores de pelo de uso en habitaciones', 50, 10, 0, 0, 29.99, 24.99, NULL, 'Negro'),
-('Papel Higiénico', 'Papel higiénico de calidad premium', 500, 150, 0, 0, 2.49, 1.99, NULL, NULL),
-('Cafetera', 'Máquina de café para habitaciones', 30, 5, 0, 0, 49.99, 39.99, NULL, 'Negro'),
-('Cubiertos de Plástico', 'Cubiertos desechables para eventos', 1000, 200, 0, 0, 7.99, 5.99, NULL, NULL),
-('Paraguas de Hotel', 'Paraguas para huéspedes', 40, 8, 0, 0, 12.99, 9.99, 'Grande', 'Azul'),
-('Gel de Ducha', 'Gel de ducha con aroma a coco', 150, 40, 0, 0, 4.99, 3.99, NULL, NULL),
-('Almohadas Extra', 'Almohadas adicionales para mayor comodidad', 80, 20, 0, 0, 14.99, 11.99, 'Estándar', 'Blanco'),
-('Aire Acondicionado Portátil', 'Unidades de aire acondicionado portátil', 10, 2, 0, 0, 249.99, 199.99, NULL, 'Blanco'),
-('Botellas de Agua', 'Botellas de agua mineral', 500, 100, 0, 0, 1.49, 0.99, '500 ml', 'Transparente'),
-('Servilletas de Papel', 'Servilletas de papel para restaurante', 800, 150, 0, 0, 5.99, 4.99, NULL, NULL),
-('Cepillos de Dientes', 'Cepillos de dientes para huéspedes', 200, 50, 0, 0, 2.99, 1.99, NULL, NULL),
-('Televisor LED de 32"', 'Televisor LED de 32 pulgadas para habitaciones', 60, 10, 0, 0, 199.99, 159.99, '32 pulgadas', 'Negro'),
-('Cajas Fuertes', 'Cajas fuertes en habitaciones', 25, 5, 0, 0, 79.99, 64.99, NULL, 'Gris'),
-('Cargadores de Teléfono', 'Cargadores para dispositivos móviles', 100, 20, 0, 0, 9.99, 7.99, NULL, 'Blanco'),
-('Batas de Baño', 'Batas de baño de lujo para huéspedes', 120, 30, 0, 0, 29.99, 24.99, 'Grande', 'Blanco'),
-('Sillas de Playa', 'Sillas de playa para áreas de piscina', 40, 10, 0, 0, 19.99, 15.99, NULL, 'Azul');
-
-go
--- Registros de ejemplo para la tabla purchasing.vendor_product
--- Proveedor 1 - Productos 1 al 10
-INSERT INTO purchasing.vendor_product (vepro_qty_stocked, vepro_qty_remaining, vepro_price, venpro_stock_id, vepro_vendor_id)
-VALUES
-(100, 100, 9.99, 1, 6),
-(200, 200, 19.99, 2, 6),
-(150, 150, 3.99, 3, 6),
-(250, 250, 1.99, 4, 6),
-(50, 50, 29.99, 5, 6),
-(500, 500, 2.49, 6, 6),
-(30, 30, 49.99, 7, 6),
-(1000, 1000, 7.99, 8, 6),
-(40, 40, 12.99, 9, 6),
-(150, 150, 4.99, 10, 6),
-
-
-(75, 75, 12.99, 1, 7),
-(150, 150, 24.99, 2, 7),
-(100, 100, 4.99, 3, 7),
-(200, 200, 1.49, 4, 7),
-(40, 40, 39.99, 5, 7),
-(300, 300, 2.99, 6, 7),
-(20, 20, 7.99, 7, 7),
-(500, 500, 5.99, 8, 7),
-(25, 25, 14.99, 9, 7),
-(100, 100, 1.99, 10, 7),
-
-
-(125, 125, 6.99, 1, 8),
-(250, 250, 18.99, 2, 8),
-(200, 200, 2.99, 3, 8),
-(400, 400, 1.49, 4, 8),
-(80, 80, 59.99, 5, 8),
-(800, 800, 4.99, 6, 8),
-(15, 15, 12.99, 7, 8),
-(300, 300, 9.99, 8, 8),
-(10, 10, 29.99, 9, 8),
-(120, 120, 7.99, 10,8),
-
-
-(90, 90, 3.49, 1, 4),
-(180, 180, 6.99, 2, 4),
-(150, 150, 1.99, 3, 4),
-(300, 300, 0.99, 4, 4),
-(60, 60, 24.99, 5, 4),
-(600, 600, 1.49, 6, 4),
-(10, 10, 39.99, 7, 4),
-(400, 400, 3.99, 8, 4),
-(20, 20, 9.99, 9, 4),
-(90, 90, 2.49, 10, 4),
-
-
-(110, 110, 4.99, 1, 5),
-(220, 220, 9.99, 2, 5),
-(180, 180, 1.99, 3, 5),
-(360, 360, 0.99, 4, 5),
-(70, 70, 29.99, 5, 5),
-(700, 700, 1.49, 6, 5),
-(12, 12, 49.99, 7, 5),
-(450, 450, 4.99, 8, 5),
-(30, 30, 11.99, 9, 5),
-(110, 110, 2.99, 10, 5);
-
-INSERT INTO Master.category_group(cagro_name, cagro_description, cagro_type,cagro_icon_url) VALUES 
-('Individual','Una habitación asignada a una persona. Puede tener una o más camas.','facility', 'https://www.hotelportuense.com/wp-content/uploads/sites/41/2019/05/gallery_Single-room10.jpg'),
-('Doble','Una habitación asignada a dos personas. Puede tener una o más camas','facility','https://www.cataloniahotels.com/es/blog/wp-content/uploads/2016/05/habitaci%C3%B3n-doble-catalonia-620x412.jpg'),
-('Triple','Una habitación asignada a tres personas. Puede tener dos o más camas','facility','https://www.torrehotelejecutivo.com/images/img-habitacion-triple1.jpg'),
-('Quad','Una sala asignada a cuatro personas. Puede tener dos o más camas.','facility','https://www.hotellosalmendros.com/uploads/1/3/9/5/13959225/whatsapp-image-1018-07-02-at-6-50-29-am_3_orig.jpeg'),
-('Queen','Una habitación con una cama de matrimonio. Puede ser ocupado por una o más personas','facility','https://hotelsantiagodecompostella.com.ec/wp-content/uploads/2018/08/principal_habitaciones-786x393.jpg'),
-('King','Una habitación con una cama king-size. Puede ser ocupado por una o más personas.','facility','https://www.desertpearl.com/uploads/widgets/201410300352235451b5f723633.jpeg?v10'),
-('Estudio','Una habitación con una cama de estudio, un sofá que se puede convertir en una cama. También puede tener una cama adicional.','facility','https://www.cataloniahotels.com/es/blog/wp-content/uploads/2016/05/habitaci%C3%B3n-doble-catalonia-620x412.jpg');
-
-INSERT INTO HR.employee(emp_national_id,emp_birth_date,emp_marital_status,emp_gender,emp_hire_date,emp_salaried_flag,
-emp_vacation_hours, emp_sickleave_hourse, emp_emp_id,emp_photo,emp_modified_date,emp_joro_id) VALUES 
-(6267374,'17/05/1985','V','M','09/12/2019',1,360,24,NULL,'https://img.freepik.com/foto-gratis/hombre-mayor-pulgar-arriba_1187-829.jpg?w=360&t=st=1694789362~exp=1694789962~hmac=0b67409247ed7e1100822de93d85bbcc22ea5bbbc557080d00487277319a87aa',GETDATE(),7),
-(4279017,'12/10/2006','C','M','13/12/2014',1,360,72,2,'https://img.freepik.com/foto-gratis/hombre-caucasico-mediana-edad-ropa-informal-sonriendo-cara-feliz-mirando-apuntando-lado-pulgar-arriba_839833-29987.jpg?w=740&t=st=1694789673~exp=1694790273~hmac=13bf410460cdc383d57ffa6c4a6864469a5b60d2942f432355b757400ad89733',GETDATE(),3),
-(3919971,'22/03/1997','V','M','05/12/2016',1,360,48,NULL,'https://img.freepik.com/foto-gratis/vista-frontal-hombre-sonriente-espacio-copia_23-2148404240.jpg?w=740&t=st=1694789379~exp=1694789979~hmac=78d40eb9ff5ea9b7433e94ba53d9be38a14d74899f02b5bdcee79c30b19b1c5b',GETDATE(),14),
-(3811690,'24/02/1986','S','M','09/11/2011',0,720,48,NULL,'https://img.freepik.com/fotos-premium/retrato-anciano-feliz-camisa-azul-anteojos-hoja-blanca-papel-vista-recortada_561613-17475.jpg?w=740',GETDATE(),8),
-(5947926,'04/06/1980','S','M','27/02/2018',1,360,48,NULL,'https://img.freepik.com/fotos-premium/joven-brasileno-caucasico-aislado-fondo-blanco-mirando-lado-sonriendo_1368-412051.jpg?w=740',GETDATE(),14),
-(6155840,'02/06/1999','C','M','13/03/2014',1,360,72,NULL,'https://img.freepik.com/foto-gratis/hombre-brazos-cruzados_1368-9618.jpg?w=360&t=st=1694789633~exp=1694790233~hmac=883302d4e8b8146ba84e648af785aa6265735088cb9dc4fac80f5520cf6953b6',GETDATE(),1),
-(8209922,'04/02/2001','S','M','12/12/2013',0,360,24,1,'https://img.freepik.com/foto-gratis/alegre-joven-deportista-posando-mostrando-pulgares-arriba-gesto_171337-8194.jpg?w=740&t=st=1694789483~exp=1694790083~hmac=de8c0119a15ef456d2289648156daa117850e6f70e4b0283575287cfd94ee6e0',GETDATE(),15),
-(4014027,'01/08/1985','D','M','24/12/2013',0,360,NULL,2,'https://img.freepik.com/foto-gratis/retrato-hombre-tatuajes-cuerpo_23-2150774627.jpg?w=360&t=st=1694789648~exp=1694790248~hmac=857c6c7b44c9a9884e74187fe2f9790220162ab86c76a0d55684f06a8f7c7d79',GETDATE(),3),
-(7682404,'18/04/2001','V','M','14/01/2010',1,720,72,NULL,'https://img.freepik.com/foto-gratis/hombre-inteligente-informal-dando-pulgares-arriba_53876-26364.jpg?w=740&t=st=1694789496~exp=1694790096~hmac=bcb3d96a386265544520ab158accabe0815456d8845f888111e7f84fef2252d2',GETDATE(),1),
-(6216554,'22/10/2001','C','M','08/03/2015',0,480,24,NULL,'https://img.freepik.com/fotos-premium/apuesto-joven-camisa-rosa-sobre-pared-azul-aislado-riendo_1368-55070.jpg?w=740',GETDATE(),13),
-(7388987,'24/04/1989','S','M','01/12/2010',1,720,NULL,2,'https://img.freepik.com/foto-gratis/imagen-apuesto-joven-confiado-camisa-blanca-sosteniendo-tableta-digital-generica-sonriendo-ampliamente-disfrutando-juegos-usando-aplicacion-linea-tecnologia-entretenimiento-juegos_343059-4594.jpg?w=740&t=st=1694789579~exp=1694790179~hmac=7840e33079c259e94daad5399a024b2d4a66c60312933615561eff76be1b27a7',GETDATE(),3),
-(4582640,'21/08/2002','V','M','22/04/2017',0,360,48,2,'https://img.freepik.com/foto-gratis/tipo-decepcionado-que-parece-molesto-enfurrunado-frunciendo-ceno-pie-disgustado-contra-fondo-amarillo_1258-170846.jpg?w=996&t=st=1694789510~exp=1694790110~hmac=ef6f9bd480bee2e86556422dfb82b19fd7b761e79c46c1caeebf370c74af6a1b',GETDATE(),14),
-(3728104,'24/03/1989','S','M','16/01/2015',0,360,72,NULL,'https://img.freepik.com/foto-gratis/retrato-joven-sonriente-gafas_171337-4842.jpg?w=740&t=st=1694789713~exp=1694790313~hmac=4dd593d42d7b4e7aee337d7627bc483f963a7260402a5fd9b92cdd72212d30c2',GETDATE(),7),
-(5015938,'09/07/2000','D','M','07/03/2010',1,720,24,NULL,'https://img.freepik.com/foto-gratis/hombre-pulgar-arriba-sobre-fondo-blanco_1368-4483.jpg?w=740&t=st=1694789600~exp=1694790200~hmac=13b3776006d2aaf73e164353446e495c7d8d7f20a6eb43236e494631b2cdb6d4',GETDATE(),3),
-(7293712,'14/05/1995','C','M','14/09/2016',1,360,24,NULL,'https://img.freepik.com/foto-gratis/hombre-senior-camisa-purpura-mirando-camara-feliz-positivo-haciendo-bien-firmar-sonriendo-alegremente-pie-sobre-fondo-color-rosa_141793-116645.jpg?w=740&t=st=1694789541~exp=1694790141~hmac=355736e5b2898dc1e1a74c888e8b97fa3e90d3c8a29006193328d7782a04c02c',GETDATE(),8),
-(7681369,'23/05/1987','D','M','22/07/2022',1,360,48,NULL,'https://img.freepik.com/foto-gratis/hombre-camisa-azul-pulgar-arriba_1368-4929.jpg?w=360&t=st=1694789730~exp=1694790330~hmac=b5a4f4652612d045ad3bf396708d09704143133e4316fe9bca6e1681a9725cd3',GETDATE(),3),
-(6960690,'04/12/2001','S','M','02/03/2023',1,NULL,72,3,'https://img.freepik.com/foto-gratis/vista-frontal-hombres-jovenes-camiseta-color-rojo-oscuro-pie-sonriendo-sobre-fondo-blanco_140725-121650.jpg?w=740&t=st=1694789660~exp=1694790260~hmac=230ac4a3307dcea7deaf560d33a9e9e6b4442e1482abca567078421ad04c9100',GETDATE(),2),
-(4027951,'09/09/1980','D','M','19/08/2017',1,360,NULL,NULL,'https://img.freepik.com/foto-gratis/hombre-moreno-positiva-brazos-cruzados_1187-5797.jpg?w=740&t=st=1694789620~exp=1694790220~hmac=07c70b190e8f80281c04d25aeff484350eaebff6936524e2f14c5b2dcbf0477b',GETDATE(),3),
-(6782231,'25/06/1984','D','M','10/09/2021',1,360,48,NULL,'https://img.freepik.com/foto-gratis/retrato-primer-plano-joven-afroamericano-profesional-exitoso-sudadera-capucha-roja-pecho-brazos-cruzados_176420-33867.jpg?w=740&t=st=1694789854~exp=1694790454~hmac=c95ede8e77d73e4ee09cddeac8aa97191451b43171a4ddbc28dff57c20ca234c',GETDATE(),3),
-(4361879,'04/02/1980','D','M','13/08/2016',0,360,NULL,NULL,'https://img.freepik.com/fotos-premium/retrato-guapo-joven-africano-hombre-llevando-gafas_219728-5590.jpg?w=740',GETDATE(),1),
-(5181935,'19/04/1980','S','M','05/07/2020',1,360,72,7,'https://img.freepik.com/foto-gratis/hombre-hispano-barba-sueter-casual-invierno-alegre-sonrisa-cara-apuntando-mano-dedo-lado-expresion-feliz-natural_839833-9834.jpg?w=740&t=st=1694789872~exp=1694790472~hmac=20f499609dfa094ab8449e4d29bac6e437368e8c462af4f0e087bd71832034af',GETDATE(),6),
-(4560481,'04/04/2006','C','M','26/03/2012',0,720,24,NULL,'https://img.freepik.com/foto-gratis/retrato-adulto-casual_144627-27312.jpg?w=360&t=st=1694789761~exp=1694790361~hmac=b1e1057cdad10cb47204c9079d5639a15329e23fbfd769faa758e1735011e4c4',GETDATE(),13),
-(6465852,'14/10/1980','C','M','23/02/2010',1,720,NULL,NULL,'https://img.freepik.com/foto-gratis/retrato-hombre-negocios-exitoso-ceo-trabajador-oficina-feliz-sonriendo-complacido-pie-contra-fondo-blanco-camisa-cuello-azul_176420-45223.jpg?w=740&t=st=1694789839~exp=1694790439~hmac=b005bb229b2667f76d80a13ffb30ef5ec35769e08538adbf862f5cd8b81766bb',GETDATE(),3),
-(7346447,'07/04/1989','C','M','04/06/2023',1,NULL,24,NULL,'https://img.freepik.com/foto-gratis/apuesto-joven-empresario-brazos-cruzados-sonriendo-confiado_176420-21730.jpg?w=740&t=st=1694789786~exp=1694790386~hmac=34b1e4ee728f9b36f75eb5b0c596e6b28ffb8bc96d079adee5ecb550f0675d63',GETDATE(),4),
-(8102263,'05/10/1982','V','M','26/09/2021',0,360,72,NULL,'https://img.freepik.com/fotos-premium/hombre-irresistible-encantador-joven-mirando-camara-sonriendo-mientras-pie-contra-fondo-gris_425904-6477.jpg?w=740',GETDATE(),7),
-(6329301,'12/09/1992','C','M','01/07/2017',1,360,NULL,NULL,'https://img.freepik.com/foto-gratis/primer-plano-hombre-sonriendo-mercado_23-2150771087.jpg?w=360&t=st=1694789896~exp=1694790496~hmac=1cd9c52b71dda0e929ca3914aeb871ccbf87630a93494cca79ca871d5d241591',GETDATE(),3),
-(6987779,'14/03/1985','D','M','29/05/2016',1,360,48,10,'https://img.freepik.com/foto-gratis/primer-plano-hombre-mediana-edad-decepcionado-sueter-gris-frunciendo-ceno-molesto-mirando-izquierda-espacio-copia_1258-180430.jpg?w=900&t=st=1694789817~exp=1694790417~hmac=c7fd7b6ae7d599659982cc3c91b5838e44f8a7edf966f407353f5a7a0249f4b8',GETDATE(),8),
-(5577795,'25/12/1998','S','M','14/09/2020',1,360,72,NULL,'https://img.freepik.com/fotos-premium/retrato-hombre-maduro-encantador-que-siente-verdaderas-emociones-contenido-camisa-beige-aislada_206895-2235.jpg?w=740',GETDATE(),7),
-(3933329,'02/02/2004','V','M','10/12/2010',1,720,24,NULL,'https://img.freepik.com/fotos-premium/joven-latino-aislado-fondo-amarillo-apuntando-lado-presentar-producto_1368-284988.jpg?w=740',GETDATE(),9),
-(7931915,'03/09/1991','V','M','01/07/2022',0,360,48,NULL,'https://img.freepik.com/fotos-premium/hombre-caucasico-joven-que-levanta-ambos-pulgares-arriba-sonriente-confiado_1187-84646.jpg?w=826',GETDATE(),1),
-(4625749,'05/04/2003','S','M','27/03/2010',1,720,24,NULL,'https://img.freepik.com/foto-gratis/trabajador-cumplio-tarea-sonrio-lado_1150-52084.jpg?w=740&t=st=1694789917~exp=1694790517~hmac=c7d55911eb1f8c3372cfc6d1f6ea6133158b3aa9fba980ef2d0ab579f40e3d25',GETDATE(),3),
-(3720489,'02/01/1992','C','M','24/03/2010',0,720,NULL,3,'https://img.freepik.com/foto-gratis/joven-constructor-casco-blanco-chaleco-amarillo-sosteniendo-portapapeles-sonrisa-pie-azul-aislado_141793-8548.jpg?w=360&t=st=1694789967~exp=1694790567~hmac=455f2a83d08c2b968072df2ce1c111b10d001492dc81d85b249f97fb5139597c',GETDATE(),2),
-(5549835,'15/07/1987','S','M','27/02/2019',0,360,48,NULL,'https://images.unsplash.com/photo-1530268729831-4b0b9e170218?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',GETDATE(),13),
-(8227767,'04/03/1989','S','M','01/02/2019',0,360,72,NULL,'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80',GETDATE(),12),
-(4607872,'04/02/2007','V','M','27/07/2022',1,360,24,NULL,'https://img.freepik.com/foto-gratis/retrato-hombre-que-usa-tableta-digital_1170-1888.jpg?w=360&t=st=1694789984~exp=1694790584~hmac=0a9f10d4d9db3a70fc476384a3d59e570fb49c0ac768b24fbf86a9fa895258e2',GETDATE(),2),
-(4129325,'03/11/1998','D','M','09/07/2022',1,360,24,NULL,'https://img.freepik.com/foto-gratis/hombre-guapo-joven-ropa-informal-verano-que-invita-entrar-sonriendo-natural-mano-abierta_839833-14649.jpg?w=740&t=st=1694790008~exp=1694790608~hmac=fabfb9dde511f97972bc45a9c6f44ea5711aa1d9df2c512b1ea7a618148d60de',GETDATE(),3),
-(5239771,'10/10/1994','C','M','08/05/2017',1,360,NULL,3,'https://plus.unsplash.com/premium_photo-1689530775582-83b8abdb5020?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',GETDATE(),11),
-(6191716,'08/02/2005','V','M','22/02/2015',1,360,24,3,'https://img.freepik.com/foto-gratis/primer-plano-joven-exitoso-sonriendo-camara-pie-traje-casual-contra-fondo-azul_1258-66609.jpg?w=740&t=st=1694790021~exp=1694790621~hmac=253f9123f80ad5f8cdcf2b36f9d237ef547581a680679650ebc77bd01d949a8d',GETDATE(),11),
-(6497742,'09/09/1993','C','M','06/07/2020',0,360,NULL,NULL,'https://images.unsplash.com/photo-1619194617062-5a61b9c6a049?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',GETDATE(),2),
-(4452294,'24/01/1997','C','M','05/07/2019',0,360,24,NULL,'https://img.freepik.com/foto-gratis/hombre-guapo-joven-camisa-casual-gafas-pie-sobre-signo-exito-fondo-rosa_839833-18277.jpg?w=740&t=st=1694790035~exp=1694790635~hmac=6da09e725f09ad35f1bd81db0cf9d1c02587a3e0fbc7df48a790d5492643c506',GETDATE(),10),
-(6824028,'14/05/2001','V','M','22/10/2010',1,720,NULL,6,'https://plus.unsplash.com/premium_photo-1688891564708-9b2247085923?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80',GETDATE(),5),
-(7100448,'05/03/1997','D','M','12/06/2018',0,360,72,NULL,'https://img.freepik.com/foto-gratis/hombre-sonriente-tiro-medio-espacio-copia_23-2148686054.jpg?w=826&t=st=1694790048~exp=1694790648~hmac=6632b37b121d1ce60e8b2d327548062f09b15d38e1c7a1ed55bef05387eb2b10',GETDATE(),2),
-(5869779,'16/12/1995','C','M','17/04/2013',1,720,24,2,'https://img.freepik.com/foto-gratis/retrato-cuerpo-entero-hombre-feliz-confiado_171337-4818.jpg?w=360&t=st=1694790061~exp=1694790661~hmac=1bb1e7b298ddadb55efcce905ae88a6d8c635a52bc71a3248a38a4bf0613d049',GETDATE(),4),
-(6559043,'03/01/1998','S','M','16/07/2023',1,NULL,48,NULL,'https://plus.unsplash.com/premium_photo-1671656349322-41de944d259b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80',GETDATE(),10),
-(3781506,'05/02/2002','C','M','03/12/2014',0,480,72,NULL,'https://img.freepik.com/foto-gratis/joven-brunet-camiseta-blanca_273609-21717.jpg?w=740&t=st=1694789161~exp=1694789761~hmac=d630b27474cd8fb999cbde55624eb751c8ea3e7097cbf7e8104636aa691d37be',GETDATE(),3),
-(7873095,'04/12/1987','D','M','08/01/2016',0,360,NULL,NULL,'https://images.unsplash.com/photo-1492447216082-4726bf04d1d1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',GETDATE(),2),
-(5623209,'10/02/1993','V','M','31/01/2016',1,360,24,NULL,'https://img.freepik.com/fotos-premium/hombre-guapo-joven-barba-sobre-aislado-manteniendo-brazos-cruzados-posicion-frontal_1368-132662.jpg?w=740',GETDATE(),11),
-(5828710,'14/06/1980','V','M','22/10/2020',0,360,NULL,6,'https://img.freepik.com/foto-gratis/feliz-sonriente-guapo-contra-fondo-azul_93675-135164.jpg?w=740&t=st=1694789147~exp=1694789747~hmac=388fd20ca2e2668cb482f126ea75b475d9ddcebb8c7b1ed920f3ad320dbbf401',GETDATE(),5),
-(7626898,'25/07/1990','S','M','07/06/2018',0,360,48,7,'https://img.freepik.com/foto-gratis/feliz-joven_1098-20869.jpg?w=740&t=st=1694789126~exp=1694789726~hmac=a57f83f2470044b2a355a2bf84b9eed8d6c62a9471a2acf91c5646ea9fa995b9',GETDATE(),6),
-(7866821,'21/11/2005','C','M','19/07/2017',1,360,24,NULL,'https://img.freepik.com/foto-gratis/concepto-premio-loteria-ganar-hombre-joven-feliz-emocionado-grita-si-exito-lograr-meta-bomba-puno_176420-33769.jpg?w=740&t=st=1694790090~exp=1694790690~hmac=54d964ad64b665dfeacc7b8cabbeb25cb3afabc10d84f9762ac5709e72c9352f',GETDATE(),2),
-(7312700,'05/03/1982','V','M','23/05/2023',0,NULL,72,NULL,'https://img.freepik.com/foto-gratis/retrato-hombre-sonriendo-parque_23-2150771023.jpg?w=826&t=st=1694790075~exp=1694790675~hmac=6f10718cd3c065669dd7d6eb97885a4e410e9aefdfdd156402b3c4d3a52f1793',GETDATE(),7),
-(3724982,'21/03/1986','S','M','20/05/2018',1,360,NULL,NULL,'https://img.freepik.com/fotos-premium/felicidad-concepto-gente-hombre-sonriente-camiseta-blanca-brazos-cruzados_380164-89171.jpg?w=360',GETDATE(),8),
-(7403425,'02/01/2004','V','M','19/11/2010',1,720,72,3,'https://img.freepik.com/foto-gratis/hombre-sonriente-estilo-joven-oficina-trabajo-conjunto-autonomo-inicio-sosteniendo-usando-tableta_285396-9048.jpg?w=740&t=st=1694789315~exp=1694789915~hmac=366ce28f4930c72a36e282c97bf682fdd5966ce54bea4d9c0b92f7c1b7ec18eb',GETDATE(),2),
-(4379236,'05/07/1983','S','M','03/09/2019',1,360,24,2,'https://img.freepik.com/foto-gratis/hombre-moreno-moda-posando_273609-22453.jpg?w=740&t=st=1694790112~exp=1694790712~hmac=117cd1586b6f555c8e7aa648a55d5dfe08423d27a221641e6a9d03a2cd760369',GETDATE(),4),
-(7378339,'11/11/1991','C','M','07/08/2012',0,720,48,NULL,'https://img.freepik.com/foto-gratis/retrato-joven-atractivo-vestido-informalmente-usando-tableta-sonriendo-fondo-blanco_662251-2948.jpg?w=740&t=st=1694789192~exp=1694789792~hmac=d510864284a4602b532c5f3ad03cf048849de4a77416251788c7a20c0784bdeb',GETDATE(),2),
-(5174699,'21/10/1998','S','M','13/12/2021',1,360,48,NULL,'https://img.freepik.com/foto-gratis/hombre-llevando-rojo-polo-camisa_1368-794.jpg?w=360&t=st=1694789350~exp=1694789950~hmac=5ddc90362d926bc6df1f88c585e27826cc42c5b60d62d3b026659388d47acbfc',GETDATE(),11),
-(3759802,'01/11/1991','C','M','28/01/2016',1,360,NULL,7,'https://img.freepik.com/foto-gratis/joven-hombre-apuesto-camiseta-informal-sonriendo-alegremente-presentando-senalando-palma-mano-mirando-camara_839833-19973.jpg?w=740&t=st=1694789299~exp=1694789899~hmac=a8bdce5cadcdf23b231847c7a60b21d726bb45dc6a1c0d1a543d9e3c208cb98f',GETDATE(),6),
-(4405763,'05/12/1998','S','M','31/10/2017',0,360,48,NULL,'https://img.freepik.com/foto-gratis/apuesto-joven-brazos-cruzados-sobre-fondo-blanco_23-2148222620.jpg?w=740&t=st=1694789266~exp=1694789866~hmac=a3732d61036e5f28572e64fec76ba8f9826fdc31dfa042c2e7f2fa2ec26f10d0',GETDATE(),2),
-(6490867,'09/10/1984','V','M','26/07/2021',0,360,NULL,6,'https://img.freepik.com/foto-gratis/retrato-joven-feliz-camisa-blanca_171337-17462.jpg?w=740&t=st=1694789329~exp=1694789929~hmac=3cb03c4598759f271b8a24d47d3944b8adbc90d450c4922b5e8e9d5f16477efe',GETDATE(),5),
-(3837032,'03/12/2005','D','M','16/01/2020',0,360,48,NULL,'https://img.freepik.com/fotos-premium/hombre-casual-feliz-telefono-inteligente-pulgar-arriba-sobre-gris_1258-14279.jpg?w=740',GETDATE(),11),
-(7701356,'21/11/1982','D','M','10/09/2011',0,720,48,NULL,'https://img.freepik.com/foto-gratis/retrato-hombre-foding-sus-manos_171337-15873.jpg?w=740&t=st=1694789285~exp=1694789885~hmac=e972f01e3b844b7714941c79794b6282565d66dae99a406a15123a66a2b943bd',GETDATE(),4),
-(6655695,'17/10/1983','S','M','01/09/2023',1,NULL,72,NULL,'https://img.freepik.com/fotos-premium/hombre-sobre-fondo-aislado_1368-333502.jpg?w=740',GETDATE(),2),
-(5186552,'16/04/2001','S','M','12/05/2017',1,480,48,7,'https://img.freepik.com/foto-gratis/retrato-hombre-atractivo-satisfecho-contento-feliz-camisa-moda-mezclilla-que-muestra-su-dedo-indice-esquina-superior-derecha_295783-1217.jpg?w=740&t=st=1694790158~exp=1694790758~hmac=e241dc02fc36227911f68bb2d0f33c29c335bff52f160c2157fb5fd74c7bed56',GETDATE(),6),
-(7433434,'09/10/1983','S','M','14/02/2011',0,720,24,2,'https://img.freepik.com/foto-gratis/joven-arabe-vestido-ropa-informal-que-aparece-senala-dedos-numero-cuatro-mientras-sonrie-confiado-feliz_839833-25521.jpg?w=740&t=st=1694790174~exp=1694790774~hmac=6b5582cc6adf08f370da79937167940878a1646d46d0b410ca41f6f26d2a44f1',GETDATE(),4);
-go
-
-
--- Insertar 20 registros ficticios en la tabla price_items
-INSERT INTO Master.price_items (prit_name, prit_price, prit_description, prit_type, prit_icon_url, prit_modified_date)
-VALUES
-  ('Snack 1', 2.99, 'Snack description 1', 'SNACK', 'https://example.com/snack1.png', GETDATE()),
-  ('Facility 1', 5.99, 'Facility description 1', 'FACILITY', 'https://example.com/facility1.png', GETDATE()),
-  ('Softdrink 1', 1.99, 'Softdrink description 1', 'SOFTDRINK', 'https://example.com/softdrink1.png', GETDATE()),
-  ('Food 1', 7.99, 'Food description 1', 'FOOD', 'https://example.com/food1.png', GETDATE()),
-  ('Service 1', 9.99, 'Service description 1', 'SERVICE', 'https://example.com/service1.png', GETDATE()),
-  ('Snack 2', 3.99, 'Snack description 2', 'SNACK', 'https://example.com/snack2.png', GETDATE()),
-  ('Facility 2', 6.99, 'Facility description 2', 'FACILITY', 'https://example.com/facility2.png', GETDATE()),
-  ('Softdrink 2', 2.49, 'Softdrink description 2', 'SOFTDRINK', 'https://example.com/softdrink2.png', GETDATE()),
-  ('Food 2', 8.99, 'Food description 2', 'FOOD', 'https://example.com/food2.png', GETDATE()),
-  ('Service 2', 10.99, 'Service description 2', 'SERVICE', 'https://example.com/service2.png', GETDATE()),
-  ('Snack 3', 4.49, 'Snack description 3', 'SNACK', 'https://example.com/snack3.png', GETDATE()),
-  ('Facility 3', 7.49, 'Facility description 3', 'FACILITY', 'https://example.com/facility3.png', GETDATE()),
-  ('Softdrink 3', 2.99, 'Softdrink description 3', 'SOFTDRINK', 'https://example.com/softdrink3.png', GETDATE()),
-  ('Food 3', 9.49, 'Food description 3', 'FOOD', 'https://example.com/food3.png', GETDATE()),
-  ('Service 3', 11.49, 'Service description 3', 'SERVICE', 'https://example.com/service3.png', GETDATE()),
-  ('Snack 4', 4.99, 'Snack description 4', 'SNACK', 'https://example.com/snack4.png', GETDATE()),
-  ('Facility 4', 8.99, 'Facility description 4', 'FACILITY', 'https://example.com/facility4.png', GETDATE()),
-  ('Softdrink 4', 3.49, 'Softdrink description 4', 'SOFTDRINK', 'https://example.com/softdrink4.png', GETDATE()),
-  ('Food 4', 10.99, 'Food description 4', 'FOOD', 'https://example.com/food4.png', GETDATE()),
-  ('Service 4', 12.99, 'Service description 4', 'SERVICE', 'https://example.com/service4.png', GETDATE());
-go
-
-INSERT INTO Master.service_task (seta_name)
-VALUES
-  ('Limpieza de habitaciones'),
-  ('Cambio de sábanas'),
-  ('Reposición de toallas'),
-  ('Servicio de despertador'),
-  ('Mantenimiento de instalaciones'),
-  ('Servicio de habitaciones'),
-  ('Atención al cliente'),
-  ('Recepción de huéspedes'),
-  ('Gestión de reservas'),
-  ('Servicio de conserjería'),
-  ('Servicio de lavandería'),
-  ('Servicio de restaurante'),
-  ('Servicio de bar'),
-  ('Servicio de piscina'),
-  ('Servicio de gimnasio'),
-  ('Servicio de spa'),
-  ('Organización de eventos'),
-  ('Servicio de transporte'),
-  ('Asistencia turística'),
-  ('Seguridad del hotel');
-  go
+ ---2.3  perfil de usuario  13
 
 insert into Users.user_profiles (uspro_national_id, uspro_birth_date,  uspro_job_title, uspro_marital_status, uspro_gender) values ('Bolivia', '1984-10-19', 'Design Engineer', 'S', 'F');
 insert into Users.user_profiles (uspro_national_id, uspro_birth_date,  uspro_job_title, uspro_marital_status, uspro_gender) values ('Bolivia', '1963-10-30', 'Software Consultant', 'M', 'F');
@@ -4341,56 +4133,300 @@ insert into Users.user_profiles (uspro_national_id, uspro_birth_date,  uspro_job
 insert into Users.user_profiles (uspro_national_id, uspro_birth_date,  uspro_job_title, uspro_marital_status, uspro_gender) values ('Bolivia', '1976-06-03', 'Payment Adjustment Coordinator', 'M', 'M');
 go
 
-INSERT INTO Master.policy_category_group (poca_poli_id, poca_cagro_id)
+
+
+--Modulo Recursos humanos   
+
+
+--  3.1 departamentos     14 
+INSERT INTO HR.department (dept_name, dept_modified_date) VALUES 
+('Departamento de Recepcion','01-01-2011'),
+('Departamento de Direccion','01-01-2011'),
+('Departamento de Limpieza','01-01-2011'),
+('Departamento de Restauracion','01-01-2011'),
+('Departamento de Cocina','01-01-2011'),
+('Departamento de Mantenimiento','01-01-2015'),
+('Departamento de Contabilidad y Finanzas','01-01-2015'),
+('Departamento de Seguridad','01-01-2011'),
+('Departamento de Ventas y Reservas','01-01-2011'),
+('Departamento de Marketing','01-01-2015'),
+('Departamento de Compras','01-01-2011'),
+('Departamento de TI','01-01-2015'),
+('Departamento de fitness','01-01-2015'),
+('Departamento de Spa','01-01-2015')
+go 
+
+--3.2  rol de trabajo     15
+INSERT INTO HR.job_role (joro_name, joro_modified_date) VALUES 
+('Recepcionista','01-01-2011'),
+('Botones','01-01-2011'),
+('Ama de llaves','01-01-2011'),
+('Camarero','01-01-2011'),
+('Cocinero','01-01-2011'),
+('Auxiliar de cocina','01-01-2011'),
+('Friega platos','01-01-2011'),
+('Personal de seguridad','01-01-2011'),
+('Animador','01-06-2015'),
+('Socorrista','01-01-2015'),
+('Masajista','01-01-2015'),
+('Hotel manager','01-01-2011'),
+('Personal de mantenimiento','01-01-2012'),
+('Conserje','01-01-2015'),
+('Agente de reservas','01-01-2015'),
+('Entrenador','01-01-2015')
+go 
+
+
+ --3.3 turno               16
+INSERT INTO HR.shift (shift_name, shift_start_time, shift_end_time) VALUES 
+('Turno mañana', '06:00', '14:00'),
+('Turno tarde', '14:00', '22:00'),
+('Turno noche', '22:00', '06:00');
+
+go
+
+-- 3.4  empleados              17
+INSERT INTO HR.employee(emp_national_id,emp_birth_date,emp_marital_status,emp_gender,emp_hire_date,emp_salaried_flag,
+emp_vacation_hours, emp_sickleave_hourse, emp_emp_id,emp_photo,emp_modified_date,emp_joro_id) VALUES 
+(6267374,'17/05/1985','V','M','09/12/2019',1,360,24,NULL,'https://img.freepik.com/foto-gratis/hombre-mayor-pulgar-arriba_1187-829.jpg?w=360&t=st=1694789362~exp=1694789962~hmac=0b67409247ed7e1100822de93d85bbcc22ea5bbbc557080d00487277319a87aa',GETDATE(),7),
+(4279017,'12/10/2006','C','M','13/12/2014',1,360,72,2,'https://img.freepik.com/foto-gratis/hombre-caucasico-mediana-edad-ropa-informal-sonriendo-cara-feliz-mirando-apuntando-lado-pulgar-arriba_839833-29987.jpg?w=740&t=st=1694789673~exp=1694790273~hmac=13bf410460cdc383d57ffa6c4a6864469a5b60d2942f432355b757400ad89733',GETDATE(),3),
+(3919971,'22/03/1997','V','M','05/12/2016',1,360,48,NULL,'https://img.freepik.com/foto-gratis/vista-frontal-hombre-sonriente-espacio-copia_23-2148404240.jpg?w=740&t=st=1694789379~exp=1694789979~hmac=78d40eb9ff5ea9b7433e94ba53d9be38a14d74899f02b5bdcee79c30b19b1c5b',GETDATE(),14),
+(3811690,'24/02/1986','S','M','09/11/2011',0,720,48,NULL,'https://img.freepik.com/fotos-premium/retrato-anciano-feliz-camisa-azul-anteojos-hoja-blanca-papel-vista-recortada_561613-17475.jpg?w=740',GETDATE(),8),
+(5947926,'04/06/1980','S','M','27/02/2018',1,360,48,NULL,'https://img.freepik.com/fotos-premium/joven-brasileno-caucasico-aislado-fondo-blanco-mirando-lado-sonriendo_1368-412051.jpg?w=740',GETDATE(),14),
+(6155840,'02/06/1999','C','M','13/03/2014',1,360,72,NULL,'https://img.freepik.com/foto-gratis/hombre-brazos-cruzados_1368-9618.jpg?w=360&t=st=1694789633~exp=1694790233~hmac=883302d4e8b8146ba84e648af785aa6265735088cb9dc4fac80f5520cf6953b6',GETDATE(),1),
+(8209922,'04/02/2001','S','M','12/12/2013',0,360,24,1,'https://img.freepik.com/foto-gratis/alegre-joven-deportista-posando-mostrando-pulgares-arriba-gesto_171337-8194.jpg?w=740&t=st=1694789483~exp=1694790083~hmac=de8c0119a15ef456d2289648156daa117850e6f70e4b0283575287cfd94ee6e0',GETDATE(),15),
+(4014027,'01/08/1985','D','M','24/12/2013',0,360,NULL,2,'https://img.freepik.com/foto-gratis/retrato-hombre-tatuajes-cuerpo_23-2150774627.jpg?w=360&t=st=1694789648~exp=1694790248~hmac=857c6c7b44c9a9884e74187fe2f9790220162ab86c76a0d55684f06a8f7c7d79',GETDATE(),3),
+(7682404,'18/04/2001','V','M','14/01/2010',1,720,72,NULL,'https://img.freepik.com/foto-gratis/hombre-inteligente-informal-dando-pulgares-arriba_53876-26364.jpg?w=740&t=st=1694789496~exp=1694790096~hmac=bcb3d96a386265544520ab158accabe0815456d8845f888111e7f84fef2252d2',GETDATE(),1),
+(6216554,'22/10/2001','C','M','08/03/2015',0,480,24,NULL,'https://img.freepik.com/fotos-premium/apuesto-joven-camisa-rosa-sobre-pared-azul-aislado-riendo_1368-55070.jpg?w=740',GETDATE(),13),
+(7388987,'24/04/1989','S','M','01/12/2010',1,720,NULL,2,'https://img.freepik.com/foto-gratis/imagen-apuesto-joven-confiado-camisa-blanca-sosteniendo-tableta-digital-generica-sonriendo-ampliamente-disfrutando-juegos-usando-aplicacion-linea-tecnologia-entretenimiento-juegos_343059-4594.jpg?w=740&t=st=1694789579~exp=1694790179~hmac=7840e33079c259e94daad5399a024b2d4a66c60312933615561eff76be1b27a7',GETDATE(),3),
+(4582640,'21/08/2002','V','M','22/04/2017',0,360,48,2,'https://img.freepik.com/foto-gratis/tipo-decepcionado-que-parece-molesto-enfurrunado-frunciendo-ceno-pie-disgustado-contra-fondo-amarillo_1258-170846.jpg?w=996&t=st=1694789510~exp=1694790110~hmac=ef6f9bd480bee2e86556422dfb82b19fd7b761e79c46c1caeebf370c74af6a1b',GETDATE(),14),
+(3728104,'24/03/1989','S','M','16/01/2015',0,360,72,NULL,'https://img.freepik.com/foto-gratis/retrato-joven-sonriente-gafas_171337-4842.jpg?w=740&t=st=1694789713~exp=1694790313~hmac=4dd593d42d7b4e7aee337d7627bc483f963a7260402a5fd9b92cdd72212d30c2',GETDATE(),7),
+(5015938,'09/07/2000','D','M','07/03/2010',1,720,24,NULL,'https://img.freepik.com/foto-gratis/hombre-pulgar-arriba-sobre-fondo-blanco_1368-4483.jpg?w=740&t=st=1694789600~exp=1694790200~hmac=13b3776006d2aaf73e164353446e495c7d8d7f20a6eb43236e494631b2cdb6d4',GETDATE(),3),
+(7293712,'14/05/1995','C','M','14/09/2016',1,360,24,NULL,'https://img.freepik.com/foto-gratis/hombre-senior-camisa-purpura-mirando-camara-feliz-positivo-haciendo-bien-firmar-sonriendo-alegremente-pie-sobre-fondo-color-rosa_141793-116645.jpg?w=740&t=st=1694789541~exp=1694790141~hmac=355736e5b2898dc1e1a74c888e8b97fa3e90d3c8a29006193328d7782a04c02c',GETDATE(),8),
+(7681369,'23/05/1987','D','M','22/07/2022',1,360,48,NULL,'https://img.freepik.com/foto-gratis/hombre-camisa-azul-pulgar-arriba_1368-4929.jpg?w=360&t=st=1694789730~exp=1694790330~hmac=b5a4f4652612d045ad3bf396708d09704143133e4316fe9bca6e1681a9725cd3',GETDATE(),3),
+(6960690,'04/12/2001','S','M','02/03/2023',1,NULL,72,3,'https://img.freepik.com/foto-gratis/vista-frontal-hombres-jovenes-camiseta-color-rojo-oscuro-pie-sonriendo-sobre-fondo-blanco_140725-121650.jpg?w=740&t=st=1694789660~exp=1694790260~hmac=230ac4a3307dcea7deaf560d33a9e9e6b4442e1482abca567078421ad04c9100',GETDATE(),2),
+(4027951,'09/09/1980','D','M','19/08/2017',1,360,NULL,NULL,'https://img.freepik.com/foto-gratis/hombre-moreno-positiva-brazos-cruzados_1187-5797.jpg?w=740&t=st=1694789620~exp=1694790220~hmac=07c70b190e8f80281c04d25aeff484350eaebff6936524e2f14c5b2dcbf0477b',GETDATE(),3),
+(6782231,'25/06/1984','D','M','10/09/2021',1,360,48,NULL,'https://img.freepik.com/foto-gratis/retrato-primer-plano-joven-afroamericano-profesional-exitoso-sudadera-capucha-roja-pecho-brazos-cruzados_176420-33867.jpg?w=740&t=st=1694789854~exp=1694790454~hmac=c95ede8e77d73e4ee09cddeac8aa97191451b43171a4ddbc28dff57c20ca234c',GETDATE(),3),
+(4361879,'04/02/1980','D','M','13/08/2016',0,360,NULL,NULL,'https://img.freepik.com/fotos-premium/retrato-guapo-joven-africano-hombre-llevando-gafas_219728-5590.jpg?w=740',GETDATE(),1),
+(5181935,'19/04/1980','S','M','05/07/2020',1,360,72,7,'https://img.freepik.com/foto-gratis/hombre-hispano-barba-sueter-casual-invierno-alegre-sonrisa-cara-apuntando-mano-dedo-lado-expresion-feliz-natural_839833-9834.jpg?w=740&t=st=1694789872~exp=1694790472~hmac=20f499609dfa094ab8449e4d29bac6e437368e8c462af4f0e087bd71832034af',GETDATE(),6),
+(4560481,'04/04/2006','C','M','26/03/2012',0,720,24,NULL,'https://img.freepik.com/foto-gratis/retrato-adulto-casual_144627-27312.jpg?w=360&t=st=1694789761~exp=1694790361~hmac=b1e1057cdad10cb47204c9079d5639a15329e23fbfd769faa758e1735011e4c4',GETDATE(),13),
+(6465852,'14/10/1980','C','M','23/02/2010',1,720,NULL,NULL,'https://img.freepik.com/foto-gratis/retrato-hombre-negocios-exitoso-ceo-trabajador-oficina-feliz-sonriendo-complacido-pie-contra-fondo-blanco-camisa-cuello-azul_176420-45223.jpg?w=740&t=st=1694789839~exp=1694790439~hmac=b005bb229b2667f76d80a13ffb30ef5ec35769e08538adbf862f5cd8b81766bb',GETDATE(),3),
+(7346447,'07/04/1989','C','M','04/06/2023',1,NULL,24,NULL,'https://img.freepik.com/foto-gratis/apuesto-joven-empresario-brazos-cruzados-sonriendo-confiado_176420-21730.jpg?w=740&t=st=1694789786~exp=1694790386~hmac=34b1e4ee728f9b36f75eb5b0c596e6b28ffb8bc96d079adee5ecb550f0675d63',GETDATE(),4),
+(8102263,'05/10/1982','V','M','26/09/2021',0,360,72,NULL,'https://img.freepik.com/fotos-premium/hombre-irresistible-encantador-joven-mirando-camara-sonriendo-mientras-pie-contra-fondo-gris_425904-6477.jpg?w=740',GETDATE(),7),
+(6329301,'12/09/1992','C','M','01/07/2017',1,360,NULL,NULL,'https://img.freepik.com/foto-gratis/primer-plano-hombre-sonriendo-mercado_23-2150771087.jpg?w=360&t=st=1694789896~exp=1694790496~hmac=1cd9c52b71dda0e929ca3914aeb871ccbf87630a93494cca79ca871d5d241591',GETDATE(),3),
+(6987779,'14/03/1985','D','M','29/05/2016',1,360,48,10,'https://img.freepik.com/foto-gratis/primer-plano-hombre-mediana-edad-decepcionado-sueter-gris-frunciendo-ceno-molesto-mirando-izquierda-espacio-copia_1258-180430.jpg?w=900&t=st=1694789817~exp=1694790417~hmac=c7fd7b6ae7d599659982cc3c91b5838e44f8a7edf966f407353f5a7a0249f4b8',GETDATE(),8),
+(5577795,'25/12/1998','S','M','14/09/2020',1,360,72,NULL,'https://img.freepik.com/fotos-premium/retrato-hombre-maduro-encantador-que-siente-verdaderas-emociones-contenido-camisa-beige-aislada_206895-2235.jpg?w=740',GETDATE(),7),
+(3933329,'02/02/2004','V','M','10/12/2010',1,720,24,NULL,'https://img.freepik.com/fotos-premium/joven-latino-aislado-fondo-amarillo-apuntando-lado-presentar-producto_1368-284988.jpg?w=740',GETDATE(),9),
+(7931915,'03/09/1991','V','M','01/07/2022',0,360,48,NULL,'https://img.freepik.com/fotos-premium/hombre-caucasico-joven-que-levanta-ambos-pulgares-arriba-sonriente-confiado_1187-84646.jpg?w=826',GETDATE(),1),
+(4625749,'05/04/2003','S','M','27/03/2010',1,720,24,NULL,'https://img.freepik.com/foto-gratis/trabajador-cumplio-tarea-sonrio-lado_1150-52084.jpg?w=740&t=st=1694789917~exp=1694790517~hmac=c7d55911eb1f8c3372cfc6d1f6ea6133158b3aa9fba980ef2d0ab579f40e3d25',GETDATE(),3),
+(3720489,'02/01/1992','C','M','24/03/2010',0,720,NULL,3,'https://img.freepik.com/foto-gratis/joven-constructor-casco-blanco-chaleco-amarillo-sosteniendo-portapapeles-sonrisa-pie-azul-aislado_141793-8548.jpg?w=360&t=st=1694789967~exp=1694790567~hmac=455f2a83d08c2b968072df2ce1c111b10d001492dc81d85b249f97fb5139597c',GETDATE(),2),
+(5549835,'15/07/1987','S','M','27/02/2019',0,360,48,NULL,'https://images.unsplash.com/photo-1530268729831-4b0b9e170218?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',GETDATE(),13),
+(8227767,'04/03/1989','S','M','01/02/2019',0,360,72,NULL,'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80',GETDATE(),12),
+(4607872,'04/02/2007','V','M','27/07/2022',1,360,24,NULL,'https://img.freepik.com/foto-gratis/retrato-hombre-que-usa-tableta-digital_1170-1888.jpg?w=360&t=st=1694789984~exp=1694790584~hmac=0a9f10d4d9db3a70fc476384a3d59e570fb49c0ac768b24fbf86a9fa895258e2',GETDATE(),2),
+(4129325,'03/11/1998','D','M','09/07/2022',1,360,24,NULL,'https://img.freepik.com/foto-gratis/hombre-guapo-joven-ropa-informal-verano-que-invita-entrar-sonriendo-natural-mano-abierta_839833-14649.jpg?w=740&t=st=1694790008~exp=1694790608~hmac=fabfb9dde511f97972bc45a9c6f44ea5711aa1d9df2c512b1ea7a618148d60de',GETDATE(),3),
+(5239771,'10/10/1994','C','M','08/05/2017',1,360,NULL,3,'https://plus.unsplash.com/premium_photo-1689530775582-83b8abdb5020?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',GETDATE(),11),
+(6191716,'08/02/2005','V','M','22/02/2015',1,360,24,3,'https://img.freepik.com/foto-gratis/primer-plano-joven-exitoso-sonriendo-camara-pie-traje-casual-contra-fondo-azul_1258-66609.jpg?w=740&t=st=1694790021~exp=1694790621~hmac=253f9123f80ad5f8cdcf2b36f9d237ef547581a680679650ebc77bd01d949a8d',GETDATE(),11),
+(6497742,'09/09/1993','C','M','06/07/2020',0,360,NULL,NULL,'https://images.unsplash.com/photo-1619194617062-5a61b9c6a049?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',GETDATE(),2),
+(4452294,'24/01/1997','C','M','05/07/2019',0,360,24,NULL,'https://img.freepik.com/foto-gratis/hombre-guapo-joven-camisa-casual-gafas-pie-sobre-signo-exito-fondo-rosa_839833-18277.jpg?w=740&t=st=1694790035~exp=1694790635~hmac=6da09e725f09ad35f1bd81db0cf9d1c02587a3e0fbc7df48a790d5492643c506',GETDATE(),10),
+(6824028,'14/05/2001','V','M','22/10/2010',1,720,NULL,6,'https://plus.unsplash.com/premium_photo-1688891564708-9b2247085923?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80',GETDATE(),5),
+(7100448,'05/03/1997','D','M','12/06/2018',0,360,72,NULL,'https://img.freepik.com/foto-gratis/hombre-sonriente-tiro-medio-espacio-copia_23-2148686054.jpg?w=826&t=st=1694790048~exp=1694790648~hmac=6632b37b121d1ce60e8b2d327548062f09b15d38e1c7a1ed55bef05387eb2b10',GETDATE(),2),
+(5869779,'16/12/1995','C','M','17/04/2013',1,720,24,2,'https://img.freepik.com/foto-gratis/retrato-cuerpo-entero-hombre-feliz-confiado_171337-4818.jpg?w=360&t=st=1694790061~exp=1694790661~hmac=1bb1e7b298ddadb55efcce905ae88a6d8c635a52bc71a3248a38a4bf0613d049',GETDATE(),4),
+(6559043,'03/01/1998','S','M','16/07/2023',1,NULL,48,NULL,'https://plus.unsplash.com/premium_photo-1671656349322-41de944d259b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80',GETDATE(),10),
+(3781506,'05/02/2002','C','M','03/12/2014',0,480,72,NULL,'https://img.freepik.com/foto-gratis/joven-brunet-camiseta-blanca_273609-21717.jpg?w=740&t=st=1694789161~exp=1694789761~hmac=d630b27474cd8fb999cbde55624eb751c8ea3e7097cbf7e8104636aa691d37be',GETDATE(),3),
+(7873095,'04/12/1987','D','M','08/01/2016',0,360,NULL,NULL,'https://images.unsplash.com/photo-1492447216082-4726bf04d1d1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',GETDATE(),2),
+(5623209,'10/02/1993','V','M','31/01/2016',1,360,24,NULL,'https://img.freepik.com/fotos-premium/hombre-guapo-joven-barba-sobre-aislado-manteniendo-brazos-cruzados-posicion-frontal_1368-132662.jpg?w=740',GETDATE(),11),
+(5828710,'14/06/1980','V','M','22/10/2020',0,360,NULL,6,'https://img.freepik.com/foto-gratis/feliz-sonriente-guapo-contra-fondo-azul_93675-135164.jpg?w=740&t=st=1694789147~exp=1694789747~hmac=388fd20ca2e2668cb482f126ea75b475d9ddcebb8c7b1ed920f3ad320dbbf401',GETDATE(),5),
+(7626898,'25/07/1990','S','M','07/06/2018',0,360,48,7,'https://img.freepik.com/foto-gratis/feliz-joven_1098-20869.jpg?w=740&t=st=1694789126~exp=1694789726~hmac=a57f83f2470044b2a355a2bf84b9eed8d6c62a9471a2acf91c5646ea9fa995b9',GETDATE(),6),
+(7866821,'21/11/2005','C','M','19/07/2017',1,360,24,NULL,'https://img.freepik.com/foto-gratis/concepto-premio-loteria-ganar-hombre-joven-feliz-emocionado-grita-si-exito-lograr-meta-bomba-puno_176420-33769.jpg?w=740&t=st=1694790090~exp=1694790690~hmac=54d964ad64b665dfeacc7b8cabbeb25cb3afabc10d84f9762ac5709e72c9352f',GETDATE(),2),
+(7312700,'05/03/1982','V','M','23/05/2023',0,NULL,72,NULL,'https://img.freepik.com/foto-gratis/retrato-hombre-sonriendo-parque_23-2150771023.jpg?w=826&t=st=1694790075~exp=1694790675~hmac=6f10718cd3c065669dd7d6eb97885a4e410e9aefdfdd156402b3c4d3a52f1793',GETDATE(),7),
+(3724982,'21/03/1986','S','M','20/05/2018',1,360,NULL,NULL,'https://img.freepik.com/fotos-premium/felicidad-concepto-gente-hombre-sonriente-camiseta-blanca-brazos-cruzados_380164-89171.jpg?w=360',GETDATE(),8),
+(7403425,'02/01/2004','V','M','19/11/2010',1,720,72,3,'https://img.freepik.com/foto-gratis/hombre-sonriente-estilo-joven-oficina-trabajo-conjunto-autonomo-inicio-sosteniendo-usando-tableta_285396-9048.jpg?w=740&t=st=1694789315~exp=1694789915~hmac=366ce28f4930c72a36e282c97bf682fdd5966ce54bea4d9c0b92f7c1b7ec18eb',GETDATE(),2),
+(4379236,'05/07/1983','S','M','03/09/2019',1,360,24,2,'https://img.freepik.com/foto-gratis/hombre-moreno-moda-posando_273609-22453.jpg?w=740&t=st=1694790112~exp=1694790712~hmac=117cd1586b6f555c8e7aa648a55d5dfe08423d27a221641e6a9d03a2cd760369',GETDATE(),4),
+(7378339,'11/11/1991','C','M','07/08/2012',0,720,48,NULL,'https://img.freepik.com/foto-gratis/retrato-joven-atractivo-vestido-informalmente-usando-tableta-sonriendo-fondo-blanco_662251-2948.jpg?w=740&t=st=1694789192~exp=1694789792~hmac=d510864284a4602b532c5f3ad03cf048849de4a77416251788c7a20c0784bdeb',GETDATE(),2),
+(5174699,'21/10/1998','S','M','13/12/2021',1,360,48,NULL,'https://img.freepik.com/foto-gratis/hombre-llevando-rojo-polo-camisa_1368-794.jpg?w=360&t=st=1694789350~exp=1694789950~hmac=5ddc90362d926bc6df1f88c585e27826cc42c5b60d62d3b026659388d47acbfc',GETDATE(),11),
+(3759802,'01/11/1991','C','M','28/01/2016',1,360,NULL,7,'https://img.freepik.com/foto-gratis/joven-hombre-apuesto-camiseta-informal-sonriendo-alegremente-presentando-senalando-palma-mano-mirando-camara_839833-19973.jpg?w=740&t=st=1694789299~exp=1694789899~hmac=a8bdce5cadcdf23b231847c7a60b21d726bb45dc6a1c0d1a543d9e3c208cb98f',GETDATE(),6),
+(4405763,'05/12/1998','S','M','31/10/2017',0,360,48,NULL,'https://img.freepik.com/foto-gratis/apuesto-joven-brazos-cruzados-sobre-fondo-blanco_23-2148222620.jpg?w=740&t=st=1694789266~exp=1694789866~hmac=a3732d61036e5f28572e64fec76ba8f9826fdc31dfa042c2e7f2fa2ec26f10d0',GETDATE(),2),
+(6490867,'09/10/1984','V','M','26/07/2021',0,360,NULL,6,'https://img.freepik.com/foto-gratis/retrato-joven-feliz-camisa-blanca_171337-17462.jpg?w=740&t=st=1694789329~exp=1694789929~hmac=3cb03c4598759f271b8a24d47d3944b8adbc90d450c4922b5e8e9d5f16477efe',GETDATE(),5),
+(3837032,'03/12/2005','D','M','16/01/2020',0,360,48,NULL,'https://img.freepik.com/fotos-premium/hombre-casual-feliz-telefono-inteligente-pulgar-arriba-sobre-gris_1258-14279.jpg?w=740',GETDATE(),11),
+(7701356,'21/11/1982','D','M','10/09/2011',0,720,48,NULL,'https://img.freepik.com/foto-gratis/retrato-hombre-foding-sus-manos_171337-15873.jpg?w=740&t=st=1694789285~exp=1694789885~hmac=e972f01e3b844b7714941c79794b6282565d66dae99a406a15123a66a2b943bd',GETDATE(),4),
+(6655695,'17/10/1983','S','M','01/09/2023',1,NULL,72,NULL,'https://img.freepik.com/fotos-premium/hombre-sobre-fondo-aislado_1368-333502.jpg?w=740',GETDATE(),2),
+(5186552,'16/04/2001','S','M','12/05/2017',1,480,48,7,'https://img.freepik.com/foto-gratis/retrato-hombre-atractivo-satisfecho-contento-feliz-camisa-moda-mezclilla-que-muestra-su-dedo-indice-esquina-superior-derecha_295783-1217.jpg?w=740&t=st=1694790158~exp=1694790758~hmac=e241dc02fc36227911f68bb2d0f33c29c335bff52f160c2157fb5fd74c7bed56',GETDATE(),6),
+(7433434,'09/10/1983','S','M','14/02/2011',0,720,24,2,'https://img.freepik.com/foto-gratis/joven-arabe-vestido-ropa-informal-que-aparece-senala-dedos-numero-cuatro-mientras-sonrie-confiado-feliz_839833-25521.jpg?w=740&t=st=1694790174~exp=1694790774~hmac=6b5582cc6adf08f370da79937167940878a1646d46d0b410ca41f6f26d2a44f1',GETDATE(),4);
+go
+
+
+ 
+
+
+
+--MODULO PAYMENT
+
+
+
+ ---5.1 entidad    18
+DECLARE @counter INT = 1;
+WHILE @counter <= 10  
+BEGIN
+    INSERT INTO Payment.entity DEFAULT VALUES;
+    SET @counter = @counter + 1;
+END;
+
+
+-- 5.2 Inserciones en la tabla Payment.bank   19
+INSERT INTO Payment.bank (bank_entity_id, bank_code, bank_name)
+VALUES (1, 'BANCO1', 'Banco Ganadero'),
+      (2, 'BANCO2', 'Banco Mercantil Santa Cruz'),
+     (3, 'BANCO3', 'Banco Nacional de Bolivia');
+go
+
+
+
+
+ --Modulo Purchasing
+--4.1 proveedor      20
+  INSERT INTO purchasing.vendor (vendor_entity_id, vendor_name, vendor_active, vendor_priority, vendor_weburl)
 VALUES
-  (1, 1),
-  (2, 1),
-  (3, 1),
-  (4, 1),
-  (5, 1),
-  (6, 1),
-  (7, 1),
-  (8, 1),
-  (9, 1),
-  (10, 1),
-  (11, 2),
-  (12, 2),
-  (13, 2),
-  (14, 2),
-  (15, 2),
-  (16, 2),
-  (17, 2),
-  (18, 2),
-  (19, 2),
-  (20, 2),
-  (21, 3),
-  (22, 3),
-  (23, 3),
-  (24, 3),
-  (25, 3);
-  go
 
-  /*select Master.policy.poli_id,Master.policy.poli_description,Master.category_group.cagro_id,
-  Master.category_group.cagro_description,Master.policy_category_group.poca_cagro_id,Master.policy_category_group.poca_poli_id 
-  from Master.policy,Master.category_group,Master.policy_category_group
-  */ SELECT DISTINCT
-    p.poli_id,
-    p.poli_description,
-    cg.cagro_id,
-    cg.cagro_description,
-    pcg.poca_cagro_id,
-    pcg.poca_poli_id
-FROM
-    Master.policy p
-INNER JOIN
-    Master.policy_category_group pcg ON p.poli_id = pcg.poca_poli_id
-INNER JOIN
-    Master.category_group cg ON pcg.poca_cagro_id = cg.cagro_id;
+(4, 'Proveedor A', 1, 0, 'http://www.proveedor-a.com'),
+(5, 'Proveedor B', 1, 1, 'http://www.proveedor-b.com'),
+(6, 'Proveedor C', 0, 0, 'http://www.proveedor-c.com'),
+(7, 'Proveedor D', 1, 0, 'http://www.proveedor-d.com'),
+(8, 'Proveedor E', 1, 1, 'http://www.proveedor-e.com');
+
+go
 
 
-/*select *from Resto.resto_menus*/
+-- 4.2 Registros de ejemplo para la tabla purchasing.stocks  21
+-- Insertar productos en la tabla purchasing.stocks
+INSERT INTO purchasing.stocks (stock_name, stock_description, stock_quantity, stock_price, stock_modified_date)
+VALUES
+    ('Pastel de Chocolate', 'Delicioso pastel de chocolate', 50, 5.99, GETDATE()),
+    ('Helado de Vainilla', 'Helado cremoso de vainilla', 100, 3.49, GETDATE()),
+    ('Galletas de Chocolate', 'Galletas crujientes de chocolate', 200, 2.99, GETDATE()),
+    ('Refresco de Cola', 'Bebida refrescante de cola', 150, 1.99, GETDATE()),
+    ('Jugo de Naranja', 'Jugo natural de naranja', 80, 2.49, GETDATE()),
+    ('Chips de Papas', 'Chips de papas salados', 300, 1.79, GETDATE()),
+    ('Brownie de Nuez', 'Brownie con nueces', 40, 4.99, GETDATE()),
+    ('Café', 'Taza de café recién preparado', 120, 1.29, GETDATE()),
+    ('Gomitas de Frutas', 'Gomitas de frutas surtidas', 250, 1.49, GETDATE()),
+    ('Batido de Fresa', 'Batido de fresa con crema', 70, 3.99, GETDATE()),
+    ('Tarta de Manzana', 'Tarta de manzana recién horneada', 30, 6.49, GETDATE()),
+    ('Agua Mineral', 'Botella de agua mineral', 200, 0.99, GETDATE()),
+    ('Donas de Chocolate', 'Donas glaseadas con chocolate', 120, 1.79, GETDATE()),
+    ('Cerveza', 'Botella de cerveza', 60, 4.49, GETDATE()),
+    ('Palomitas de Maíz', 'Palomitas de maíz saladas', 180, 2.29, GETDATE()),
+    ('Vino Tinto', 'Vino para la ocacion', 50, 3.49, GETDATE()),
+    ('Limón Agrio', 'Limón agrio fresco', 40, 0.79, GETDATE()),
+    ('Chocolate Caliente', 'Taza de chocolate caliente', 90, 2.99, GETDATE()),
+    ('Almendras Tostadas', 'Almendras tostadas y saladas', 120, 3.99, GETDATE()),
+    ('Tarta de Queso', 'Tarta de queso con frambuesas', 25, 7.99, GETDATE());
 
--------------------------------****************************************---------------------
+
+go
+------22
+INSERT INTO purchasing.stock_photo (spho_thumbnail_filename, spho_photo_filename, spho_primary, spho_url, spho_stock_id)
+VALUES
+    ('pastel_chocolate_thumb.jpg', 'pastel_chocolate_full.jpg', 1, 'https://ejemplo.com/pastel_chocolate', 1),
+    ('helado_vainilla_thumb.jpg', 'helado_vainilla_full.jpg', 1, 'https://ejemplo.com/helado_vainilla', 2),
+    ('galletas_chocolate_thumb.jpg', 'galletas_chocolate_full.jpg', 1, 'https://ejemplo.com/galletas_chocolate', 3),
+    ('refresco_cola_thumb.jpg', 'refresco_cola_full.jpg', 1, 'https://ejemplo.com/refresco_cola', 4),
+    ('jugo_naranja_thumb.jpg', 'jugo_naranja_full.jpg', 1, 'https://ejemplo.com/jugo_naranja', 5),
+    ('chips_papas_thumb.jpg', 'chips_papas_full.jpg', 1, 'https://ejemplo.com/chips_papas', 6),
+    ('brownie_nuez_thumb.jpg', 'brownie_nuez_full.jpg', 1, 'https://ejemplo.com/brownie_nuez', 7),
+    ('cafe_thumb.jpg', 'cafe_full.jpg', 1, 'https://ejemplo.com/cafe', 8),
+    ('gomitas_frutas_thumb.jpg', 'gomitas_frutas_full.jpg', 1, 'https://ejemplo.com/gomitas_frutas', 9),
+    ('batido_fresa_thumb.jpg', 'batido_fresa_full.jpg', 1, 'https://ejemplo.com/batido_fresa', 10),
+    ('tarta_manzana_thumb.jpg', 'tarta_manzana_full.jpg', 1, 'https://ejemplo.com/tarta_manzana', 11),
+    ('agua_mineral_thumb.jpg', 'agua_mineral_full.jpg', 1, 'https://ejemplo.com/agua_mineral', 12),
+    ('donas_chocolate_thumb.jpg', 'donas_chocolate_full.jpg', 1, 'https://ejemplo.com/donas_chocolate', 13),
+    ('cerveza_thumb.jpg', 'cerveza_full.jpg', 1, 'https://ejemplo.com/cerveza', 14),
+    ('palomitas_maiz_thumb.jpg', 'palomitas_maiz_full.jpg', 1, 'https://ejemplo.com/palomitas_maiz', 15),
+    ('vino_tinto_thumb.jpg', 'vino_tinto_full.jpg', 1, 'https://ejemplo.com/vino_tinto', 16),
+    ('limon_agrio_thumb.jpg', 'limon_agrio_full.jpg', 1, 'https://ejemplo.com/limon_agrio', 17),
+    ('chocolate_caliente_thumb.jpg', 'chocolate_caliente_full.jpg', 1, 'https://ejemplo.com/chocolate_caliente', 18),
+    ('almendras_tostadas_thumb.jpg', 'almendras_tostadas_full.jpg', 1, 'https://ejemplo.com/almendras_tostadas', 19),
+    ('tarta_queso_thumb.jpg', 'tarta_queso_full.jpg', 1, 'https://ejemplo.com/tarta_queso', 20);
+
+
+
+
+
+
+-- 4.3 Proveedor_producto   23
+INSERT INTO purchasing.vendor_product (vepro_qty_stocked, vepro_qty_remaining, vepro_price, venpro_stock_id, vepro_vendor_id)
+VALUES
+(100, 100, 9.99, 1, 6),
+(200, 200, 19.99, 2, 6),
+(150, 150, 3.99, 3, 6),
+(250, 250, 1.99, 4, 6),
+(50, 50, 29.99, 5, 6),
+(500, 500, 2.49, 6, 6),
+(30, 30, 49.99, 7, 6),
+(1000, 1000, 7.99, 8, 6),
+(40, 40, 12.99, 9, 6),
+(150, 150, 4.99, 10, 6),
+
+
+(75, 75, 12.99, 1, 7),
+(150, 150, 24.99, 2, 7),
+(100, 100, 4.99, 3, 7),
+(200, 200, 1.49, 4, 7),
+(40, 40, 39.99, 5, 7),
+(300, 300, 2.99, 6, 7),
+(20, 20, 7.99, 7, 7),
+(500, 500, 5.99, 8, 7),
+(25, 25, 14.99, 9, 7),
+(100, 100, 1.99, 10, 7),
+
+
+(125, 125, 6.99, 1, 8),
+(250, 250, 18.99, 2, 8),
+(200, 200, 2.99, 3, 8),
+(400, 400, 1.49, 4, 8),
+(80, 80, 59.99, 5, 8),
+(800, 800, 4.99, 6, 8),
+(15, 15, 12.99, 7, 8),
+(300, 300, 9.99, 8, 8),
+(10, 10, 29.99, 9, 8),
+(120, 120, 7.99, 10,8),
+
+
+(90, 90, 3.49, 1, 4),
+(180, 180, 6.99, 2, 4),
+(150, 150, 1.99, 3, 4),
+(300, 300, 0.99, 4, 4),
+(60, 60, 24.99, 5, 4),
+(600, 600, 1.49, 6, 4),
+(10, 10, 39.99, 7, 4),
+(400, 400, 3.99, 8, 4),
+(20, 20, 9.99, 9, 4),
+(90, 90, 2.49, 10, 4),
+
+
+(110, 110, 4.99, 1, 5),
+(220, 220, 9.99, 2, 5),
+(180, 180, 1.99, 3, 5),
+(360, 360, 0.99, 4, 5),
+(70, 70, 29.99, 5, 5),
+(700, 700, 1.49, 6, 5),
+(12, 12, 49.99, 7, 5),
+(450, 450, 4.99, 8, 5),
+(30, 30, 11.99, 9, 5),
+(110, 110, 2.99, 10, 5);
+
+
+
+
+    UPDATE Users.users
+    SET user_modified_date = DATEADD(SECOND, ABS(CHECKSUM(NEWID())) % (DATEDIFF(SECOND, '2022-09-01', '2023-09-19') + 1), '2022-09-01');
+    go
+
+
+---MOUDULO RESTO
+
+
+
+
 
 
 
@@ -4402,9 +4438,7 @@ INNER JOIN
   -- Crear un procedimiento almacenado para asignar aleatoriamente roles a usuarios
  ----TABLAS  NO MASTER 
 
- use  Hotel_Realta
-go
-CREATE or alter  PROCEDURE AssignRandomRolesToUsersEmpleados
+CREATE or alter  PROCEDURE AssignRandomRolesToUsersEmpleados  --25
 AS
 BEGIN
     DECLARE @UserID INT ;DECLARE @RoleID INT ;DECLARE @MaxRecords INT 
@@ -4449,7 +4483,7 @@ END
 go 
 
 
-
+  --26
 CREATE or alter  PROCEDURE AssignRandomRolesToUsersClientes
 AS
 BEGIN
@@ -4496,7 +4530,7 @@ BEGIN
 END
 go 
 
-
+---27
 -- Crear un procedimiento almacenado para insertar registros de membresía
 CREATE OR ALTER PROCEDURE InsertUserMemberships
 AS
@@ -4556,24 +4590,7 @@ END
 go
 
 
-
-
-
-
-
-EXEC AssignRandomRolesToUsersEmpleados
-EXEC AssignRandomRolesToUsersClientes
-exec InsertUserMemberships
-INSERT INTO Users.roles (role_name) VALUES ('Gerente');
-------------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------------------
-
-USE Hotel_Realta
-GO
---SELECT *
---FROM Hotel.Hotel_Reviews
-
------------------------------------------------------------------------------------------------------
+----28
 -- Crear el procedimiento almacenado
 CREATE OR ALTER PROCEDURE InsertHotelReviewsForClients
 AS
@@ -4634,14 +4651,8 @@ BEGIN
 END
 go
 
----------****************************----------
---select *
---from HR.employee
---select *
---from hr.job_role
---select *
---from hr.employee_pay_history
 
+----29
 -- Crear el procedimiento almacenado
 CREATE or alter  PROCEDURE GenerateEmployeeSalaryHistory
 AS
@@ -4713,8 +4724,7 @@ BEGIN
 END
 go
 
---select *
---from hr.employee_pay_history
+-----30
 ----------------**********************************--------------------
 -- Crear el procedimiento almacenado
 CREATE or alter  PROCEDURE AssignEmployeeAttributesAndShifts
@@ -4783,14 +4793,7 @@ BEGIN
 END
 go
 
---DROP PROCEDURE AssignEmployeeAttributesAndShifts
-
---SELECT * FROM HR.employee_department_history
---select * from hr.employee
---select d.dept_name
---from hr.department d, hr.employee e , hr.job_role j, hr.employee_department_history edh
---where e.emp_id = 64 and d.dept_id=edh.edhi_dept_id and edh.edhi_emp_id=e.emp_id and e.emp_joro_id=j.joro_id
-
+-----31
 -------------------------------------**************************************-------------------------------
 CREATE or alter  PROCEDURE InsertRandomFacilities @NumFacilities INT
 AS
@@ -4861,6 +4864,9 @@ BEGIN
   END;
 END;
 go
+
+
+-------32
 CREATE PROCEDURE InsertarBonusPoints
 AS
 BEGIN
@@ -4881,6 +4887,8 @@ BEGIN
     END;
 END;
 go
+
+-------34
 CREATE or alter PROCEDURE Users.usp_InsertRandomUserData
 AS
 BEGIN
@@ -4900,15 +4908,339 @@ SET @uspa_user_id = @uspa_user_id + 1;
 END;
 END;
 go
+
+
+-------35
+CREATE PROCEDURE InsertarRegistrosAleatorios
+AS
+BEGIN
+    DECLARE @contador INT = 1;
+
+    WHILE @contador <= 1000
+    BEGIN
+        DECLARE @cart_emp_id INT;
+        DECLARE @cart_vepro_id INT;
+		DECLARE @cart_order_qty INT;
+        DECLARE @cart_modified_date DATETIME;
+
+        -- Generar valores aleatorios
+        SET @cart_emp_id = CAST((RAND() * 5) + 1 AS INT); -- Entre 1 y 1000
+        SET @cart_vepro_id = CAST((RAND() * 50) + 1 AS INT);  -- Entre 1 y 50
+		SET @cart_order_qty = CAST((RAND() * 5) + 1 AS INT);
+        SET @cart_modified_date = DATEADD(DAY, CAST((RAND() * 365) AS INT), '2022-09-01'); -- Entre 2019-09-01 y 2023-09-19
+
+        INSERT INTO purchasing.cart (cart_emp_id, cart_vepro_id, cart_order_qty, cart_modified_date)
+        VALUES (@cart_emp_id, @cart_vepro_id, @cart_order_qty, @cart_modified_date);
+
+        SET @contador = @contador + 1;
+    END;
+END;
+
+go
+
+
+--------------36
+-- Crear el procedimiento almacenado
+CREATE PROCEDURE GenerarRegistrosPurchaseOrder
+AS
+BEGIN
+    DECLARE @contador INT = 1;
+
+    WHILE @contador <= 50
+    BEGIN
+        DECLARE @pohe_vendor_id INT;
+        DECLARE @pohe_emp_id INT;
+
+        -- Generar valores aleatorios para pohe_vendor_id y pohe_emp_id entre 1 y 5
+        SET @pohe_vendor_id = CAST((RAND() * 5) + 4 AS INT);
+        SET @pohe_emp_id = CAST((RAND() * 5) + 1 AS INT);
+
+        INSERT INTO purchasing.purchase_order_header (pohe_number, pohe_status, pohe_order_date, pohe_subtotal, pohe_tax, pohe_emp_id, pohe_vendor_id, pohe_pay_type)
+        VALUES (
+            'PO-' + CAST(@contador AS NVARCHAR(10)),
+            CAST((RAND() * 5) + 1 AS TINYINT), -- Status aleatorio entre 1 y 5
+            DATEADD(DAY, -CAST((RAND() * 365) AS INT), GETDATE()), -- Fecha aleatoria en los últimos 365 días
+            ROUND(RAND() * 1000, 2), -- Subtotal aleatorio entre 0 y 1000
+            0.1, -- Impuesto fijo en 0.1
+            @pohe_emp_id,
+            @pohe_vendor_id,
+            CASE WHEN RAND() < 0.5 THEN 'TR' ELSE 'CA' END -- Aleatoriamente 'TR' o 'CA' para pohe_pay_type
+        );
+
+        SET @contador = @contador + 1;
+    END;
+END;
+go
+-- Crear el procedimiento almacenado
+-- Crear el procedimiento almacenado  37
+CREATE PROCEDURE GenerarRegistrosStockDetail
+AS
+BEGIN
+    DECLARE @contador INT = 1;
+
+    WHILE @contador <= 50
+    BEGIN
+        DECLARE @stod_stock_id INT;
+        DECLARE @stod_pohe_id INT;
+        DECLARE @stod_faci_id INT;
+
+        -- Generar valores aleatorios para stod_stock_id, stod_pohe_id y stod_faci_id
+        SET @stod_stock_id = CAST((RAND() * 20) + 1 AS INT); -- Valores entre 1 y 20
+        SET @stod_pohe_id = CAST((RAND() * 50) + 1 AS INT); -- Valores entre 1 y 50
+        SET @stod_faci_id = CAST((RAND() * 50) + 1 AS INT); -- Valores entre 1 y 50
+
+        -- Generar valores aleatorios para stod_status como cadenas de caracteres
+        DECLARE @stod_status NCHAR(2);
+        SET @stod_status = CASE 
+            WHEN RAND() < 0.25 THEN '1'
+            WHEN RAND() < 0.5 THEN '2'
+            WHEN RAND() < 0.75 THEN '3'
+            ELSE '4'
+        END;
+
+        INSERT INTO purchasing.stock_detail (stod_stock_id, stod_barcode_number, stod_status, stod_notes, stod_faci_id, stod_pohe_id)
+        VALUES (
+            @stod_stock_id,
+            'Barcode-' + CAST(@contador AS NVARCHAR(10)),
+            @stod_status,
+            'Notas para el producto ' + CAST(@contador AS NVARCHAR(10)),
+            @stod_faci_id,
+            @stod_pohe_id
+        );
+
+        SET @contador = @contador + 1;
+    END;
+END;
+
+go
+
+-- Crear el procedimiento almacenado
+CREATE PROCEDURE InsertarRegistrosPurchaseOrderDetail
+AS
+BEGIN
+    DECLARE @contador INT = 1;
+
+    WHILE @contador <= 300
+    BEGIN
+        DECLARE @pode_pohe_id INT;
+        DECLARE @pode_stock_id INT;
+
+        -- Generar valores aleatorios para pode_pohe_id y pode_stock_id
+        SET @pode_pohe_id = CAST((RAND() * 50) + 1 AS INT); -- Valores entre 1 y 50
+        SET @pode_stock_id = CAST((RAND() * 20) + 1 AS INT); -- Valores entre 1 y 20
+
+        -- Generar valores aleatorios para pode_order_qty, pode_price, pode_received_qty, y pode_rejected_qty
+        DECLARE @pode_order_qty SMALLINT;
+        SET @pode_order_qty = CAST((RAND() * 100) + 1 AS SMALLINT); -- Valores entre 1 y 100
+
+        DECLARE @pode_price MONEY;
+        SET @pode_price = ROUND(RAND() * 100, 2); -- Valores entre 0 y 100 con 2 decimales
+
+        DECLARE @pode_received_qty DECIMAL(8, 2);
+        SET @pode_received_qty = CAST((RAND() * 50) AS DECIMAL(8, 2)); -- Valores entre 0 y 50 con 2 decimales
+
+        DECLARE @pode_rejected_qty DECIMAL(8, 2);
+        SET @pode_rejected_qty = CAST((RAND() * @pode_received_qty) AS DECIMAL(8, 2)); -- Valores entre 0 y puede_received_qty con 2 decimales
+
+        INSERT INTO purchasing.purchase_order_detail (pode_pohe_id, pode_order_qty, pode_price, pode_received_qty, pode_rejected_qty, pode_stock_id)
+        VALUES (
+            @pode_pohe_id,
+            @pode_order_qty,
+            @pode_price,
+            @pode_received_qty,
+            @pode_rejected_qty,
+            @pode_stock_id
+        );
+
+        SET @contador = @contador + 1;
+    END;
+END;
+go
+
+CREATE PROCEDURE InsertarOfertasreservaAleatorias
+AS
+BEGIN
+    DECLARE @Counter INT = 1;
+
+    WHILE @Counter <= 20
+    BEGIN
+        INSERT INTO Booking.special_offers (spof_name, spof_description, spof_type, spof_discount, spof_start_date, spof_end_date, spof_min_qty, spof_max_qty)
+        VALUES
+            ('Oferta ' + CAST(@Counter AS NVARCHAR(2)), 'Descripción de la oferta ' + CAST(@Counter AS NVARCHAR(2)), 
+            'T', (RAND() * 10), 
+            DATEADD(day, CAST(RAND() * 365 AS INT), '2022-09-01'), 
+            DATEADD(day, CAST(RAND() * 365 AS INT), '2023-09-01'), 
+            CASE WHEN @Counter % 4 = 0 THEN @Counter ELSE 0 END, 
+            CASE WHEN @Counter % 5 = 0 THEN @Counter ELSE null END);
+
+        SET @Counter = @Counter + 1;
+    END;
+END;
+go
+CREATE PROCEDURE InsertarRegistrosBookingOrders
+AS
+BEGIN
+    DECLARE @Counter INT = 1;
+
+    WHILE @Counter <= 100
+    BEGIN
+        -- Generar valores aleatorios para algunos campos
+        DECLARE @OrderNumber NVARCHAR(55);
+        SET @OrderNumber = 'ORD-' + CAST(@Counter AS NVARCHAR(3));
+
+        DECLARE @OrderDate DATETIME;
+        SET @OrderDate = DATEADD(day, -RAND() * 365, GETDATE());
+
+        DECLARE @ArrivalDate DATETIME;
+        SET @ArrivalDate = DATEADD(day, CAST(RAND() * 365 AS INT), GETDATE());
+
+        DECLARE @TotalRoom SMALLINT;
+        SET @TotalRoom = CAST(RAND() * 10 AS SMALLINT);
+
+        DECLARE @TotalGuest SMALLINT;
+        SET @TotalGuest = CAST(RAND() * 5 AS SMALLINT);
+
+        DECLARE @Discount MONEY;
+        SET @Discount = RAND() * 100;
+
+        DECLARE @TotalTax MONEY;
+        SET @TotalTax = RAND() * 50;
+
+        DECLARE @TotalAmount MONEY;
+        SET @TotalAmount = RAND() * 500;
+
+        DECLARE @DownPayment MONEY;
+        SET @DownPayment = RAND() * 100;
+
+        DECLARE @PayType NCHAR(2);
+        SET @PayType = CASE WHEN RAND() < 0.5 THEN 'CR' ELSE 'C' END;
+
+        DECLARE @IsPaid NCHAR(2);
+        SET @IsPaid = CASE WHEN RAND() < 0.3 THEN 'DP' WHEN RAND() < 0.6 THEN 'P' ELSE 'R' END;
+
+        DECLARE @Type NVARCHAR(15);
+        SET @Type = CASE WHEN RAND() < 0.4 THEN 'T' WHEN RAND() < 0.8 THEN 'C' ELSE 'I' END;
+
+        DECLARE @CardNumber NVARCHAR(25);
+        SET @CardNumber = NULL;
+
+        DECLARE @MemberType NVARCHAR(15);
+        SET @MemberType = NULL;
+
+        DECLARE @Status NVARCHAR(15);
+        SET @Status = CASE WHEN RAND() < 0.2 THEN 'BOOKING' WHEN RAND() < 0.4 THEN 'CHECKIN' WHEN RAND() < 0.6 THEN 'CHECKOUT' WHEN RAND() < 0.8 THEN 'CLEANING' ELSE 'CANCELED' END;
+
+        DECLARE @UserId INT;
+        SET @UserId = 300 + CAST(RAND() * 700 AS INT);
+
+        --DECLARE @HotelId INT;
+        --SET @HotelId = 1 + CAST(RAND() * 5 AS INT);
+
+        -- Insertar el registro
+        INSERT INTO Booking.booking_orders (
+            boor_order_number, boor_order_date, boor_arrival_date, boor_total_room, 
+            boor_total_guest, boor_discount, boor_total_tax, boor_total_ammount, 
+            boor_down_payment, boor_pay_type, boor_is_paid, boor_type, boor_cardnumber, 
+            boor_member_type, boor_status, boor_user_id
+        )
+        VALUES (
+            @OrderNumber, @OrderDate, @ArrivalDate, @TotalRoom, @TotalGuest, @Discount, 
+            @TotalTax, @TotalAmount, @DownPayment, @PayType, @IsPaid, @Type, @CardNumber, 
+            @MemberType, @Status, @UserId
+        );
+
+        SET @Counter = @Counter + 1;
+    END;
+END;
+go
+-- Crear el procedimiento almacenado
+CREATE or alter PROCEDURE InsertarRegistrosPaymentGateway
+AS
+BEGIN
+    DECLARE @Counter INT = 1;
+
+    WHILE @Counter <= 10
+    BEGIN
+        INSERT INTO Payment.payment_gateway (paga_entity_id, paga_code, paga_name)
+        VALUES (@Counter, 'Code' + CAST(@Counter AS NVARCHAR(10)), 'Name' + CAST(@Counter AS NVARCHAR(10)));
+
+        SET @Counter = @Counter + 1;
+    END;
+END;
+go
+
+
+
+-- Crear el procedimiento almacenado
+CREATE PROCEDURE InsertarRegistrosUserAccounts
+AS
+BEGIN
+    DECLARE @Counter INT = 1;
+
+    WHILE @Counter <= 1000
+    BEGIN
+        DECLARE @UserID INT;
+        SET @UserID = (@Counter % 1000) + 1; -- Asumiendo 1000 usuarios
+
+        INSERT INTO Payment.user_accounts (usac_entity_id, usac_user_id, usac_account_number, usac_saldo, usac_type, usac_expmonth, usac_expyear)
+        VALUES (@Counter % 10 + 1, @UserID, 'Account' + CAST(@Counter AS NVARCHAR(10)), 0.00, 'debet', NULL, NULL);
+
+        SET @Counter = @Counter + 1;
+    END;
+END;
+go
+-- Crear el procedimiento almacenado
+CREATE PROCEDURE InsertarRegistrosPaymentTransaction
+AS
+BEGIN
+    DECLARE @Counter INT = 1;
+
+    WHILE @Counter <= 1000
+    BEGIN
+        DECLARE @UserID INT;
+        SET @UserID = @Counter; -- Suponiendo que los IDs de usuario son del 1 al 1000
+
+        INSERT INTO Payment.payment_transaction (patr_trx_number, patr_type, patr_user_id)
+        VALUES ('Transaction' + CAST(@Counter AS NVARCHAR(10)), 'TP', @UserID);
+
+        SET @Counter = @Counter + 1;
+    END;
+END;
+go
+
+
+
+
+
+EXEC AssignRandomRolesToUsersEmpleados
+EXEC AssignRandomRolesToUsersClientes
+exec InsertUserMemberships
 EXEC Users.usp_InsertRandomUserData;
 exec InsertarBonusPoints
 EXEC InsertHotelReviewsForClients
 EXEC GenerateEmployeeSalaryHistory
 EXEC AssignEmployeeAttributesAndShifts
 EXEC InsertRandomFacilities 50;
+EXEC InsertarRegistrosAleatorios;
+EXEC GenerarRegistrosPurchaseOrder;
+EXEC GenerarRegistrosStockDetail;
+EXEC InsertarRegistrosPurchaseOrderDetail;
+exec InsertarOfertasreservaAleatorias
+exec InsertarRegistrosBookingOrders;
+exec InsertarRegistrosPaymentGateway
+EXEC InsertarRegistrosUserAccounts;
+EXEC InsertarRegistrosPaymentTransaction;
+INSERT INTO Users.roles (role_name) VALUES ('Gerente');
+go
+
+
+
+-----------------------------------------------------------------------------------------------------
+
 
 
 ---------------------------------------**********************************************----------------------------------
+ --6.1 menus    37
 INSERT INTO Resto.resto_menus(reme_name, reme_description, reme_price, reme_status, reme_modified_date, reme_type, reme_faci_id) VALUES 
 ('Causa de Pollo','Papa amarilla prensada aderezada con limon y crema de aji amarillo peruano rellena con pollo con salsa huancaina',70,'Disponible',GETDATE(),'Entradas Frias',1),
 ('Papines a la Huancaina','Papas cocidas al vapor en sabrosa salsa huancaina, con todos los sabores peruanos, coronada con huevo, aceitunas y huevo',70,'Disponible',GETDATE(),'Entradas Frias',7),
@@ -4927,5 +5259,50 @@ INSERT INTO Resto.resto_menus(reme_name, reme_description, reme_price, reme_stat
 ('Spaghetti','A la crema pon pollo en dados y tomillo flameados al pisco',65,'Disponible',GETDATE(),'Fondos',42),
 ('Silpancho','Tipico plato Boliviano renovado a nuestro estilo',99,'Disponible',GETDATE(),'Fondos',26);
 go
+
+
+
+/*select Master.policy.poli_id,Master.policy.poli_description,Master.category_group.cagro_id,
+  Master.category_group.cagro_description,Master.policy_category_group.poca_cagro_id,Master.policy_category_group.poca_poli_id 
+  from Master.policy,Master.category_group,Master.policy_category_group
+  */ 
+  
+  /*SELECT DISTINCT
+    p.poli_id,
+    p.poli_description,
+    cg.cagro_id,
+    cg.cagro_description,
+    pcg.poca_cagro_id,
+    pcg.poca_poli_id
+FROM
+    Master.policy p
+INNER JOIN
+    Master.policy_category_group pcg ON p.poli_id = pcg.poca_poli_id
+INNER JOIN
+    Master.category_group cg ON pcg.poca_cagro_id = cg.cagro_id;*/
+
+
+/*select *from Resto.resto_menus*/
+
+---------****************************----------
+--select *
+--from HR.employee
+--select *
+--from hr.job_role
+--select *
+--from hr.employee_pay_history
+
+
+
+
+--DROP PROCEDURE AssignEmployeeAttributesAndShifts
+
+--SELECT * FROM HR.employee_department_history
+--select * from hr.employee
+--select d.dept_name
+--from hr.department d, hr.employee e , hr.job_role j, hr.employee_department_history edh
+--where e.emp_id = 64 and d.dept_id=edh.edhi_dept_id and edh.edhi_emp_id=e.emp_id and e.emp_joro_id=j.joro_id
+
+
 
 
